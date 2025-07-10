@@ -25,9 +25,9 @@ arr1 =  arr1 |> PolyHok.new_gnx
     ## map_1para_1D_resp
         #|> Ske.map(PolyHok.phok(fn (x,y) -> x + y end),[par1])
     ## map_1_para_coord_1D
-        |> Ske.map(PolyHok.phok(fn (x,y,z) -> x + y + z end),[par1],[coord: true, return: false, dim: :one])
+        #|> Ske.map(PolyHok.phok(fn (x,y,z) -> x + y + z end),[par1],[coord: true, return: false, dim: :one])
     ## map_1_para_coord_1D_resp
-        #|> Ske.map(PolyHok.phok(fn (x,y,z) -> x + y + z end),[par1],[coord: true, return: true, dim: :one])
+        |> Ske.map(PolyHok.phok(fn (x,y,z) -> x + y + z end),[par1],[coord: true, return: true, dim: :one])
     ## map_1para_2D
         #|> Ske.map(PolyHok.phok(fn (x,y) -> x + y end),[par1],[coord: false, return: false, dim: :two])
     ## map_1para_2D_resp
