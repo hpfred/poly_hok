@@ -4,7 +4,7 @@ use Ske
 #n = 1000
 n = 20
 
-arr1 = Nx.tensor([Enum.to_list(1..n)],type: {:s, 32})
+arr1 = Nx.tensor(Enum.to_list(1..n),type: {:s, 32})
 par1 = 1
 par2 = 1
 par3 = 1
