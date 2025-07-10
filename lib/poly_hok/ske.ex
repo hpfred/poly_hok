@@ -543,7 +543,7 @@ PolyHok.defmodule Ske do
     id  = step * offset
     if(offset < sizeX)do
     #for i in range(idX,sizeX,stride) do
-      ret[idX] = f(d_array[idX],par1,par2,idX)
+      ret[id] = f(d_array[id],par1,par2,idX)
     end
   end
   def map_2para_coord_1D_resp(d_array, par1, par2, f) do
