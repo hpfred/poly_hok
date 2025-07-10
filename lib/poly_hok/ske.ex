@@ -541,7 +541,7 @@ PolyHok.defmodule Ske do
     
     offset = idX * blockDim.x * gridDim.x
     id  = step * offset
-    if(offset < sizeX)
+    if(offset < sizeX)do
     #for i in range(idX,sizeX,stride) do
       ret[i] = f(d_array[i],par1,par2,idX)
     end
