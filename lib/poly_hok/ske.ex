@@ -554,9 +554,10 @@ PolyHok.defmodule Ske do
                           x -> raise "Invalid shape for a 1D map: #{inspect x}!"
                         end
 
-    #IO.inspect {sizeX,step}
+    IO.inspect {sizeX,step}
     block_size = 16
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    IO.puts(grid_rows)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
 
     PolyHok.spawn(&Ske.map_2para_coord_1D_resp_kernel/6,{grid_rows,1,1},{block_size,block_size,1},[d_array,ret,par1,par2,step,sizeX,f])
