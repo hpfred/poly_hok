@@ -43,7 +43,7 @@ arr1 =  arr1 |> PolyHok.new_gnx
     ## map_2para_coord_1D
         #|> Ske.map(PolyHok.phok(fn (x,y,z,q) -> x + y + z + q end),[par1,par2],[coord: true, return: false, dim: :one])
     ## map_2para_coord_1D_resp
-        #|> Ske.map(PolyHok.phok(fn (x,y,z,q) -> x + y + z + q end),[par1,par2],[coord: true, return: true, dim: :one])
+        |> Ske.map(PolyHok.phok(fn (x,y,z,q) -> x + y + z + q end),[par1,par2],[coord: true, return: true, dim: :one])
     ## map_2para_2D
         #|> Ske.map(PolyHok.phok(fn (x,y,z) -> x + y + z end),[par1,par2],[coord: false, return: false, dim: :two])
     ## map_2para_2D_resp
@@ -70,7 +70,7 @@ arr1 =  arr1 |> PolyHok.new_gnx
         #|> Ske.map(PolyHok.phok(fn (x,y,z,q,w,r) -> x + y + z + q + w + r end),[par1,par2,par3],[coord: true, return: true, dim: :two])
         #|> Ske.map(PolyHok.phok(fn (x,y,z,q,w,r) -> w + r end),[par1,par2,par3],[coord: true, return: true, dim: :two])
         #|> Ske.map(PolyHok.phok(fn (x,y,z,q,w,r) -> w end),[par1,par2,par3],[coord: true, return: true, dim: :two])
-        |> Ske.map(PolyHok.phok(fn (x,y,z,q,w,r) -> r end),[par1,par2,par3],[coord: true, return: true, dim: :two])
+        #|> Ske.map(PolyHok.phok(fn (x,y,z,q,w,r) -> r end),[par1,par2,par3],[coord: true, return: true, dim: :two])
     
     
 #IO.inspect(arr1)

@@ -516,10 +516,9 @@ PolyHok.defmodule Ske do
 
     id  = step * offset
     #f(id,id)
-    trashCollect = 0
     if (offset < sizex) do
       #f(d_array+id,par1,par2,x,y)
-      trashCollect = f(d_array+id,par1,par2,x)
+      f(d_array+id,par1,par2,x)
     end
   end
   def map_2para_coord_1D(d_array, par1, par2, f) do
@@ -539,7 +538,11 @@ PolyHok.defmodule Ske do
   defk map_2para_coord_1D_resp_kernel(d_array, ret, par1, par2, sizeX, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
-    for i in range(idX,sizeX,stride) do
+    
+    offset = idX * blockDim.x * gridDim.x
+    id  = step * offset
+    if(offset < sizeX)
+    #for i in range(idX,sizeX,stride) do
       ret[i] = f(d_array[i],par1,par2,idX)
     end
   end
@@ -833,8 +836,9 @@ PolyHok.defmodule Ske do
     idY = threadIdx.y + blockIdx.y * blockDim.y
     #stride = blockDim.x * gridDim.x
     stride = blockDim.x * gridDim.x * blockDim.y * gridDim.y
+    ret[0] = 
     for i in range((idX*idY),(sizeX*sizeY*step),stride) do
-      ret[i] = f(d_array[i], par1, par2, par3, idX, idY)
+      #ret[i] = f(d_array[i][], par1, par2, par3, idX, idY)
     end
   end
   def map_3para_coord_2D_resp(d_array, par1, par2, par3, f) do
