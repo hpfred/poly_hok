@@ -1,0 +1,5 @@
+*.bmp
+
+priv/gpu_nifs.so
+priv/bmp_nifs.so
+
