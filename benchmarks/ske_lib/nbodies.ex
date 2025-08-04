@@ -50,8 +50,8 @@ prev = System.monotonic_time()
 d_buf = PolyHok.new_gnx(h_buf)
 
 _gpu_resp = d_buf
-  |> Ske.map(&NBodies.gpu_nBodies/3, [d_buf,nBodies], return: false)
-  |> Ske.map(&NBodies.gpu_integrate/3, [0.01,nBodies], return: false)
+  #|> Ske.map(&NBodies.gpu_nBodies/3, [d_buf,nBodies], return: true)
+  #|> Ske.map(&NBodies.gpu_integrate/3, [0.01,nBodies], return: true)
   |> PolyHok.get_gnx
   #|> IO.inspect
 

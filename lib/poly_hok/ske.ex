@@ -747,13 +747,13 @@ PolyHok.defmodule Ske do
       ret
   end
   defk map_3para_coord_2D_kernel(d_array, par1, par2, par3, step, sizeX, sizeY, f) do
-    x = threadIdx.x + blockIdx.x * blockDim.x
-    y = threadIdx.y + blockIdx.y * blockDim.y
+    idX = threadIdx.x + blockIdx.x * blockDim.x
+    idY = threadIdx.y + blockIdx.y * blockDim.y
     offset = x + y * blockDim.x * gridDim.x
 
     id  = step * offset
     if (offset < (sizeX*sizeY)) do
-      f(d_array+id,par1,par2,par3,x,y)
+      f(d_array+id,par1,par2,par3,idX,idY)
     end
   end
   def map_3para_coord_2D(d_array, par1, par2, par3, f) do
@@ -774,6 +774,8 @@ PolyHok.defmodule Ske do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
+
+
     if(stride < (sizeX*sizeY*step)) do
       ret[stride] = f(d_array[stride], par1, par2, par3, idX, idY)
     end
