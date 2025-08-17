@@ -23,6 +23,7 @@ PolyHok.defmodule NBodies do
   p[3] = p[3]+ dt*fx;
   p[4] = p[4]+ dt*fy;
   p[5] = p[5]+ dt*fz;
+  p
 
   end
   defd gpu_integrate(p, dt, n) do
@@ -30,6 +31,7 @@ PolyHok.defmodule NBodies do
       p[1] = p[1] + p[4]*dt;
       p[2] = p[2] + p[5]*dt;
 
+      p
   end
 end
 
@@ -42,6 +44,7 @@ user_value = String.to_integer(arg)
 
 
 nBodies = user_value #3000;
+IO.puts(nBodies)
 size_body = 6
 
 h_buf = PolyHok.new_nx_from_function(nBodies,size_body,{:f,64},fn -> :rand.uniform() end )
@@ -50,8 +53,8 @@ prev = System.monotonic_time()
 d_buf = PolyHok.new_gnx(h_buf)
 
 _gpu_resp = d_buf
-  #|> Ske.map(&NBodies.gpu_nBodies/3, [d_buf,nBodies], return: true)
-  #|> Ske.map(&NBodies.gpu_integrate/3, [0.01,nBodies], return: true)
+  |> Ske.map(&NBodies.gpu_nBodies/3, [d_buf,nBodies], return: false)
+  |> Ske.map(&NBodies.gpu_integrate/3, [0.01,nBodies], return: false)
   |> PolyHok.get_gnx
   #|> IO.inspect
 
