@@ -138,10 +138,10 @@ arr2 = PolyHok.new_gnx({8,8,4},{:s,32})
     ## map_3para_coord_2D
         #arr2 |> Ske.map(PolyHok.phok(fn (x,y,z,q,w,r) -> x + y + z + q + w + r end),[par1,par2,par3],[coord: true, return: false, dim: :two])
         #arr2 |> Ske.map(PolyHok.phok(fn (x,y,z,q,w,r) -> s = 1 end),[par1,par2,par3],[coord: true, return: false, dim: :two])
-        arr2 |> Ske.map(&Teste.sum6/6,[par1,par2,par3],[coord: true, return: false, dim: :two])
+        #arr2 |> Ske.map(&Teste.sum6/6,[par1,par2,par3],[coord: true, return: false, dim: :two])
     
     ## map_3para_coord_2D_resp
-        #arr2 = arr2 |> Ske.map(PolyHok.phok(fn (x,y,z,q,w,r) -> x + y + z + q + w + r end),[par1,par2,par3],[coord: true, return: true, dim: :two])
+        arr2 = arr2 |> Ske.map(PolyHok.phok(fn (x,y,z,q,w,r) -> x + y + z + q + w + r end),[par1,par2,par3],[coord: true, return: true, dim: :two])
 
         #arr2 = arr2 |> Ske.map(PolyHok.phok(fn (x,y,z,q,w,r) -> w + r end),[par1,par2,par3],[coord: true, return: true, dim: :two])
         #arr2 = arr2 |> Ske.map(PolyHok.phok(fn (x,y,z,q,w,r) -> w end),[par1,par2,par3],[coord: true, return: true, dim: :two])
@@ -149,5 +149,5 @@ arr2 = PolyHok.new_gnx({8,8,4},{:s,32})
 
 
 #IO.inspect(arr1)
-PolyHok.get_gnx(arr1) |> IO.inspect(limit: :infinity)
-#PolyHok.get_gnx(arr2) |> IO.inspect(limit: :infinity)
+#PolyHok.get_gnx(arr1) |> IO.inspect(limit: :infinity)
+PolyHok.get_gnx(arr2) |> IO.inspect(limit: :infinity)

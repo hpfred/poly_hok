@@ -249,12 +249,13 @@ PolyHok.defmodule Ske do
       result_gpu
   end
 
-  defk map_1para_1D_kernel(d_array, par1, size, f) do
+  defk map_1para_1D_kernel(d_array, par1, step, size, f) do
     id = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
-    
+
     for i in range(id,size,stride) do
-      f(d_array[i], par1)
+      id = i*step
+      f(d_array[id], par1)
     end
   end
   def map_1para_1D(d_array, par1, f) do
@@ -267,15 +268,16 @@ PolyHok.defmodule Ske do
     size = l*step
     nBlocks = floor ((size + block_size - 1) / block_size)
 
-    PolyHok.spawn(&Ske.map_1para_1D_kernel/4,{nBlocks,1,1},{block_size,1,1},[d_array,par1,size,f])
+    PolyHok.spawn(&Ske.map_1para_1D_kernel/5,{nBlocks,1,1},{block_size,1,1},[d_array,par1,step,size,f])
     d_array
   end
-  defk map_1para_1D_resp_kernel(d_array, ret, par1, size, f) do
+  defk map_1para_1D_resp_kernel(d_array, ret, par1, step, size, f) do
     id = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
 
     for i in range(id,size,stride) do
-      ret[i] = f(d_array[i], par1)
+      id = i*step
+      ret[id] = f(d_array[id], par1)
     end
   end
   def map_1para_1D_resp(d_array, par1, f) do
@@ -289,15 +291,16 @@ PolyHok.defmodule Ske do
     nBlocks = floor ((size + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
     
-    PolyHok.spawn(&Ske.map_1para_1D_resp_kernel/5,{nBlocks,1,1},{block_size,1,1},[d_array,ret,par1,size,f])
+    PolyHok.spawn(&Ske.map_1para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,ret,par1,step,size,f])
     ret
   end
-  defk map_1para_coord_1D_kernel(d_array, par1, size, f) do
+  defk map_1para_coord_1D_kernel(d_array, par1, step, size, f) do
     idX = threadIdx.x + blockIdx.x * blockDim.x
     stride = blockDim.x * gridDim.x
 
     for i in range(idX,size,stride) do
-      f(d_array[i], par1,idX)
+      id = i*step
+      f(d_array[id], par1,idX)
     end
   end
   def map_1para_coord_1D(d_array, par1, f) do
@@ -311,15 +314,16 @@ PolyHok.defmodule Ske do
     block_size = 16
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
 
-    PolyHok.spawn(&Ske.map_1para_coord_1D_kernel/4,{grid_rows,1,1},{block_size,block_size,1},[d_array,par1,size,f])
+    PolyHok.spawn(&Ske.map_1para_coord_1D_kernel/5,{grid_rows,1,1},{block_size,block_size,1},[d_array,par1,step,size,f])
     d_array
   end
-  defk map_1para_coord_1D_resp_kernel(d_array, ret, par1, size, f) do
+  defk map_1para_coord_1D_resp_kernel(d_array, ret, par1, step, size, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
 
     for i in range(idX,size,stride) do
-      ret[i] = f(d_array[i],par1,idX)
+      id = i*step
+      ret[id] = f(d_array[id],par1,idX)
     end
   end
   def map_1para_coord_1D_resp(d_array, par1, f) do
@@ -334,7 +338,7 @@ PolyHok.defmodule Ske do
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
 
-    PolyHok.spawn(&Ske.map_1para_coord_1D_resp_kernel/5,{grid_rows,1,1},{block_size,block_size,1},[d_array,ret,par1,size,f])
+    PolyHok.spawn(&Ske.map_1para_coord_1D_resp_kernel/6,{grid_rows,1,1},{block_size,block_size,1},[d_array,ret,par1,step,size,f])
     ret
   end
 
@@ -343,8 +347,10 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
 
+    #if (stride < (sizeX*sizeY)) do
     if (stride < (sizeX*sizeY*step)) do
-      f(d_array[stride], par1)
+      id = stride*step
+      f(d_array[id], par1)
     end
   end
   def map_1para_2D(d_array, par1, f) do
@@ -367,8 +373,10 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
     
+    #if(stride < (sizeX*sizeY)) do
     if(stride < (sizeX*sizeY*step)) do
-      ret[stride] = f(d_array[stride], par1)
+      id = stride*step
+      ret[id] = f(d_array[id], par1)
     end
   end
   def map_1para_2D_resp(d_array, par1, f) do
@@ -393,6 +401,7 @@ PolyHok.defmodule Ske do
     stride = idX + idY * blockDim.x * gridDim.x
 
     id  = step * stride
+    #if (stride < (sizeX*sizeY)) do
     if (stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
@@ -419,11 +428,13 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
 
+    #if(stride < (sizeX*sizeY)) do
     if(stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
+      id  = step * stride
 
-      ret[stride] = f(d_array[stride], par1, x, y)
+      ret[id] = f(d_array[id], par1, x, y)
     end
   end
   def map_1para_coord_2D_resp(d_array, par1, f) do
@@ -443,10 +454,11 @@ PolyHok.defmodule Ske do
   end
 
   defk map_2para_1D_kernel(d_array, step, par1, par2, size, f) do
-    id = blockIdx.x * blockDim.x + threadIdx.x
+    idX = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
 
-    for i in range(id,size,stride) do
+    for i in range(idX,size,stride) do
+      id = i*step
       f(d_array+id,par1,par2)
     end
   end
@@ -463,12 +475,13 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_2para_1D_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,step,par1,par2,size,f])
     d_array
   end
-  defk map_2para_1D_resp_kernel(d_array, ret, par1, par2, size, f) do
+  defk map_2para_1D_resp_kernel(d_array, ret, par1, par2, step, size, f) do
     id = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
 
     for i in range(id,size,stride) do
-      ret[i] = f(d_array[i],par1,par2)
+      id = i*step
+      ret[id] = f(d_array[id],par1,par2)
     end
   end
   def map_2para_1D_resp(d_array, par1, par2, f) do
@@ -482,15 +495,16 @@ PolyHok.defmodule Ske do
     nBlocks = floor ((size + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
 
-    PolyHok.spawn(&Ske.map_2para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,ret,par1,par2,size,f])
+    PolyHok.spawn(&Ske.map_2para_1D_resp_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array,ret,par1,par2,step,size,f])
     ret
   end
-  defk map_2para_coord_1D_kernel(d_array, par1, par2, size, f) do
+  defk map_2para_coord_1D_kernel(d_array, par1, par2, step, size, f) do
     x = threadIdx.x + blockIdx.x * blockDim.x
     offset = x * blockDim.x * gridDim.x
 
     if (offset < size) do
-      f(d_array[offset],par1,par2,x)
+      id = step * offset
+      f(d_array[id],par1,par2,x)
     end
   end
   def map_2para_coord_1D(d_array, par1, par2, f) do
@@ -504,10 +518,10 @@ PolyHok.defmodule Ske do
     block_size = 16
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
 
-    PolyHok.spawn(&Ske.map_2para_coord_1D_kernel/5,{grid_rows,1,1},{block_size,block_size,1},[d_array,par1,par2,size,f])
+    PolyHok.spawn(&Ske.map_2para_coord_1D_kernel/6,{grid_rows,1,1},{block_size,block_size,1},[d_array,par1,par2,step,size,f])
     d_array
   end
-  defk map_2para_coord_1D_resp_kernel(d_array, ret, par1, par2, size, f) do
+  defk map_2para_coord_1D_resp_kernel(d_array, ret, par1, par2, step, size, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
     
@@ -515,7 +529,8 @@ PolyHok.defmodule Ske do
     #if(offset < size)do
     #  ret[offset] = f(d_array[offset],par1,par2,idX)
     for i in range(idX,size,stride) do
-      ret[i] = f(d_array[i],par1,par2,idX)
+      id = i*step
+      ret[id] = f(d_array[id],par1,par2,idX)
     end
   end
   def map_2para_coord_1D_resp(d_array, par1, par2, f) do
@@ -530,7 +545,7 @@ PolyHok.defmodule Ske do
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
 
-    PolyHok.spawn(&Ske.map_2para_coord_1D_resp_kernel/6,{grid_rows,1,1},{block_size,block_size,1},[d_array,ret,par1,par2,size,f])
+    PolyHok.spawn(&Ske.map_2para_coord_1D_resp_kernel/7,{grid_rows,1,1},{block_size,block_size,1},[d_array,ret,par1,par2,step,size,f])
     ret
   end
   
@@ -539,8 +554,10 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
 
+    #if(stride < (sizeX*sizeY)) do
     if(stride < (sizeX*sizeY*step)) do
-      f(d_array[stride], par1, par2)
+      id = stride*step
+      f(d_array[id], par1, par2)
     end
   end
   def map_2para_2D(d_array, par1, par2, f) do
@@ -563,8 +580,10 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
 
+    #if(stride < (sizeX*sizeY)) do
     if(stride < (sizeX*sizeY*step)) do
-      ret[stride] = f(d_array[stride], par1, par2)
+      id = stride*step
+      ret[id] = f(d_array[id], par1, par2)
     end
   end
   def map_2para_2D_resp(d_array, par1, par2, f) do
@@ -590,6 +609,7 @@ PolyHok.defmodule Ske do
 
     id = stride*step
     if (stride < (sizex*sizey)) do
+    #if (stride < (sizex*sizey*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
 
@@ -615,11 +635,13 @@ PolyHok.defmodule Ske do
     idY = threadIdx.y + blockIdx.y * blockDim.y
     stride = idX + idY * blockDim.x * gridDim.x
 
+    #if (stride < (sizeX*sizeY)) do
     if (stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
+      id = stride*step
 
-      ret[stride] = f(d_array[stride], par1, par2, x, y)
+      ret[id] = f(d_array[id], par1, par2, x, y)
     end
   end
   def map_2para_coord_2D_resp(d_array, par1, par2, f) do
@@ -638,12 +660,13 @@ PolyHok.defmodule Ske do
     ret
   end
 
-  defk map_3para_1D_kernel(d_array, par1, par2, par3, size, f) do
-    id = blockIdx.x * blockDim.x + threadIdx.x
+  defk map_3para_1D_kernel(d_array, par1, par2, par3, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
     
-    for i in range(id,size,stride) do
-      f(d_array[i],par1,par2,par3)
+    for i in range(idX,size,stride) do
+      id = i*step
+      f(d_array[id],par1,par2,par3)
     end
   end
   def map_3para_1D(d_array, par1, par2, par3, f) do
@@ -656,15 +679,16 @@ PolyHok.defmodule Ske do
       size = l*step
       nBlocks = floor ((size + block_size - 1) / block_size)
 
-      PolyHok.spawn(&Ske.map_3para_1D_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,par1,par2,par3,size,f])
+      PolyHok.spawn(&Ske.map_3para_1D_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array,par1,par2,par3,step,size,f])
       d_array
   end
-  defk map_3para_1D_resp_kernel(d_array, ret, par1, par2, par3, size, f) do
-        id = blockIdx.x * blockDim.x + threadIdx.x
+  defk map_3para_1D_resp_kernel(d_array, ret, par1, par2, par3, step, size, f) do
+        idX = blockIdx.x * blockDim.x + threadIdx.x
         stride = blockDim.x * gridDim.x
 
-        for i in range(id,size,stride) do
-          ret[i] = f(d_array[i],par1,par2,par3)
+        for i in range(idX,size,stride) do
+          id = i*step
+          ret[id] = f(d_array[id],par1,par2,par3)
         end
   end
   def map_3para_1D_resp(d_array, par1, par2, par3, f) do
@@ -678,10 +702,10 @@ PolyHok.defmodule Ske do
       nBlocks = floor ((size + block_size - 1) / block_size)
       ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
 
-      PolyHok.spawn(&Ske.map_3para_1D_resp_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array,ret,par1,par2,par3,size,f])
+      PolyHok.spawn(&Ske.map_3para_1D_resp_kernel/8,{nBlocks,1,1},{block_size,1,1},[d_array,ret,par1,par2,par3,step,size,f])
       ret
   end
-  defk map_3para_coord_1D_kernel(d_array, par1, par2, par3, size, f) do
+  defk map_3para_coord_1D_kernel(d_array, par1, par2, par3, step, size, f) do
     idX = threadIdx.x + blockIdx.x * blockDim.x
     stride = blockDim.x * gridDim.x
 
@@ -689,7 +713,8 @@ PolyHok.defmodule Ske do
     #if (offset < size) do
     #  f(d_array+id,par1,par2,par3,x)
     for i in range(idX,size,stride) do
-      f(d_array[i],par1,par2,par3,idX)
+      id = i*step
+      f(d_array[id],par1,par2,par3,idX)
     end
   end
   def map_3para_coord_1D(d_array, par1, par2, par3, f) do
@@ -703,15 +728,16 @@ PolyHok.defmodule Ske do
     block_size = 16
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
 
-    PolyHok.spawn(&Ske.map_3para_coord_1D_kernel/6,{grid_rows,1,1},{block_size,block_size,1},[d_array,par1,par2,par3,size,f])
+    PolyHok.spawn(&Ske.map_3para_coord_1D_kernel/7,{grid_rows,1,1},{block_size,block_size,1},[d_array,par1,par2,par3,step,size,f])
     d_array
   end
-  defk map_3para_coord_1D_resp_kernel(d_array, ret, par1, par2, par3, size, f) do
-    id = blockIdx.x * blockDim.x + threadIdx.x
+  defk map_3para_coord_1D_resp_kernel(d_array, ret, par1, par2, par3, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
 
-    for i in range(id,size,stride) do
-      ret[i] = f(d_array[i],par1,par2,par3,id)
+    for i in range(idX,size,stride) do
+      id = i*step
+      ret[id] = f(d_array[id],par1,par2,par3,id)
     end
   end
   def map_3para_coord_1D_resp(d_array, par1, par2, par3, f) do
@@ -727,8 +753,8 @@ PolyHok.defmodule Ske do
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
 
-    #PolyHok.spawn(&Ske.map_3para_coord_1D_resp_kernel/7,{grid_rows,1,1},{block_size,block_size,1},[d_array,ret,par1,par2,par3,size,f])
-    PolyHok.spawn(&Ske.map_3para_coord_1D_resp_kernel/7,{grid_rows,1,1},{block_size,1,1},[d_array,ret,par1,par2,par3,size,f])
+    #PolyHok.spawn(&Ske.map_3para_coord_1D_resp_kernel/8,{grid_rows,1,1},{block_size,block_size,1},[d_array,ret,par1,par2,par3,step,size,f])
+    PolyHok.spawn(&Ske.map_3para_coord_1D_resp_kernel/8,{grid_rows,1,1},{block_size,1,1},[d_array,ret,par1,par2,par3,step,size,f])
     ret
   end
 
@@ -737,8 +763,10 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
 
+    id = stride*step
+    #if(stride < (sizeX*sizeY)) do
     if(stride < (sizeX*sizeY*step)) do
-      f(d_array[stride], par1, par2, par3)
+      f(d_array[id], par1, par2, par3)
     end
   end
   def map_3para_2D(d_array, par1, par2, par3, f) do
@@ -761,8 +789,10 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
 
+    id = stride*step 
+    #if(stride < (sizeX*sizeY)) do
     if(stride < (sizeX*sizeY*step)) do
-      ret[stride] = f(d_array[stride], par1, par2, par3)
+      ret[id] = f(d_array[id], par1, par2, par3)
     end
   end
   def map_3para_2D_resp(d_array, par1, par2, par3, f) do
@@ -787,7 +817,8 @@ PolyHok.defmodule Ske do
     offset = x + y * blockDim.x * gridDim.x
 
     id  = step * offset
-    if (offset < (sizeX*sizeY)) do
+    #if (offset < (sizeX*sizeY)) do
+    if (offset < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
 
@@ -814,11 +845,13 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
     
+    #if(stride < (sizeX*sizeY)) do
     if(stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
+      id = stride*step
 
-      ret[stride] = f(d_array[stride], par1, par2, par3, x, y)
+      ret[id] = f(d_array[id], par1, par2, par3, x, y)
     end
   end
   def map_3para_coord_2D_resp(d_array, par1, par2, par3, f) do
