@@ -1,20 +1,40 @@
-echo "dot product double"
-mix run benchmarks/dot_product_double.ex 1000
-echo "dot product"
-mix run benchmarks/dot_product.ex 1000
-echo "julia"
-mix run benchmarks/julia.ex 1024
-echo "mm"
-mix run benchmarks/mm.ex 1024
-echo "nbodies"
-mix run benchmarks/nbodies.ex 1000
-echo "nearest neightbor"
-mix run benchmarks/nearest_neighbor.ex 1000
-echo "raytracer"
-mix run benchmarks/raytracer.ex 1000
-echo "ske lib dot product"
-mix run benchmarks/ske_lib/dot_product.ex 1000
-echo "ske lib julia"
-mix run benchmarks/ske_lib/julia.ex 1024
-echo "ske lib raytracer"
-mix run benchmarks/ske_lib/raytracer.ex 1024
+echo "--------cuda dot product------------------------"
+for ((count=1;count<=30;count++)) do
+   echo -n -e "$count.\t" 
+   ./benchmarks/cuda/DP 900000000
+done
+echo "--------ske_lib dot product------------------------"
+for ((count=1;count<=30;count++)) do
+   echo -n -e "$count.\t" 
+   mix run benchmarks/ske_lib/dot_product.ex 900000000
+done
+echo "--------cuda julia------------------------"
+for ((count=1;count<=30;count++)) do
+   echo -n -e "$count.\t" 
+   ./benchmarks/cuda/JL 11264
+done
+echo "--------ske_lib julia------------------------"
+for ((count=1;count<=30;count++)) do
+   echo -n -e "$count.\t" 
+   mix run benchmarks/ske_lib/julia.ex 11264
+done
+echo "--------cuda nbodies------------------------"
+for ((count=1;count<=30;count++)) do
+   echo -n -e "$count.\t" 
+   ./benchmarks/cuda/NB 7000
+done
+echo "--------ske_lib nbodies------------------------"
+for ((count=1;count<=30;count++)) do
+   echo -n -e "$count.\t" 
+   mix run benchmarks/ske_lib/nbodies.ex 7000
+done
+echo "--------cuda raytracer------------------------"
+for ((count=1;count<=30;count++)) do
+   echo -n -e "$count.\t" 
+   ./benchmarks/cuda/RT 11264
+done
+echo "--------ske_lib raytracer------------------------"
+for ((count=1;count<=30;count++)) do
+   echo -n -e "$count.\t" 
+   mix run benchmarks/ske_lib/raytracer.ex 11264
+done
