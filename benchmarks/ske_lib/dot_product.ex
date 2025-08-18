@@ -94,13 +94,13 @@ include CAS
 end
 #PolyHok.include [DP]
 
+start = System.monotonic_time()
+
 use Ske
 
 [arg] = System.argv()
 
 n = String.to_integer(arg)
-
-
 
 vet1 = DP.new_dataset_nx_a(n)
 vet2 = DP.new_dataset_nx_b(n)
@@ -111,7 +111,6 @@ ref1 = PolyHok.new_gnx(vet1)
 
 ref2 = PolyHok.new_gnx(vet2)
 
-
 _result = ref1
     |> Ske.map(ref2, PolyHok.phok fn (a,b) -> a * b end)
     |> Ske.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
@@ -121,5 +120,4 @@ _result = ref1
 
 next = System.monotonic_time()
 
-
-IO.puts "PolyHok\t#{n}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
+IO.puts "PolyHok\t#{n}\tTotal: #{System.convert_time_unit(next-start,:native,:millisecond)}\tGPU: #{System.convert_time_unit(next-prev,:native,:millisecond)}"

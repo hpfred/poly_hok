@@ -471,7 +471,7 @@ PolyHok.defmodule Ske do
               end
     size = l*step
     nBlocks = floor ((size + block_size - 1) / block_size)
-
+    
     PolyHok.spawn(&Ske.map_2para_1D_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,step,par1,par2,size,f])
     d_array
   end
@@ -602,14 +602,14 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_2para_2D_resp_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,ret,par1,par2,step,sizeX,sizeY,f])
     ret
   end
-  defk map_2para_coord_2D_kernel(d_array, step, par1, par2, sizex, sizey, f) do
+  defk map_2para_coord_2D_kernel(d_array, step, par1, par2, sizeX, sizeY, f) do
     idX = threadIdx.x + blockIdx.x * blockDim.x
     idY = threadIdx.y + blockIdx.y * blockDim.y
     stride = idX + idY * blockDim.x * gridDim.x
 
     id = stride*step
-    if (stride < (sizex*sizey)) do
-    #if (stride < (sizex*sizey*step)) do
+    if (stride < (sizeX*sizeY)) do
+    #if (stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
 
@@ -617,17 +617,17 @@ PolyHok.defmodule Ske do
     end
   end
   def map_2para_coord_2D(d_array, par1, par2, f) do
-    {sizex,sizey,step} =  case PolyHok.get_shape_gnx(d_array) do
+    {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array) do
                             {l,c} -> {l,c,1}
                             {l,c,step} -> {l,c,step}
                             x -> raise "Invalid shape for a 2D map: #{inspect x}!"
                           end
 
     block_size = 16
-    grid_rows = trunc ((sizex + block_size - 1) / block_size)
-    grid_cols = trunc ((sizey + block_size - 1) / block_size)
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
 
-    PolyHok.spawn(&Ske.map_2para_coord_2D_kernel/7,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,step,par1,par2,sizex,sizey,f])
+    PolyHok.spawn(&Ske.map_2para_coord_2D_kernel/7,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,step,par1,par2,sizeX,sizeY,f])
     d_array
   end
   defk map_2para_coord_2D_resp_kernel(d_array, ret, par1, par2, step, sizeX, sizeY, f) do

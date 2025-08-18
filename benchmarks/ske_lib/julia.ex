@@ -50,10 +50,9 @@ PolyHok.defmodule Julia do
     ptr[2] = 0;
     ptr[3] = 255;
   end
-
-
-
 end
+
+start = System.monotonic_time()
 
 use Ske
 
@@ -74,6 +73,6 @@ image = result_gpu
 
 next = System.monotonic_time()
 
-IO.puts "PolyHok\t#{dim}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
+IO.puts "PolyHok\t#{dim}\tTotal: #{System.convert_time_unit(next-start,:native,:millisecond)}\tGPU: #{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
 BMP.gen_bmp_int(~c"juliaske.bmp",dim,image)

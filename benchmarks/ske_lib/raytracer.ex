@@ -101,6 +101,8 @@ defmodule Main do
     end
 
     def main do
+        start = System.monotonic_time()
+
         use Ske
 
         sphereList = Nx.tensor([sphereMaker2(Main.spheres,Main.dim)], type: {:f,32})
@@ -108,25 +110,19 @@ defmodule Main do
         width = Main.dim
         height = width
 
-
-
         prev = System.monotonic_time()
 
         ref_sphere = PolyHok.new_gnx(sphereList)
         ref_image = PolyHok.new_gnx({width, height, 4},{:s,32})
 
-        Ske.map(ref_image, &RayTracer.raytracing/5 , [width, ref_sphere], dim: :two, return: false, coord: true)
+        Ske.map(ref_image, &RayTracer.raytracing/5, [width,ref_sphere], [dim: :two, return: false, coord: true])
       
         image = PolyHok.get_gnx(ref_image)
 
         next = System.monotonic_time()
-        IO.puts "PolyHok\t#{width}\t#{System.convert_time_unit(next-prev,:native,:millisecond)} "
-
+        IO.puts "PolyHok\t#{width}\tTotal: #{System.convert_time_unit(next-start,:native,:millisecond)}\tGPU: #{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
         BMP.gen_bmp_int(~c"ray.bmp",width,image)
-
-
-
     end
 end
 

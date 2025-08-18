@@ -20,28 +20,25 @@ PolyHok.defmodule NBodies do
         fy = fy + dy * invDist3;
         fz = fz + dz * invDist3;
       end
-  p[3] = p[3]+ dt*fx;
-  p[4] = p[4]+ dt*fy;
-  p[5] = p[5]+ dt*fz;
-  p
+    p[3] = p[3]+ dt*fx;
+    p[4] = p[4]+ dt*fy;
+    p[5] = p[5]+ dt*fz;
+    end
 
-  end
   defd gpu_integrate(p, dt, n) do
-      p[0] = p[0] + p[3]*dt;
-      p[1] = p[1] + p[4]*dt;
-      p[2] = p[2] + p[5]*dt;
-
-      p
+    p[0] = p[0] + p[3]*dt;
+    p[1] = p[1] + p[4]*dt;
+    p[2] = p[2] + p[5]*dt;
   end
 end
+
+start = System.monotonic_time()
 
 use Ske
 
 [arg] = System.argv()
 
 user_value = String.to_integer(arg)
-
-
 
 nBodies = user_value #3000;
 IO.puts(nBodies)
@@ -54,12 +51,12 @@ d_buf = PolyHok.new_gnx(h_buf)
 
 _gpu_resp = d_buf
   |> Ske.map(&NBodies.gpu_nBodies/3, [d_buf,nBodies], return: false)
-  |> Ske.map(&NBodies.gpu_integrate/3, [0.01,nBodies], return: false)
+  #|> Ske.map(&NBodies.gpu_integrate/3, [0.01,nBodies], return: false)
   |> PolyHok.get_gnx
   #|> IO.inspect
 
   next = System.monotonic_time()
 
-IO.puts "PolyHok\t#{user_value}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
+IO.puts "PolyHok\t#{user_value}\tTotal: #{System.convert_time_unit(next-start,:native,:millisecond)}\tGPU: #{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
 #IO.inspect gpu_resp
