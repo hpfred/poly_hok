@@ -1,0 +1,149 @@
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/dot_product.ex 20000000
+PolyHok    20000000    Total: 2431    GPU: 516
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/dot_product.ex 200000000
+PolyHok    200000000    Total: 19814    GPU: 649
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/dot_product.ex 400000000
+PolyHok    400000000    Total: 39119    GPU: 842
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/dot_product.ex 500000000
+PolyHok    500000000    Total: 48751    GPU: 966
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/dot_product.ex 600000000
+PolyHok    600000000    Total: 58764    GPU: 1089
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/dot_product.ex 700000000
+PolyHok    700000000    Total: 68000    GPU: 1225
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/dot_product.ex 800000000
+PolyHok    800000000    Total: 77798    GPU: 1309
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/dot_product.ex 900000000
+PolyHok    900000000    Total: 88100    GPU: 1392
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/dot_product.ex 1000000000
+** (ErlangError) Erlang error: ~c"Error new_gpu_array_nif: out of memory"
+    (poly_hok 0.1.0) PolyHok.new_gpu_array_nif(1, 1000000000, ~c"float")
+    (poly_hok 0.1.0) lib/poly_hok.ex:341: PolyHok.new_gnx/2
+    (poly_hok 0.1.0) lib/poly_hok/ske.ex:242: Ske.map2/3
+    benchmarks/ske_lib/dot_product.ex:115: (file)
+    
+------------------------------
+
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/DP 20000000
+CUDA    20000000    29.0
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/DP 200000000
+CUDA    200000000    242.3
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/DP 400000000
+CUDA    400000000    467.1
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/DP 500000000
+CUDA    500000000    568.6
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/DP 600000000
+CUDA    600000000    685.0
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/DP 700000000
+CUDA    700000000    796.9
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/DP 800000000
+CUDA    800000000    912.1
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/DP 900000000
+CUDA    900000000    1024.9
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/DP 1000000000
+Error: out of memory
+
+--------------------------------------------------------------------------------------------
+
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/julia.ex 4096
+PolyHok    4096    Total: 498    GPU: 249
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/julia.ex 8192
+PolyHok    8192    Total: 891    GPU: 641
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/julia.ex 9216
+PolyHok    9216    Total: 1012    GPU: 758
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/julia.ex 10240
+PolyHok    10240    Total: 1201    GPU: 944
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/julia.ex 11264
+PolyHok    11264    Total: 1810    GPU: 1550
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/julia.ex 12288
+binary_alloc: Cannot allocate 2305843007334645760 bytes of memory (of type "binary").
+
+Crash dump is being written to: erl_crash.dump...done
+    
+------------------------------
+
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/JL 4096
+CUDA    4096    264.7
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/JL 8192
+CUDA    8192    1041.7
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/JL 9216
+CUDA    9216    1315.9
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/JL 10240
+CUDA    10240    1623.2
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/JL 11264
+CUDA    11264    1957.8
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/JL 12288
+Error 1: out of memory
+Error 7: invalid argument
+CUDA    12288    0.0
+
+--------------------------------------------------------------------------------------------
+
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/nbodies.ex 1000
+1000
+PolyHok    1000    Total: 360    GPU: 359
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/nbodies.ex 2000
+2000
+PolyHok    2000    Total: 355    GPU: 353
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/nbodies.ex 5000
+5000
+PolyHok    5000    Total: 405    GPU: 403
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/nbodies.ex 7000
+7000
+PolyHok    7000    Total: 450    GPU: 447
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/nbodies.ex 8000
+8000
+** (ErlangError) Erlang error: ~c"Error (get_gpu_array_nif) copying data from device to host: an illegal memory access was encountered"
+    (poly_hok 0.1.0) PolyHok.get_gpu_array_nif(#Reference<0.2383234759.3463577603.231821>, 8000, 6, ~c"double")
+    (poly_hok 0.1.0) lib/poly_hok.ex:375: PolyHok.get_gnx/1
+    benchmarks/ske_lib/nbodies.ex:55: (file)
+    
+------------------------------
+
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/NB 1000
+cuda    1000    1.5
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/NB 2000
+cuda    2000    2.6
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/NB 5000
+cuda    5000    12.5
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/NB 7000
+cuda    7000    17.5
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/NB 8000
+cuda    8000    30.0
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/NB 10000
+cuda    10000    37.3
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/NB 100000
+cuda    100000    3299.1
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/NB 1000000
+^C
+
+--------------------------------------------------------------------------------------------
+
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/raytracer.ex 1024
+PolyHok    1024    Total: 342    GPU: 331
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/raytracer.ex 2048
+PolyHok    2048    Total: 371    GPU: 361
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/raytracer.ex 10240
+PolyHok    10240    Total: 1215    GPU: 1205
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/raytracer.ex 11264
+PolyHok    11264    Total: 1405    GPU: 1395
+hpfred@hpfred-desktop:~/Documents/poly_hok$ mix run benchmarks/ske_lib/raytracer.ex 12288
+binary_alloc: Cannot allocate 2305843007334645760 bytes of memory (of type "binary").
+
+Crash dump is being written to: erl_crash.dump...done
+
+------------------------------
+
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/RT 1024
+CUDA    1024    8.9
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/RT 2048
+CUDA    2048    33.0
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/RT 10240
+CUDA    10240    741.2
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/RT 11264
+CUDA    11264    904.4
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/RT 12288
+CUDA    12288    1177.7
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/RT 20480
+CUDA    20480    2933.8
+hpfred@hpfred-desktop:~/Documents/poly_hok$ ./benchmarks/cuda/RT 40960
+CUDA    40960    0.0

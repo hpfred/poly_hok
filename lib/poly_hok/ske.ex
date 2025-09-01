@@ -125,6 +125,7 @@ PolyHok.defmodule Ske do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
     :one ->   if (not coord && not return )do
+                #IO.puts("teste")
                 map_2para_1D({:nx, type, shape, name , ref},  par1, par2, func)
 
               else if (not coord && return) do
@@ -265,7 +266,8 @@ PolyHok.defmodule Ske do
                 {l,step} -> {l,step}
                 x -> raise "Invalid shape for 1D map: #{inspect x}!"
               end
-    size = l*step
+    #size = l*step
+    size = l
     nBlocks = floor ((size + block_size - 1) / block_size)
 
     PolyHok.spawn(&Ske.map_1para_1D_kernel/5,{nBlocks,1,1},{block_size,1,1},[d_array,par1,step,size,f])
@@ -287,7 +289,8 @@ PolyHok.defmodule Ske do
                 {l,step} -> {l,step}
                 x -> raise "Invalid shape for 1D map: #{inspect x}!"
               end
-    size = l*step
+    #size = l*step
+    size = l
     nBlocks = floor ((size + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
     
@@ -309,7 +312,8 @@ PolyHok.defmodule Ske do
                             {l,step} -> {l,step}
                             x -> raise "Invalid shape for a 1D map: #{inspect x}!"
                           end
-    size = sizeX*step
+    #size = sizeX*step
+    size = sizeX
 
     block_size = 16
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
@@ -332,7 +336,8 @@ PolyHok.defmodule Ske do
                             {l,step} -> {l,step}
                             x -> raise "Invalid shape for a 1D map: #{inspect x}!"
                           end
-    size = sizeX*step
+    #size = sizeX*step
+    size = sizeX
 
     block_size = 16
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
@@ -347,8 +352,9 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
 
-    #if (stride < (sizeX*sizeY)) do
-    if (stride < (sizeX*sizeY*step)) do
+    ## Aqui tenho que verificar o 'step'
+    if (stride < (sizeX*sizeY)) do
+    #if (stride < (sizeX*sizeY*step)) do
       id = stride*step
       f(d_array[id], par1)
     end
@@ -373,8 +379,9 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
     
-    #if(stride < (sizeX*sizeY)) do
-    if(stride < (sizeX*sizeY*step)) do
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
       id = stride*step
       ret[id] = f(d_array[id], par1)
     end
@@ -401,8 +408,9 @@ PolyHok.defmodule Ske do
     stride = idX + idY * blockDim.x * gridDim.x
 
     id  = step * stride
-    #if (stride < (sizeX*sizeY)) do
-    if (stride < (sizeX*sizeY*step)) do
+    ## Aqui tenho que verificar o 'step'
+    if (stride < (sizeX*sizeY)) do
+    #if (stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
 
@@ -421,6 +429,7 @@ PolyHok.defmodule Ske do
     grid_cols = trunc ((sizeY + block_size - 1) / block_size)
 
     PolyHok.spawn(&Ske.map_1para_coord_2D_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,step,par1,sizeX,sizeY,f])
+    #PolyHok.spawn(&Ske.map_1para_coord_2D_kernel/6,{sizeX,sizeX,1},{1,1,1},[d_array,step,par1,sizeX,sizeY,f])
     d_array
   end
   defk map_1para_coord_2D_resp_kernel(d_array, ret, par1, step, sizeX, sizeY, f) do
@@ -428,8 +437,9 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
 
-    #if(stride < (sizeX*sizeY)) do
-    if(stride < (sizeX*sizeY*step)) do
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
       id  = step * stride
@@ -469,7 +479,9 @@ PolyHok.defmodule Ske do
                 {l,step} -> {l,step}
                 x -> raise "Invalid shape for 1D map: #{inspect x}!"
               end
-    size = l*step
+    #size = l*step
+    size = l
+    #IO.puts(size)
     nBlocks = floor ((size + block_size - 1) / block_size)
     
     PolyHok.spawn(&Ske.map_2para_1D_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,step,par1,par2,size,f])
@@ -491,7 +503,8 @@ PolyHok.defmodule Ske do
                 {l,step} -> {l,step}
                 x -> raise "Invalid shape for 1D map: #{inspect x}!"
               end
-    size = l*step
+    #size = l*step
+    size = l
     nBlocks = floor ((size + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
 
@@ -513,7 +526,8 @@ PolyHok.defmodule Ske do
                           {l,step} -> {l,step}
                           x -> raise "Invalid shape for a 1D map: #{inspect x}!"
                         end
-    size = sizeX*step
+    #size = sizeX*step
+    size = sizeX
     
     block_size = 16
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
@@ -539,7 +553,8 @@ PolyHok.defmodule Ske do
                           {l,step} -> {l,step}
                           x -> raise "Invalid shape for a 1D map: #{inspect x}!"
                         end
-    size = sizeX*step
+    #size = sizeX*step
+    size = sizeX
 
     block_size = 16
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
@@ -554,8 +569,9 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
 
-    #if(stride < (sizeX*sizeY)) do
-    if(stride < (sizeX*sizeY*step)) do
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
       id = stride*step
       f(d_array[id], par1, par2)
     end
@@ -580,8 +596,9 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
 
-    #if(stride < (sizeX*sizeY)) do
-    if(stride < (sizeX*sizeY*step)) do
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
       id = stride*step
       ret[id] = f(d_array[id], par1, par2)
     end
@@ -608,6 +625,7 @@ PolyHok.defmodule Ske do
     stride = idX + idY * blockDim.x * gridDim.x
 
     id = stride*step
+    ## Aqui tenho que verificar o 'step'
     if (stride < (sizeX*sizeY)) do
     #if (stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
@@ -635,8 +653,9 @@ PolyHok.defmodule Ske do
     idY = threadIdx.y + blockIdx.y * blockDim.y
     stride = idX + idY * blockDim.x * gridDim.x
 
-    #if (stride < (sizeX*sizeY)) do
-    if (stride < (sizeX*sizeY*step)) do
+    ## Aqui tenho que verificar o 'step'
+    if (stride < (sizeX*sizeY)) do
+    #if (stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
       id = stride*step
@@ -676,7 +695,8 @@ PolyHok.defmodule Ske do
                 {l,step} -> {l,step}
                 x -> raise "Invalid shape for 1D map: #{inspect x}!"
               end
-      size = l*step
+      #size = l*step
+      size = l
       nBlocks = floor ((size + block_size - 1) / block_size)
 
       PolyHok.spawn(&Ske.map_3para_1D_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array,par1,par2,par3,step,size,f])
@@ -698,7 +718,8 @@ PolyHok.defmodule Ske do
                 {l,step} -> {l,step}
                 x -> raise "Invalid shape for 1D map: #{inspect x}!"
               end
-      size = l*step
+      #size = l*step
+      size = l
       nBlocks = floor ((size + block_size - 1) / block_size)
       ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
 
@@ -723,7 +744,8 @@ PolyHok.defmodule Ske do
                           {l,step} -> {l,step}
                           x -> raise "Invalid shape for a 1D map: #{inspect x}!"
                         end
-    size = sizeX*step
+    #size = sizeX*step
+    size = sizeX
 
     block_size = 16
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
@@ -746,7 +768,8 @@ PolyHok.defmodule Ske do
                           {l,step} -> {l,step}
                           x -> raise "Invalid shape for a 1D map: #{inspect x}!"
                         end
-    size = sizeX*step
+    #size = sizeX*step
+    size = sizeX
 
     #block_size = 16
     block_size = 128
@@ -764,8 +787,9 @@ PolyHok.defmodule Ske do
     stride = idX + idY * blockDim.x * gridDim.x
 
     id = stride*step
-    #if(stride < (sizeX*sizeY)) do
-    if(stride < (sizeX*sizeY*step)) do
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
       f(d_array[id], par1, par2, par3)
     end
   end
@@ -790,8 +814,9 @@ PolyHok.defmodule Ske do
     stride = idX + idY * blockDim.x * gridDim.x
 
     id = stride*step 
-    #if(stride < (sizeX*sizeY)) do
-    if(stride < (sizeX*sizeY*step)) do
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
       ret[id] = f(d_array[id], par1, par2, par3)
     end
   end
@@ -817,8 +842,9 @@ PolyHok.defmodule Ske do
     offset = x + y * blockDim.x * gridDim.x
 
     id  = step * offset
-    #if (offset < (sizeX*sizeY)) do
-    if (offset < (sizeX*sizeY*step)) do
+    ## Aqui tenho que verificar o 'step'
+    if (offset < (sizeX*sizeY)) do
+    #if (offset < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
 
@@ -845,8 +871,9 @@ PolyHok.defmodule Ske do
     idY = blockIdx.y * blockDim.y + threadIdx.y
     stride = idX + idY * blockDim.x * gridDim.x
     
-    #if(stride < (sizeX*sizeY)) do
-    if(stride < (sizeX*sizeY*step)) do
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
       id = stride*step
