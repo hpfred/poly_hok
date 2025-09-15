@@ -125,7 +125,7 @@ nBodies = user_value #3000;
 size_body = 6
 
 
-:rand.seed(:exsss, {123, 123, 123})
+#:rand.seed(:exsss, {123, 123, 123})
 h_buf = PolyHok.new_nx_from_function(nBodies,size_body,{:f,64},fn -> :rand.uniform() end )
 
 #h_buf = PolyHok.new_nx_from_function(nBodies,size_body,{:f,32},fn -> 1 end )
@@ -140,7 +140,7 @@ _gpu_resp = d_buf
   |> NBodies.map_2_para_no_resp(d_buf,nBodies,nBodies, &NBodies.gpu_nBodies/3)
   |> NBodies.map_2_para_no_resp( 0.01,nBodies,nBodies, &NBodies.gpu_integrate/3)
   |> PolyHok.get_gnx
-  |> IO.inspect
+  #|> IO.inspect
 
   next = System.monotonic_time()
 

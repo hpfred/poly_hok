@@ -44,7 +44,7 @@ nBodies = user_value #3000;
 IO.puts(nBodies)
 size_body = 6
 
-:rand.seed(:exsss, {123, 123, 123})
+#:rand.seed(:exsss, {123, 123, 123})
 h_buf = PolyHok.new_nx_from_function(nBodies,size_body,{:f,64},fn -> :rand.uniform() end )
 prev = System.monotonic_time()
 
@@ -54,7 +54,7 @@ _gpu_resp = d_buf
   |> Ske.map(&NBodies.gpu_nBodies/3, [d_buf,nBodies], return: false)
   |> Ske.map(&NBodies.gpu_integrate/3, [0.01,nBodies], return: false)
   |> PolyHok.get_gnx
-  |> IO.inspect
+  #|> IO.inspect
 
   next = System.monotonic_time()
 

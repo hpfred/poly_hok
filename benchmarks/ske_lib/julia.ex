@@ -63,9 +63,9 @@ dim = m
 
 #values_per_pixel = 4
 
-result_gpu = PolyHok.new_gnx({dim,dim,4},{:s,32})
-
 prev = System.monotonic_time()
+
+result_gpu = PolyHok.new_gnx({dim,dim,4},{:s,32})
 
 image = result_gpu
   |> Ske.map(&Julia.julia_function/4,[dim], [return: false, dim: :two, coord: true])

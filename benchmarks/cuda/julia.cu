@@ -156,12 +156,21 @@ int main( int argc, char const *argv[] ) {
 
     
     ////////////////////
-    dim3 grid(DIM,DIM);
+    int block_size = 16;
+    int grid_rows = trunc ((height + block_size - 1) / block_size);
+    int grid_cols = trunc ((width + block_size - 1) / block_size);
+    
+    dim3 grid(grid_cols,grid_rows,1);
+    dim3 block(block_size,block_size,1);
+//PolyHok.spawn(&Ske.map_1para_coord_2D_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,step,par1,sizeX,sizeY,f])
 
    // int (*f)(float*,int,int,int) = (int (*)(float*,int,int,int)) get_julia_function_ptr();
 
-    mapgen2D_xy_1para_noret_ker<<<grid, 1>>>(d_pixelbuffer,DIM,DIM);
+    //mapgen2D_xy_1para_noret_ker<<<grid, 1>>>(d_pixelbuffer,DIM,DIM);
+    mapgen2D_xy_1para_noret_ker<<<grid, block>>>(d_pixelbuffer,DIM,DIM);
     
+    
+
     j_error = cudaGetLastError();
     if(j_error != cudaSuccess) printf("Error 3: %s\n", cudaGetErrorString(j_error));
   ////////
