@@ -1,6 +1,6 @@
 require PolyHok
 PolyHok.defmodule MM do
-    use ske
+    use Ske
 
     def comp2xy2D1p(arr1,arr2,par,size1,size2,f) do
         arr1_gpu = PolyHok.new_gnx(arr1)
@@ -8,7 +8,7 @@ PolyHok.defmodule MM do
 
         result_gpu = PolyHok.new_gnx(size1,size2,PolyHok.get_array_type(arr1))
             #MM.map2xy2D1p(arr1_gpu, arr2_gpu,par, result_gpu, size1,f)
-            |> ske.map(f, [par], [return: true, dim: :two, coord: true])
+            |> Ske.map(f, [par], [return: true, dim: :two, coord: true])
 
         r_gpu = PolyHok.get_gnx(result_gpu)
         r_gpu

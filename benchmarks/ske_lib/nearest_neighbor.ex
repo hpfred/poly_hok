@@ -145,7 +145,7 @@ PolyHok.defmodule NN do
     end
 end
 
-use ske
+use Ske
 
 [arg] = System.argv()
 
@@ -158,7 +158,7 @@ data_set_host = DataSet.gen_data_set_nx_double(size)
 prev = System.monotonic_time()
 
 _r= PolyHok.new_gnx(data_set_host)
-    |> ske.map(&NN.euclid/3,[0.0, 0.0], [return: true, dim: :one, coord: false])
+    |> Ske.map(&NN.euclid/3, [0.0, 0.0], [return: true, dim: :one, coord: false])
     |> NN.reduce(50000.0,&NN.menor/2)
     |> PolyHok.get_gnx
     #|> IO.inspect
