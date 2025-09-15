@@ -131,8 +131,6 @@ PolyHok.defmodule NN do
         end
     end
     
-    use ske
-    
     defd euclid(d_locations, lat, lng) do
         return sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
         #return sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
@@ -147,6 +145,7 @@ PolyHok.defmodule NN do
     end
 end
 
+use ske
 
 [arg] = System.argv()
 

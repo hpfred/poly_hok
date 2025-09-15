@@ -160,6 +160,44 @@ PolyHok.defmodule Ske do
   end
   end
 
+  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1], options )do
+    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+  case dim do
+    :one ->   if (not coord && not return )do
+                map2_1para_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+
+              else if (not coord && return) do
+                map2_1para_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+
+              else if (coord && not return) do
+                map2_1para_coord_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+
+              else if (coord && return) do
+                map2_1para_coord_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+              end
+              end
+              end
+              end
+
+     :two ->  if (not coord && not return) do
+                map2_1para_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+
+              else if (not coord && return) do
+                map2_1para_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+     
+              else if (coord && not return) do
+                map2_1para_coord_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, par1, func)
+
+              else if (coord && return) do
+                map2_1para_coord_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+              end
+              end
+              end
+              end
+
+  end
+  end
+
   def map({:nx, type, shape, name , ref}, func, [par1,par2,par3], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do

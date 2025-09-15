@@ -7,6 +7,7 @@ PolyHok.defmodule MM do
         arr2_gpu = PolyHok.new_gnx(arr2)
 
         result_gpu = PolyHok.new_gnx(size1,size2,PolyHok.get_array_type(arr1))
+            #MM.map2xy2D1p(arr1_gpu, arr2_gpu,par, result_gpu, size1,f)
             |> ske.map(f, [par], [return: true, dim: :two, coord: true])
 
         r_gpu = PolyHok.get_gnx(result_gpu)
