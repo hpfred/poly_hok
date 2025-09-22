@@ -49,6 +49,8 @@ _result = PolyHok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
             sum
           end
 
+    ## map2_0para_coord_resp
+
 #comp mat1 mat2 m m m(fun mat1 mat2 m x y)
 
 next = System.monotonic_time()

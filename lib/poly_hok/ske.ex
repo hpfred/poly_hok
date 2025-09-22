@@ -526,6 +526,7 @@ PolyHok.defmodule Ske do
     d_array
   end
   defk map_2para_1D_resp_kernel(d_array, ret, par1, par2, step, size, f) do
+    printf("AQUI\\n")
     id = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
 

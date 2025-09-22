@@ -2,34 +2,37 @@
 require PolyHok
 
 PolyHok.defmodule MM do
+  defk map2xy2D_kernel(arr1,arr2,resp,size,f) do
+    row  = blockIdx.y * blockDim.y + threadIdx.y
+    col = blockIdx.x * blockDim.x + threadIdx.x
 
-defk map2xy2D_kernel(arr1,arr2,par, resp,size,f) do
-  row  = blockIdx.y * blockDim.y + threadIdx.y
-  col = blockIdx.x * blockDim.x + threadIdx.x
-
-  if(col < size && row < size) do
-    resp[row * size + col] = f(arr1,arr2,par,row,col)
+    if(col < size && row < size) do
+      resp[row * size + col] = f(arr1,arr2,size,row,col)
+    end
   end
-end
-def map2xy2D1p(arr1,arr2,par,resp,size,f) do
-  block_size = 16
-  grid_rows = trunc ((size + block_size - 1) / block_size)
-  grid_cols = trunc ((size + block_size - 1) / block_size)
+  
+  def map2xy2D1p(arr1,arr2,resp,size,f) do
+    block_size = 16
+    grid_rows = trunc ((size + block_size - 1) / block_size)
+    grid_cols = trunc ((size + block_size - 1) / block_size)
 
-  PolyHok.spawn(&MM.map2xy2D_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[arr1,arr2,par,resp,size,f])
-end
-def comp2xy2D1p(arr1,arr2,par,size1,size2,f) do
+    PolyHok.spawn(&MM.map2xy2D_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[arr1,arr2,resp,size,f])
+  end
+  
+  def comp2xy2D1p(arr1,arr2,size1,size2,f) do
+      result_gpu = PolyHok.new_gnx(size1,size2,PolyHok.get_array_type(arr1))
+      arr1_gpu = PolyHok.new_gnx(arr1)
+      arr2_gpu = PolyHok.new_gnx(arr2)
 
+      MM.map2xy2D1p(arr1_gpu, arr2_gpu, result_gpu, size1,f)
 
-    result_gpu = PolyHok.new_gnx(size1,size2,PolyHok.get_array_type(arr1))
-    arr1_gpu = PolyHok.new_gnx(arr1)
-    arr2_gpu = PolyHok.new_gnx(arr2)
+      r_gpu = PolyHok.get_gnx(result_gpu)
+      r_gpu
+  end
 
-    MM.map2xy2D1p(arr1_gpu, arr2_gpu,par, result_gpu, size1,f)
-
-    r_gpu = PolyHok.get_gnx(result_gpu)
-    r_gpu
-end
+  def mat_mult(arr1,arr2,size,row,col) do
+    arr1[row * size + col]*arr2[col * size + row]
+  end
 end
 
 [arg] = System.argv()
@@ -58,13 +61,22 @@ prev = System.monotonic_time()
 
 
 
-_result = PolyHok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
-            sum = 0
-            for i in range(0,m,1) do
-                  sum = sum + mat1[x * m + i] * mat2[i * m + y]
-            end
-            sum
-          end
+#_result = PolyHok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
+#            sum = 0
+#            for i in range(0,m,1) do
+#                  sum = sum + mat1[x * m + i] * mat2[i * m + y]
+#            end
+#            sum
+#          end
+#IO.inspect(_result)
+
+ ## Transpose mat2
+ ## Then map mat1 and mat2
+ ## But do you reduce the resulting_mat returned by map? Apparently not(?)
+ ## And do you even need to transpose mat2?
+
+_result = MM.comp2xy2D1p(mat1,mat2,m,m,&MM.mat_mult/5)
+IO.inspect(_result)
 
 # comp mat1 mat2 m m m(fun mat1 mat2 m x y)
 
