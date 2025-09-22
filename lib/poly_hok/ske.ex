@@ -160,44 +160,6 @@ PolyHok.defmodule Ske do
   end
   end
 
-  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1], options )do
-    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
-  case dim do
-#    :one ->   if (not coord && not return )do
-#                map2_1para_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-#
-#              else if (not coord && return) do
-#                map2_1para_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-#
-#              else if (coord && not return) do
-#                map2_1para_coord_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-#
-#              else if (coord && return) do
-#                map2_1para_coord_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-#              end
-#              end
-#              end
-#              end
-#
-     :two ->  if (not coord && not return) do
-                map2_1para_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-#
-#              else if (not coord && return) do
-#                map2_1para_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-#     
-#              else if (coord && not return) do
-#                map2_1para_coord_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, par1, func)
-#
-              else if (coord && return) do
-                map2_1para_coord_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-              end
-              end
-#              end
-#              end
-#
-  end
-  end
-
   def map({:nx, type, shape, name , ref}, func, [par1,par2,par3], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
@@ -937,10 +899,46 @@ PolyHok.defmodule Ske do
     ret
   end
 
-  #defk map2_1para_2D_kernel() do
-  #end
-  def map2_1para_2D(d_array1, d_array2, par1, func) do
+
+  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1], options )do
+    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+  case dim do
+#    :one ->   if (not coord && not return )do
+#                map2_1para_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+#
+#              else if (not coord && return) do
+#                map2_1para_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+#
+#              else if (coord && not return) do
+#                map2_1para_coord_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+#
+#              else if (coord && return) do
+#                map2_1para_coord_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+#              end
+#              end
+#              end
+#              end
+#
+     :two ->  #if (not coord && not return) do
+#                map2_1para_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+#
+#              else if (not coord && return) do
+#                map2_1para_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+#     
+#              else if (coord && not return) do
+#                map2_1para_coord_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, par1, func)
+#
+              #else if (coord && return) do
+              if (coord && return) do
+                map2_1para_coord_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
+              end
+#              end
+#              end
+#              end
+#
   end
+  end
+
   defk map2_1para_coord_2D_resp_kernel(d_array1, d_array2, ret, par1, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y

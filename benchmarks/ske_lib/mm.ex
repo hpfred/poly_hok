@@ -47,12 +47,13 @@ arr1_gpu = PolyHok.new_gnx(mat1)
 arr2_gpu = PolyHok.new_gnx(mat2)
 par1 = m
 
-result_gpu = PolyHok.new_gnx(m,m,PolyHok.get_array_type(mat1))
+#result_gpu = PolyHok.new_gnx(m,m,PolyHok.get_array_type(mat1))
 #MM.map2xy2D1p(arr1_gpu, arr2_gpu, par, result_gpu, size1, f)
-result_gpu = Ske.map(arr1_gpu, arr2_gpu, [par1], &MM.mat_mult/5, [return: true, dim: :two, coord: true])
+result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [par1], [return: true, dim: :two, coord: true])
 
 r_gpu = PolyHok.get_gnx(result_gpu)
-r_gpu
+#r_gpu
+IO.inspect(r_gpu)
 
 #comp mat1 mat2 m m m(fun mat1 mat2 m x y)
 
