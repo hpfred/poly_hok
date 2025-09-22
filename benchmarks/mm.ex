@@ -16,21 +16,22 @@ PolyHok.defmodule MM do
     grid_rows = trunc ((size + block_size - 1) / block_size)
     grid_cols = trunc ((size + block_size - 1) / block_size)
 
-    PolyHok.spawn(&MM.map2xy2D_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[arr1,arr2,resp,size,f])
+    PolyHok.spawn(&MM.map2xy2D_kernel/5,{grid_cols,grid_rows,1},{block_size,block_size,1},[arr1,arr2,resp,size,f])
   end
   
   def comp2xy2D1p(arr1,arr2,size1,size2,f) do
-      result_gpu = PolyHok.new_gnx(size1,size2,PolyHok.get_array_type(arr1))
-      arr1_gpu = PolyHok.new_gnx(arr1)
-      arr2_gpu = PolyHok.new_gnx(arr2)
+    result_gpu = PolyHok.new_gnx(size1,size2,PolyHok.get_array_type(arr1))
+    arr1_gpu = PolyHok.new_gnx(arr1)
+    arr2_gpu = PolyHok.new_gnx(arr2)
 
-      MM.map2xy2D1p(arr1_gpu, arr2_gpu, result_gpu, size1,f)
+    MM.map2xy2D1p(arr1_gpu, arr2_gpu, result_gpu, size1, f)
+    #MM.map2xy2D1p(arr1_gpu, arr2_gpu, result_gpu, size1, &MM.mat_mult/5)
 
-      r_gpu = PolyHok.get_gnx(result_gpu)
-      r_gpu
+    r_gpu = PolyHok.get_gnx(result_gpu)
+    r_gpu
   end
 
-  def mat_mult(arr1,arr2,size,row,col) do
+  defd mat_mult(arr1,arr2,size,row,col) do
     arr1[row * size + col]*arr2[col * size + row]
   end
 end
@@ -73,10 +74,10 @@ prev = System.monotonic_time()
  ## Transpose mat2
  ## Then map mat1 and mat2
  ## But do you reduce the resulting_mat returned by map? Apparently not(?)
- ## And do you even need to transpose mat2?
+ ## And do you even need to transpose mat2? Not really, at least not here
 
 _result = MM.comp2xy2D1p(mat1,mat2,m,m,&MM.mat_mult/5)
-IO.inspect(_result)
+#IO.inspect(_result)
 
 # comp mat1 mat2 m m m(fun mat1 mat2 m x y)
 
