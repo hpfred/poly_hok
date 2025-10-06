@@ -157,12 +157,19 @@ data_set_host = DataSet.gen_data_set_nx_double(size)
 
 prev = System.monotonic_time()
 
-_r= PolyHok.new_gnx(data_set_host)
-    |> Ske.map(&NN.euclid/3, [0.0, 0.0], [return: true, dim: :one, coord: false])
-    |> NN.reduce(50000.0,&NN.menor/2)
-    |> PolyHok.get_gnx
+#_r= PolyHok.new_gnx(data_set_host)
+    #|> Ske.map(&NN.euclid/3, [0.0, 0.0], [return: true, dim: :one, coord: false])
+    #|> NN.reduce(50000.0,&NN.menor/2)
+    #|> PolyHok.get_gnx
     #|> IO.inspect
 
+d_array = PolyHok.new_gnx(data_set_host)
+type = PolyHok.get_type_gnx(d_array)
+distances_device = PolyHok.new_gnx(1,size, type)
+_r = Ske.map(d_array, distances_device, &NN.euclid/3, [0.0, 0.0], [return: false, dim: :one, coord: false])
+_r2 = NN.reduce(distances_device, 50000.0,&NN.menor/2)
+    |> PolyHok.get_gnx
+    #|> IO.inspect
 
 
 next = System.monotonic_time()
