@@ -2,8 +2,8 @@ require PolyHok
 use Ske
 
 PolyHok.defmodule MM do
-  defd mat_mult(arr1,arr2,size,row,col) do
-    arr1[row * size + col]*arr2[col * size + row]
+  defd mat_mult(arr1,arr2,res_arr,size,row,col) do
+    res_arr[row * size + col] = arr1[row * size + col]*arr2[col * size + row]
   end
 end
 
@@ -45,16 +45,16 @@ prev = System.monotonic_time()
 
 arr1_gpu = PolyHok.new_gnx(mat1)
 arr2_gpu = PolyHok.new_gnx(mat2)
-par1 = m
+#par1 = m
 
-#result_gpu = PolyHok.new_gnx(m,m,PolyHok.get_array_type(mat1))
+result_gpu = PolyHok.new_gnx(m,m,PolyHok.get_array_type(mat1))
 #MM.map2xy2D1p(arr1_gpu, arr2_gpu, par, result_gpu, size1, f)
 #result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [par1], [return: true, dim: :two, coord: true])
-result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [par1], [return: false, dim: :two, coord: true])
+result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [result_gpu, m], [return: false, dim: :two, coord: true])
 
-#r_gpu = PolyHok.get_gnx(result_gpu)
+r_gpu = PolyHok.get_gnx(result_gpu)
 #r_gpu
-#IO.inspect(r_gpu)
+IO.inspect(r_gpu)
 
 #comp mat1 mat2 m m m(fun mat1 mat2 m x y)
 

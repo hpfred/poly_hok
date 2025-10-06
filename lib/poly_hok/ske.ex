@@ -932,7 +932,7 @@ PolyHok.defmodule Ske do
               else if (coord && return) do
                 map2_1para_coord_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
               end
-#              end
+              end
 #              end
 #              end
 #
@@ -971,7 +971,7 @@ PolyHok.defmodule Ske do
               else if (coord && return) do
                 map2_2para_coord_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, func)
               end
-#              end
+              end
 #              end
 #              end
 #
@@ -1010,7 +1010,7 @@ PolyHok.defmodule Ske do
               else if (coord && return) do
                 map2_3para_coord_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, par3, func)
               end
-#              end
+              end
 #              end
 #              end
 #
@@ -1206,7 +1206,7 @@ PolyHok.defmodule Ske do
     grid_cols = trunc ((sizeY + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
 
-    PolyHok.spawn(&Ske.map2_3para_coord_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,par1,par2,par3,step,sizeX,sizeY,f])
+    PolyHok.spawn(&Ske.map2_3para_coord_2D_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,par1,par2,par3,step,sizeX,sizeY,f])
     ret
   end
   defk map2_3para_coord_2D_resp_kernel(d_array1, d_array2, ret, par1, par2, par3, step, sizeX, sizeY, f) do
@@ -1244,7 +1244,7 @@ PolyHok.defmodule Ske do
     grid_cols = trunc ((sizeY + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
 
-    PolyHok.spawn(&Ske.map2_3para_coord_2D_resp_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,ret,par1,par2,par3,step,sizeX,sizeY,f])
+    PolyHok.spawn(&Ske.map2_3para_coord_2D_resp_kernel/10,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,ret,par1,par2,par3,step,sizeX,sizeY,f])
     ret
   end
   
