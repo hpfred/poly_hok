@@ -88,6 +88,7 @@ PolyHok.defmodule NN do
         type = PolyHok.get_type_gnx(ref)
         size = l*c
         result_gpu  = PolyHok.new_gnx(Nx.tensor([[acc]] , type: type))
+        IO.inspect(PolyHok.get_gnx(ref))
 
         threadsPerBlock = 256
         blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
@@ -95,7 +96,7 @@ PolyHok.defmodule NN do
         PolyHok.spawn(&NN.reduce_kernel/4,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, f, size])
         result_gpu
     end
-    defk reduce_kernel(a, ref4, f,n) do
+    defk reduce_kernel(a, ref4, f, n) do
         __shared__ cache[256]
 
         tid = threadIdx.x + blockIdx.x * blockDim.x;
@@ -131,8 +132,9 @@ PolyHok.defmodule NN do
         end
     end
     
-    defd euclid(d_locations, lat, lng) do
-        return sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
+    defd euclid(d_locations, d_result, lat, lng) do
+        d_result[0] = sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
+        #printf("%f",d_locations[1])
         #return sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
     end
 
@@ -164,12 +166,13 @@ prev = System.monotonic_time()
     #|> IO.inspect
 
 d_array = PolyHok.new_gnx(data_set_host)
+#IO.inspect(PolyHok.get_gnx(d_array))
 type = PolyHok.get_type_gnx(d_array)
 distances_device = PolyHok.new_gnx(1,size, type)
 _r = Ske.map(d_array, distances_device, &NN.euclid/3, [0.0, 0.0], [return: false, dim: :one, coord: false])
 _r2 = NN.reduce(distances_device, 50000.0,&NN.menor/2)
-    |> PolyHok.get_gnx
-    #|> IO.inspect
+#    |> PolyHok.get_gnx
+#    |> IO.inspect
 
 
 next = System.monotonic_time()

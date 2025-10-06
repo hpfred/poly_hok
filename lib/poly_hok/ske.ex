@@ -488,7 +488,7 @@ PolyHok.defmodule Ske do
     d_array
   end
   defk map_2para_1D_resp_kernel(d_array, ret, par1, par2, step, size, f) do
-    printf("AQUI\\n")
+    #printf("AQUI\\n")
     id = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
 
@@ -942,8 +942,8 @@ PolyHok.defmodule Ske do
   def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1, par2], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
-#    :one ->   if (not coord && not return )do
-#                map2_2para_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, func)
+    :one ->   if (not coord && not return )do
+                map2_2para_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, func)
 #
 #              else if (not coord && return) do
 #                map2_2para_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, func)
@@ -956,8 +956,8 @@ PolyHok.defmodule Ske do
 #              end
 #              end
 #              end
-#              end
-#
+              end
+
      :two ->  #if (not coord && not return) do
 #                map2_2para_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, func)
 #
@@ -1094,6 +1094,31 @@ PolyHok.defmodule Ske do
     ret
   end
 
+  defk map2_2para_1D_kernel(d_array1, d_array2, par1, par2, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+    
+    ## Aqui tenho que verificar o 'step'
+    if(idX < size) do
+      #id = stride*step
+
+      #printf("%d  ",d_array2+idX)
+      f(d_array1+idX, d_array2+idX, par1, par2)
+    end
+  end
+  def map2_2para_1D(d_array1, d_array2, par1, par2, f) do
+    block_size =  128;
+    {l,step} = case PolyHok.get_shape_gnx(d_array1) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    size = l
+    nBlocks = floor ((size + block_size - 1) / block_size)
+    
+    PolyHok.spawn(&Ske.map2_2para_1D_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,par1,par2,step,size,f])
+    d_array2
+  end
   defk map2_2para_coord_2D_kernel(d_array1, d_array2, par1, par2, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
