@@ -20,29 +20,28 @@ PolyHok.defmodule Ske do
   include CAS_Poly
 
   def reduce(ref, initial, f) do
-     shape = PolyHok.get_shape_gnx(ref)
-     type = PolyHok.get_type_gnx(ref)
-     size = Tuple.product(shape)
-      result_gpu  = PolyHok.new_gnx(Nx.tensor([[initial]] , type: type))
+    shape = PolyHok.get_shape_gnx(ref)
+    type = PolyHok.get_type_gnx(ref)
+    size = Tuple.product(shape)
+    result_gpu  = PolyHok.new_gnx(Nx.tensor([[initial]] , type: type))
 
-      threadsPerBlock = 256
-      blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
-      numberOfBlocks = blocksPerGrid
+    threadsPerBlock = 256
+    blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
+    numberOfBlocks = blocksPerGrid
 
-      case type do
-        {:f,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
-            PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+    case type do
+      {:f,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
+              PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
 
-        {:f,64} -> cas = PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
-            PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+      {:f,64} -> cas = PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
+              PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
 
-        {:s,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_int(x,y,z) end)
-            PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+      {:s,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_int(x,y,z) end)
+              PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
 
-        x -> raise "new_gnx: type #{x} not suported"
-     end
-
-      result_gpu
+      x -> raise "new_gnx: type #{x} not suported"
+    end
+    result_gpu
   end
   defk reduce_kernel(a, ref4, initial, n, cas, f) do
     __shared__ cache[256]
@@ -72,13 +71,12 @@ PolyHok.defmodule Ske do
       i = i/2
     end
 
-  if (cacheIndex == 0) do
-    current_value = ref4[0]
-    while(!(current_value == cas(ref4,current_value,f(cache[0],current_value)))) do
+    if (cacheIndex == 0) do
       current_value = ref4[0]
+      while(!(current_value == cas(ref4,current_value,f(cache[0],current_value)))) do
+        current_value = ref4[0]
+      end
     end
-  end
-
   end
 
   @defaults %{coord: false, return: true, dim: :one}

@@ -83,7 +83,7 @@ PolyHok.defmodule NN do
     def euclid_seq_([],_lat,_lng, data) do
         data
     end
-    def reduce(ref, acc, f) do
+    def reduce_NN(ref, acc, f) do
         {l,c} = PolyHok.get_shape_gnx(ref)
         type = PolyHok.get_type_gnx(ref)
         size = l*c
@@ -93,10 +93,10 @@ PolyHok.defmodule NN do
         threadsPerBlock = 256
         blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
         numberOfBlocks = blocksPerGrid
-        PolyHok.spawn(&NN.reduce_kernel/4,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, f, size])
+        PolyHok.spawn(&NN.reduce_NN_kernel/4,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, f, size])
         result_gpu
     end
-    defk reduce_kernel(a, ref4, f, n) do
+    defk reduce_NN_kernel(a, ref4, f,n) do
         __shared__ cache[256]
 
         tid = threadIdx.x + blockIdx.x * blockDim.x;
@@ -161,7 +161,7 @@ prev = System.monotonic_time()
 
 #_r= PolyHok.new_gnx(data_set_host)
     #|> Ske.map(&NN.euclid/3, [0.0, 0.0], [return: true, dim: :one, coord: false])
-    #|> NN.reduce(50000.0,&NN.menor/2)
+    #|> NN.reduce_NN(50000.0,&NN.menor/2)
     #|> PolyHok.get_gnx
     #|> IO.inspect
 
@@ -170,7 +170,7 @@ d_array = PolyHok.new_gnx(data_set_host)
 type = PolyHok.get_type_gnx(d_array)
 distances_device = PolyHok.new_gnx(1,size, type)
 _r = Ske.map(d_array, distances_device, &NN.euclid/3, [0.0, 0.0], [return: false, dim: :one, coord: false])
-_r2 = NN.reduce(distances_device, 50000.0,&NN.menor/2)
+_r2 = NN.reduce_NN(distances_device, 50000.0,&NN.menor/2)
 #    |> PolyHok.get_gnx
 #    |> IO.inspect
 
