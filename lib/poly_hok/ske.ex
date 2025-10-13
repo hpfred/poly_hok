@@ -13,13 +13,16 @@ require PolyHok
 #end
 
 PolyHok.defmodule Ske do
+
   #defmacro __using__(_opts) do
   #     IO.puts "You are USIng!"
   #    end
 
   include CAS_Poly
+  #include CAS_Double
 
   def reduce(ref, initial, f) do
+    #IO.inspect(PolyHok.get_gnx(ref))
     shape = PolyHok.get_shape_gnx(ref)
     type = PolyHok.get_type_gnx(ref)
     size = Tuple.product(shape)
@@ -29,21 +32,24 @@ PolyHok.defmodule Ske do
     blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
     numberOfBlocks = blocksPerGrid
 
+    #PolyHok.spawn(&Ske.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, initial, size, f, size])
     case type do
       {:f,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
               PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
-
+    
       {:f,64} -> cas = PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
               PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
-
+    
       {:s,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_int(x,y,z) end)
               PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
-
+    
       x -> raise "new_gnx: type #{x} not suported"
     end
+    
     result_gpu
   end
   defk reduce_kernel(a, ref4, initial, n, cas, f) do
+  #defk reduce_kernel(a, ref4, initial, n, f) do
     __shared__ cache[256]
 
     tid = threadIdx.x + blockIdx.x * blockDim.x;
@@ -73,6 +79,7 @@ PolyHok.defmodule Ske do
 
     if (cacheIndex == 0) do
       current_value = ref4[0]
+      #while(!(current_value == atomic_cas(ref4,current_value,f(cache[0],current_value)))) do
       while(!(current_value == cas(ref4,current_value,f(cache[0],current_value)))) do
         current_value = ref4[0]
       end
@@ -1048,10 +1055,9 @@ PolyHok.defmodule Ske do
     #block_size = 128
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
     grid_cols = trunc ((sizeY + block_size - 1) / block_size)
-    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
 
     PolyHok.spawn(&Ske.map2_1para_coord_2D_kernel/7,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,par1,step,sizeX,sizeY,f])
-    ret
+    d_array1
   end
   defk map2_1para_coord_2D_resp_kernel(d_array1, d_array2, ret, par1, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
@@ -1097,7 +1103,7 @@ PolyHok.defmodule Ske do
     stride = blockDim.x * gridDim.x
     
     ## Aqui tenho que verificar o 'step'
-    if(idX < size) do
+    if(idX < size*step) do
       #id = stride*step
 
       #printf("%d  ",d_array2+idX)
@@ -1115,7 +1121,7 @@ PolyHok.defmodule Ske do
     nBlocks = floor ((size + block_size - 1) / block_size)
     
     PolyHok.spawn(&Ske.map2_2para_1D_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,par1,par2,step,size,f])
-    d_array2
+    d_array1
   end
   defk map2_2para_coord_2D_kernel(d_array1, d_array2, par1, par2, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
@@ -1150,10 +1156,9 @@ PolyHok.defmodule Ske do
     #block_size = 128
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
     grid_cols = trunc ((sizeY + block_size - 1) / block_size)
-    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
 
     PolyHok.spawn(&Ske.map2_2para_coord_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,par1,par2,step,sizeX,sizeY,f])
-    ret
+    d_array1
   end
   defk map2_2para_coord_2D_resp_kernel(d_array1, d_array2, ret, par1, par2, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
@@ -1227,10 +1232,9 @@ PolyHok.defmodule Ske do
     #block_size = 128
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
     grid_cols = trunc ((sizeY + block_size - 1) / block_size)
-    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
 
     PolyHok.spawn(&Ske.map2_3para_coord_2D_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,par1,par2,par3,step,sizeX,sizeY,f])
-    ret
+    d_array1
   end
   defk map2_3para_coord_2D_resp_kernel(d_array1, d_array2, ret, par1, par2, par3, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x

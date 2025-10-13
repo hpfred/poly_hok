@@ -83,59 +83,10 @@ PolyHok.defmodule NN do
     def euclid_seq_([],_lat,_lng, data) do
         data
     end
-    def reduce_NN(ref, acc, f) do
-        {l,c} = PolyHok.get_shape_gnx(ref)
-        type = PolyHok.get_type_gnx(ref)
-        size = l*c
-        result_gpu  = PolyHok.new_gnx(Nx.tensor([[acc]] , type: type))
-        IO.inspect(PolyHok.get_gnx(ref))
-
-        threadsPerBlock = 256
-        blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
-        numberOfBlocks = blocksPerGrid
-        PolyHok.spawn(&NN.reduce_NN_kernel/4,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, f, size])
-        result_gpu
-    end
-    defk reduce_NN_kernel(a, ref4, f,n) do
-        __shared__ cache[256]
-
-        tid = threadIdx.x + blockIdx.x * blockDim.x;
-        cacheIndex = threadIdx.x
-
-        temp = ref4[0]
-
-        while (tid < n) do
-            temp = f(a[tid], temp)
-            tid = blockDim.x * gridDim.x + tid
-        end
-
-        cache[cacheIndex] = temp
-        __syncthreads()
-
-        i = blockDim.x/2
-
-        while (i != 0 ) do  ###&& tid < n) do
-            #tid = blockDim.x * gridDim.x + tid
-            if (cacheIndex < i) do
-                cache[cacheIndex] = f(cache[cacheIndex + i] , cache[cacheIndex])
-            end
-
-           __syncthreads()
-            i = i/2
-        end
-
-        if (cacheIndex == 0) do
-            current_value = ref4[0]
-            while(!(current_value == atomic_cas(ref4,current_value,f(cache[0],current_value)))) do
-                current_value = ref4[0]
-            end
-        end
-    end
     
-    defd euclid(d_locations, d_result, lat, lng) do
+    defd euclid(d_result, d_locations, lat, lng) do
+        #printf("%f  %f  %f  %f  \\n",d_locations[0], d_locations[1], lat, lng)
         d_result[0] = sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
-        #printf("%f",d_locations[1])
-        #return sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
     end
 
     defd menor(x,y) do
@@ -159,27 +110,19 @@ data_set_host = DataSet.gen_data_set_nx_double(size)
 
 prev = System.monotonic_time()
 
-#_r= PolyHok.new_gnx(data_set_host)
-    #|> Ske.map(&NN.euclid/3, [0.0, 0.0], [return: true, dim: :one, coord: false])
-    #|> NN.reduce_NN(50000.0,&NN.menor/2)
-    #|> PolyHok.get_gnx
-    #|> IO.inspect
-
 d_array = PolyHok.new_gnx(data_set_host)
 #IO.inspect(PolyHok.get_gnx(d_array))
 type = PolyHok.get_type_gnx(d_array)
-distances_device = PolyHok.new_gnx(1,size, type)
-_r = Ske.map(d_array, distances_device, &NN.euclid/3, [0.0, 0.0], [return: false, dim: :one, coord: false])
-_r2 = NN.reduce_NN(distances_device, 50000.0,&NN.menor/2)
-#    |> PolyHok.get_gnx
-#    |> IO.inspect
-
+_r = PolyHok.new_gnx(1,size, type)
+    |> Ske.map(d_array, &NN.euclid/3, [0.0, 0.0], [return: false, dim: :one, coord: false])
+    |> Ske.reduce(50000.0,&NN.menor/2)
+    |> PolyHok.get_gnx
+    |> IO.inspect
 
 next = System.monotonic_time()
 IO.puts "PolyHok\t#{size}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
 #result_elixir = Enum.reverse(NN.euclid_seq(list_data_set,0.0,0.0))
-
 
 #IO.puts("NN = #{nn[1]}")
 
