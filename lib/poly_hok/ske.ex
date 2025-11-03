@@ -1275,6 +1275,55 @@ PolyHok.defmodule Ske do
     ret
   end
   
+
+  def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [par1], options )do
+    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+  case dim do
+     :two ->  if (coord && not return) do
+                map3_1para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+              end
+  end
+  end
+
+  defk map3_1para_coord_2D_kernel(d_array1, d_array2, d_array3, par1, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+    
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+      x = (stride - sizeY * (stride / sizeY))
+      y = stride/sizeY
+      id = stride*step
+      #printf("%d\\n",d_array1+id)
+
+      f(d_array1+id, d_array2+id, d_array3+id, par1, x, y)
+    end
+  end
+  def map3_1para_coord_2D(d_array1, d_array2, d_array3, par1, f) do
+    {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end                        
+    if(sizeX != sizeX2 or sizeY != sizeY2 or step != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    block_size = 16
+    #block_size = 128
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_1para_coord_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,step,sizeX,sizeY,f])
+    d_array1
+  end
+
 end
 
 

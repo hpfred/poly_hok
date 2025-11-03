@@ -58,9 +58,10 @@ mat2 = Nx.tensor(Enum.to_list(1..(m*m)),  type: :f32)
 mat1 = Nx.reshape(mat1,{m,m})
 mat2 = Nx.reshape(mat2,{m,m})
 
+#IO.inspect(mat1)
+#IO.inspect(mat2)
+
 prev = System.monotonic_time()
-
-
 
 #_result = PolyHok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
 #            sum = 0
@@ -77,7 +78,7 @@ prev = System.monotonic_time()
  ## And do you even need to transpose mat2? Not really, at least not here
 
 _result = MM.comp2xy2D1p(mat1,mat2,m,m,&MM.mat_mult/5)
-#IO.inspect(_result)
+IO.inspect(_result)
 
 # comp mat1 mat2 m m m(fun mat1 mat2 m x y)
 
