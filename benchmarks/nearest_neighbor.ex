@@ -166,37 +166,30 @@ PolyHok.defmodule NN do
     end
 end
 
-
 [arg] = System.argv()
 
 size = String.to_integer(arg)
 
-data_set_host = DataSet.gen_data_set_nx_double(size)
+:rand.seed(:exsss, {123, 123, 123})
 
+data_set_host = DataSet.gen_data_set_nx_double(size)
 #data_set_host = Nx.tensor(DataSet.gen_data_set(size),  type: {:f,32} )
 
-#IO.inspect data_set_host
-
-#IO.inspect data_set_host
+IO.inspect data_set_host
 
 prev = System.monotonic_time()
 
-_r= PolyHok.new_gnx(data_set_host)
-|> NN.map_step_2para_1resp(2,0.0,0.0,size, &NN.euclid/3)
-|> NN.reduce(50000.0,&NN.menor/2)
-|> PolyHok.get_gnx
-#      |> IO.inspect
-
-
+_r = PolyHok.new_gnx(data_set_host)
+    |> NN.map_step_2para_1resp(2,0.0,0.0,size, &NN.euclid/3)
+    #|> NN.reduce(50000.0,&NN.menor/2)
+    |> PolyHok.get_gnx
+    |> IO.inspect
 
 next = System.monotonic_time()
 IO.puts "PolyHok\t#{size}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
 #result_elixir = Enum.reverse(NN.euclid_seq(list_data_set,0.0,0.0))
 
-
-
 #IO.puts("NN = #{nn[1]}")
-
 
 #IO.inspect (Enum.reduce(result_elixir,0, fn (x,y)-> if y == 0 do x else if x<y do x else y end end end))

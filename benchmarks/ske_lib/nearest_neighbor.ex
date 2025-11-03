@@ -104,9 +104,12 @@ use Ske
 
 size = String.to_integer(arg)
 
+:rand.seed(:exsss, {123, 123, 123})
+
 data_set_host = DataSet.gen_data_set_nx_double(size)
 #data_set_host = Nx.tensor(DataSet.gen_data_set(size),  type: {:f,32} )
-#IO.inspect data_set_host
+
+IO.inspect data_set_host
 
 prev = System.monotonic_time()
 
@@ -115,7 +118,7 @@ d_array = PolyHok.new_gnx(data_set_host)
 type = PolyHok.get_type_gnx(d_array)
 _r = PolyHok.new_gnx(1,size, type)
     |> Ske.map(d_array, &NN.euclid/3, [0.0, 0.0], [return: false, dim: :one, coord: false])
-    |> Ske.reduce(50000.0,&NN.menor/2)
+    #|> Ske.reduce(50000.0,&NN.menor/2)
     |> PolyHok.get_gnx
     |> IO.inspect
 

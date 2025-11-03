@@ -75,4 +75,4 @@ next = System.monotonic_time()
 
 IO.puts "PolyHok\t#{dim}\tTotal: #{System.convert_time_unit(next-start,:native,:millisecond)}\tGPU: #{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
-BMP.gen_bmp_int(~c"juliaske.bmp",dim,image)
+BMP.gen_bmp_int(~c"julia_ske.bmp",dim,image)

@@ -35,6 +35,7 @@ include CAS
       threadsPerBlock = 256
       blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
       numberOfBlocks = blocksPerGrid
+      #IO.inspect(PolyHok.get_gnx(ref))
       PolyHok.spawn(&DP.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial,f, size])
       result_gpu
   end
@@ -119,6 +120,7 @@ end
 
 n = String.to_integer(arg)
 
+:rand.seed(:exsss, {123, 123, 123})
 
 #{vet1,_} = Nx.Random.uniform(Nx.Random.key(1), shape: {1, n}, type: :f32)
 #{vet2,_} = Nx.Random.uniform(Nx.Random.key(1), shape: {1, n}, type: :f32)
@@ -145,23 +147,20 @@ vet2 = DP.new_dataset_nx_b(n)
 #vet1 = PolyHok.new_nx_from_function(1,n,{:f,32},fn -> 1.0 end )
 #vet2 = Nx.tensor([Enum.to_list(1..n)], type: {:f,32})
 
+IO.inspect(vet1)
+IO.inspect(vet2)
+
 prev = System.monotonic_time()
 
-#IO.inspect vet2
-
 ref1 = PolyHok.new_gnx(vet1)
-
 ref2 = PolyHok.new_gnx(vet2)
-
 
 _result = ref1
     |> DP.map2(ref2, PolyHok.phok fn (a,b) -> a * b end)
     |> DP.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
     |> PolyHok.get_gnx
-
-#IO.inspect result
+    |> IO.inspect
 
 next = System.monotonic_time()
-
 
 IO.puts "PolyHok\t#{n}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"

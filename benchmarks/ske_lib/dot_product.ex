@@ -102,21 +102,24 @@ use Ske
 
 n = String.to_integer(arg)
 
+:rand.seed(:exsss, {123, 123, 123})
+
 vet1 = DP.new_dataset_nx_a(n)
 vet2 = DP.new_dataset_nx_b(n)
+
+IO.inspect(vet1)
+IO.inspect(vet2)
 
 prev = System.monotonic_time()
 
 ref1 = PolyHok.new_gnx(vet1)
-
 ref2 = PolyHok.new_gnx(vet2)
 
 _result = ref1
     |> Ske.map(ref2, PolyHok.phok fn (a,b) -> a * b end)
     |> Ske.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
     |> PolyHok.get_gnx
-
-#IO.inspect result
+    |> IO.inspect
 
 next = System.monotonic_time()
 
