@@ -13,7 +13,6 @@ require PolyHok
 #end
 
 PolyHok.defmodule Ske do
-
   #defmacro __using__(_opts) do
   #     IO.puts "You are USIng!"
   #    end
@@ -32,16 +31,24 @@ PolyHok.defmodule Ske do
     blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
     numberOfBlocks = blocksPerGrid
 
+    #cudaDeviceProp prop
+    #cudaGetDeviceProperties(&prop, 0)
+    #blocks = prop.multiProcessorCount*2
+    #threads = 256
+
     #PolyHok.spawn(&Ske.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, initial, size, f, size])
     case type do
       {:f,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
-              PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+              #PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+              PolyHok.spawn(&Ske.reduce_kernel_nvidia_k5/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
     
       {:f,64} -> cas = PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
               PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+              #PolyHok.spawn(&Ske.reduce_kernel_nvidia_k5/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
     
       {:s,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_int(x,y,z) end)
               PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+              #PolyHok.spawn(&Ske.reduce_kernel_nvidia_k5/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
     
       x -> raise "new_gnx: type #{x} not suported"
     end
@@ -83,6 +90,63 @@ PolyHok.defmodule Ske do
       while(!(current_value == cas(ref4,current_value,f(cache[0],current_value)))) do
         current_value = ref4[0]
       end
+    end
+  end
+  defk reduce_kernel_nvidia_k4(a, ref4, n, cas, f) do
+    printf("TESTE7")
+    __shared__ cache[256]
+
+    unsigned int tid
+    tid = blockIdx.x*(blockDim.x) + threadIdx.x;
+    unsigned int cacheIndex
+    cacheIndex = threadIdx.x;
+
+    cache[cacheIndex] = a[tid] + a[tid+blockDim.x]
+    __syncthreads();
+
+    for (unsigned int s = blockDim.x; s > 0; s = s/2) do
+      if (cacheIndex < s) do
+        cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + s]
+      end
+      __syncthreads();
+    end
+
+    if (cacheIndex == 0) do
+      ref4[blockIdx.x] = cache[0];
+    end
+  end
+  defk reduce_kernel_nvidia_k5(a, ref4, n, cas, f) do
+    printf("TESTE2")
+    __shared__ cache[256]
+
+    tid = blockIdx.x*(blockDim.x) + threadIdx.x;
+    cacheIndex = threadIdx.x;
+
+    #tem que usar o f pra ele identificar o tipo do f
+    #cache[cacheIndex] = a[tid] + a[tid+blockDim.x]
+    cache[cacheIndex] = f(a[tid],a[tid+blockDim.x])
+    __syncthreads();
+
+    #syntaxe do for tem que arrumar
+    for s in range(blockDim.x, 32, s = s/2) do
+      if (cacheIndex < s) do
+        cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + s]
+      end
+      __syncthreads();
+    end
+
+    if (cacheIndex < 32) do
+      cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + 32]
+      cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + 16]
+      cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + 8]
+      cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + 4]
+      cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + 2]
+      cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + 1]
+    end
+
+    if (cacheIndex == 0) do
+      #printf("%d %d %d %d %d \\n",cache[0],cache[1],cache[2],cache[3],cache[4])
+      ref4[blockIdx.x] = cache[0]
     end
   end
 
@@ -1105,9 +1169,10 @@ PolyHok.defmodule Ske do
     ## Aqui tenho que verificar o 'step'
     if(idX < size*step) do
       #id = stride*step
+      id = idX*step
 
-      #printf("%d  ",d_array2+idX)
-      f(d_array1+idX, d_array2+idX, par1, par2)
+      #printf("%d %d ",idX,id)
+      f(d_array1+idX, d_array2+id, par1, par2)
     end
   end
   def map2_2para_1D(d_array1, d_array2, par1, par2, f) do

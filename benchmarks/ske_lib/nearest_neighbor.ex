@@ -83,7 +83,7 @@ PolyHok.defmodule NN do
     def euclid_seq_([],_lat,_lng, data) do
         data
     end
-    
+
     defd euclid(d_result, d_locations, lat, lng) do
         #printf("%f  %f  %f  %f  \\n",d_locations[0], d_locations[1], lat, lng)
         d_result[0] = sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
@@ -116,9 +116,11 @@ prev = System.monotonic_time()
 d_array = PolyHok.new_gnx(data_set_host)
 #IO.inspect(PolyHok.get_gnx(d_array))
 type = PolyHok.get_type_gnx(d_array)
-_r = PolyHok.new_gnx(1,size, type)
+r = PolyHok.new_gnx(1,size, type)
     |> Ske.map(d_array, &NN.euclid/3, [0.0, 0.0], [return: false, dim: :one, coord: false])
-    #|> Ske.reduce(50000.0,&NN.menor/2)
+IO.inspect(PolyHok.get_gnx(r))
+_r = r
+    |> Ske.reduce(50000.0,&NN.menor/2)
     |> PolyHok.get_gnx
     |> IO.inspect
 

@@ -501,7 +501,7 @@ static ERL_NIF_TERM get_gpu_array_nif(ErlNifEnv *env, int argc, const ERL_NIF_TE
       { char message[200]; 
         const char *error;
         cuGetErrorString(err, &error);
-        strcpy(message,"Error (get_gpu_array_nif): error compying data from device to host: ");
+        strcpy(message,"Error (get_gpu_array_nif): error copying data from device to host: ");
         strcat(message, error);
         enif_raise_exception(env,enif_make_string(env, message, ERL_NIF_LATIN1));
     }
@@ -545,6 +545,7 @@ static ERL_NIF_TERM get_gpu_array_nif(ErlNifEnv *env, int argc, const ERL_NIF_TE
     
     //// MAKE CUDA CALL
     err=  cuMemcpyDtoH(ptr_matrix, dev_array, data_size) ;
+    //Aqui quebra o nearest neighbor
     
     if(err != CUDA_SUCCESS)  
       { char message[200];

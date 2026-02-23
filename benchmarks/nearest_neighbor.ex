@@ -96,47 +96,44 @@ PolyHok.defmodule NN do
      numberOfBlocks = blocksPerGrid
      PolyHok.spawn(&NN.reduce_kernel/4,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, f, size])
      result_gpu
- end
- defk reduce_kernel(a, ref4, f,n) do
+  end
+  defk reduce_kernel(a, ref4, f,n) do
+    __shared__ cache[256]
 
-   __shared__ cache[256]
+    tid = threadIdx.x + blockIdx.x * blockDim.x;
+    cacheIndex = threadIdx.x
 
-   tid = threadIdx.x + blockIdx.x * blockDim.x;
-   cacheIndex = threadIdx.x
+    temp = ref4[0]
 
-   temp = ref4[0]
+    while (tid < n) do
+      temp = f(a[tid], temp)
+      tid = blockDim.x * gridDim.x + tid
+    end
 
-   while (tid < n) do
-     temp = f(a[tid], temp)
-     tid = blockDim.x * gridDim.x + tid
-   end
+    cache[cacheIndex] = temp
+      __syncthreads()
 
-   cache[cacheIndex] = temp
-     __syncthreads()
+    i = blockDim.x/2
 
-   i = blockDim.x/2
+    while (i != 0 ) do  ###&& tid < n) do
+      #tid = blockDim.x * gridDim.x + tid
+      if (cacheIndex < i) do
+        cache[cacheIndex] = f(cache[cacheIndex + i] , cache[cacheIndex])
+      end
 
-   while (i != 0 ) do  ###&& tid < n) do
-     #tid = blockDim.x * gridDim.x + tid
-     if (cacheIndex < i) do
-       cache[cacheIndex] = f(cache[cacheIndex + i] , cache[cacheIndex])
-     end
+      __syncthreads()
+      i = i/2
+    end
 
-   __syncthreads()
-   i = i/2
-   end
+    if (cacheIndex == 0) do
+      current_value = ref4[0]
+      while(!(current_value == atomic_cas(ref4,current_value,f(cache[0],current_value)))) do
+        current_value = ref4[0]
+      end
+    end
+  end
 
- if (cacheIndex == 0) do
-   current_value = ref4[0]
-   while(!(current_value == atomic_cas(ref4,current_value,f(cache[0],current_value)))) do
-     current_value = ref4[0]
-   end
- end
-
- end
   defk map_step_2para_1resp_kernel(d_array, d_result, step,  par1, par2,size,f) do
-
-
     #var globalId int = blockDim.x * ( gridDim.x * blockIdx.y + blockIdx.x ) + threadIdx.x
     globalId = threadIdx.x + blockIdx.x * blockDim.x
     id  = step * globalId
@@ -148,9 +145,12 @@ PolyHok.defmodule NN do
   def map_step_2para_1resp(d_array,step, par1, par2, size, f) do
     type = PolyHok.get_type_gnx(d_array)
 
-      distances_device = PolyHok.new_gnx(1,size, type)
-      PolyHok.spawn(&NN.map_step_2para_1resp_kernel/7,{size,1,1},{1,1,1},[d_array,distances_device,step,par1,par2,size,f])
-      distances_device
+    distances_device = PolyHok.new_gnx(1,size, type)
+    #PolyHok.spawn(&NN.map_step_2para_1resp_kernel/7,{size,1,1},{1,1,1},[d_array,distances_device,step,par1,par2,size,f])
+    block_size = 128
+    nBlocks = floor ((size + block_size - 1) / block_size)
+    PolyHok.spawn(&NN.map_step_2para_1resp_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array,distances_device,step,par1,par2,size,f])
+    distances_device
   end
   defd euclid(d_locations, lat, lng) do
     return sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
@@ -160,10 +160,10 @@ PolyHok.defmodule NN do
   defd menor(x,y) do
     if (x<y) do
       x
-     else
-       y
-     end
+    else
+      y
     end
+  end
 end
 
 [arg] = System.argv()
