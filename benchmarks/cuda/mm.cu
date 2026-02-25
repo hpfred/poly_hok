@@ -166,9 +166,9 @@ for (int i = 1; i <= m*m; ++i) {
      //       ((end.tv_nsec - begin.tv_nsec) / 1000000000.0 +
        //     (end.tv_sec  - begin.tv_sec))*1000);
    
-//    cpu_mm(a,b,cpu_result,m,m,m);
+//  cpu_mm(a,b,cpu_result,m,m,m);
   
-  //  checkElementsAre(c,cpu_result,m*m);
+//  checkElementsAre(c,cpu_result,m*m);
 
     
     free(a);
