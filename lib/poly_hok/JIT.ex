@@ -4,14 +4,14 @@ defmodule JIT do
 
   def compile_function({:anon,fname,code,type}) do
    {code,fun_graph} = code
-   
+
     #IO.puts "Compile function: #{fname}"
 
     delta = gen_delta_from_type(code,type)
    # IO.inspect "Delta: #{inspect delta}"
 
     inf_types = JIT.infer_types(code,delta)
-   # IO.inspect "inf_types: #{inspect inf_types}"
+    #IO.inspect "inf_types function: #{inspect inf_types}"
     {:fn, _, [{:->, _ , [para,body]}] } = code
 
 
@@ -45,12 +45,13 @@ def compile_function({name,type}) do
     nil -> [""]
     {fast,fun_graph} ->
           delta = gen_delta_from_type(fast,type)
-       #   IO.inspect "Delta: #{inspect delta}"
+         #IO.inspect "Delta: #{inspect delta}"
          # IO.inspect "Type: #{inspect type}"
     #      IO.inspect "Call graph: #{inspect fun_graph}"
           inf_types = JIT.infer_types(fast,delta)
-        #  IO.inspect "inf_types: #{inspect inf_types}"
+         #IO.inspect "inf_types function: #{inspect inf_types}"
           {:defd,_iinfo,[header,[body]]} = fast
+        #  IO.inspect body
           {fname, _, para} = header
 
           param_list = para
@@ -269,9 +270,9 @@ def process_module(module_name,body) do
     try do
          Process.register(pid, :module_server)
     rescue
-    _ -> :ok  
+    _ -> :ok
      end
-  end   
+  end
   _defs=case body do
       {:__block__, [], definitions} ->  process_definitions(module_name,definitions,[])
       _   -> process_definitions(module_name,[body],[])

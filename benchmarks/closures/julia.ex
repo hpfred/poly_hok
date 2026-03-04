@@ -14,7 +14,7 @@ defmodule BMP do
   def gen_bmp_float_nif(_string,_dim,_mat) do
     raise "gen_bmp_nif not implemented"
 end
-  
+
   def gen_bmp_float(string,dim,%Nx.Tensor{data: data, type: _type, shape: _shape, names: _name}) do
     %Nx.BinaryBackend{ state: array} = data
     gen_bmp_float_nif(string,dim,array)
@@ -42,11 +42,11 @@ PolyHok.defmodule Julia do
     end
     return 1
   end
-  
+
 end
 
 defmodule MyApp do
-  
+
 
 use Ske
 
@@ -59,11 +59,12 @@ dim = m
 
 #values_per_pixel = 4
 
-result_gpu = PolyHok.new_gnx({dim,dim,4},{:s,32})
-
 prev = System.monotonic_time()
 
-fun = PolyHok.clo fn (ptr,x,y) -> 
+result_gpu = PolyHok.new_gnx({dim,dim,4},{:s,32})
+
+
+fun = PolyHok.clo fn (ptr,x,y) ->
 
   juliaValue = julia(x,y,dim)
 
@@ -82,7 +83,7 @@ next = System.monotonic_time()
 
 IO.puts "PolyHok\t#{dim}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
-BMP.gen_bmp_int(~c"juliaske.bmp",dim,image)
+BMP.gen_bmp_int(~c"juliaclosures.bmp",dim,image)
 end
 end
 

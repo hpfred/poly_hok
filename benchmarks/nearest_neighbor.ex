@@ -96,44 +96,47 @@ PolyHok.defmodule NN do
      numberOfBlocks = blocksPerGrid
      PolyHok.spawn(&NN.reduce_kernel/4,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, f, size])
      result_gpu
-  end
-  defk reduce_kernel(a, ref4, f,n) do
-    __shared__ cache[256]
+ end
+ defk reduce_kernel(a, ref4, f,n) do
 
-    tid = threadIdx.x + blockIdx.x * blockDim.x;
-    cacheIndex = threadIdx.x
+   __shared__ cache[256]
 
-    temp = ref4[0]
+   tid = threadIdx.x + blockIdx.x * blockDim.x;
+   cacheIndex = threadIdx.x
 
-    while (tid < n) do
-      temp = f(a[tid], temp)
-      tid = blockDim.x * gridDim.x + tid
-    end
+   temp = ref4[0]
 
-    cache[cacheIndex] = temp
-      __syncthreads()
+   while (tid < n) do
+     temp = f(a[tid], temp)
+     tid = blockDim.x * gridDim.x + tid
+   end
 
-    i = blockDim.x/2
+   cache[cacheIndex] = temp
+     __syncthreads()
 
-    while (i != 0 ) do  ###&& tid < n) do
-      #tid = blockDim.x * gridDim.x + tid
-      if (cacheIndex < i) do
-        cache[cacheIndex] = f(cache[cacheIndex + i] , cache[cacheIndex])
-      end
+   i = blockDim.x/2
 
-      __syncthreads()
-      i = i/2
-    end
+   while (i != 0 ) do  ###&& tid < n) do
+     #tid = blockDim.x * gridDim.x + tid
+     if (cacheIndex < i) do
+       cache[cacheIndex] = f(cache[cacheIndex + i] , cache[cacheIndex])
+     end
 
-    if (cacheIndex == 0) do
-      current_value = ref4[0]
-      while(!(current_value == atomic_cas(ref4,current_value,f(cache[0],current_value)))) do
-        current_value = ref4[0]
-      end
-    end
-  end
+   __syncthreads()
+   i = i/2
+   end
 
+ if (cacheIndex == 0) do
+   current_value = ref4[0]
+   while(!(current_value == atomic_cas(ref4,current_value,f(cache[0],current_value)))) do
+     current_value = ref4[0]
+   end
+ end
+
+ end
   defk map_step_2para_1resp_kernel(d_array, d_result, step,  par1, par2,size,f) do
+
+
     #var globalId int = blockDim.x * ( gridDim.x * blockIdx.y + blockIdx.x ) + threadIdx.x
     globalId = threadIdx.x + blockIdx.x * blockDim.x
     id  = step * globalId
@@ -145,12 +148,9 @@ PolyHok.defmodule NN do
   def map_step_2para_1resp(d_array,step, par1, par2, size, f) do
     type = PolyHok.get_type_gnx(d_array)
 
-    distances_device = PolyHok.new_gnx(1,size, type)
-    #PolyHok.spawn(&NN.map_step_2para_1resp_kernel/7,{size,1,1},{1,1,1},[d_array,distances_device,step,par1,par2,size,f])
-    block_size = 128
-    nBlocks = floor ((size + block_size - 1) / block_size)
-    PolyHok.spawn(&NN.map_step_2para_1resp_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array,distances_device,step,par1,par2,size,f])
-    distances_device
+      distances_device = PolyHok.new_gnx(1,size, type)
+      PolyHok.spawn(&NN.map_step_2para_1resp_kernel/7,{size,1,1},{1,1,1},[d_array,distances_device,step,par1,par2,size,f])
+      distances_device
   end
   defd euclid(d_locations, lat, lng) do
     return sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
@@ -160,36 +160,43 @@ PolyHok.defmodule NN do
   defd menor(x,y) do
     if (x<y) do
       x
-    else
-      y
+     else
+       y
+     end
     end
-  end
 end
+
 
 [arg] = System.argv()
 
 size = String.to_integer(arg)
 
-:rand.seed(:exsss, {123, 123, 123})
-
 data_set_host = DataSet.gen_data_set_nx_double(size)
+
 #data_set_host = Nx.tensor(DataSet.gen_data_set(size),  type: {:f,32} )
 
-IO.inspect data_set_host
+#IO.inspect data_set_host
+
+#IO.inspect data_set_host
 
 prev = System.monotonic_time()
 
-_r = PolyHok.new_gnx(data_set_host)
-    |> NN.map_step_2para_1resp(2,0.0,0.0,size, &NN.euclid/3)
-    #|> NN.reduce(50000.0,&NN.menor/2)
-    |> PolyHok.get_gnx
-    |> IO.inspect
+_r= PolyHok.new_gnx(data_set_host)
+|> NN.map_step_2para_1resp(2,0.0,0.0,size, &NN.euclid/3)
+|> NN.reduce(50000.0,&NN.menor/2)
+|> PolyHok.get_gnx
+#      |> IO.inspect
+
+
 
 next = System.monotonic_time()
 IO.puts "PolyHok\t#{size}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
 #result_elixir = Enum.reverse(NN.euclid_seq(list_data_set,0.0,0.0))
 
+
+
 #IO.puts("NN = #{nn[1]}")
+
 
 #IO.inspect (Enum.reduce(result_elixir,0, fn (x,y)-> if y == 0 do x else if x<y do x else y end end end))

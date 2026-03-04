@@ -73,17 +73,17 @@ defmodule Main do
           oy = 0.0
           ox = (x - width/2)
           oy = (y - width/2)
-        
+
           r = 0.0
           g = 0.0
           b = 0.0
-        
+
           maxz = -99999.0
-        
+
           for i in range(0, 20) do
-        
+
             sphereRadius = spheres[i * 7 + 3]
-        
+
             dx = ox - spheres[i * 7 + 4]
             dy = oy - spheres[i * 7 + 5]
             n = 0.0
@@ -97,7 +97,7 @@ defmodule Main do
               t = -99999.0
               n = 0.0
             end
-        
+
             if t > maxz do
               fscale = n
               r = spheres[i * 7 + 0] * fscale
@@ -106,17 +106,17 @@ defmodule Main do
               maxz = t
             end
           end
-        
+
           image[0] = r * 255
           image[1] = g * 255
           image[2] = b * 255
           image[3] = 255
-        
+
         end
-        
+
 
         Ske.map(ref_image, fun_ray, [], dim: :two, return: false, coord: true)
-      
+
         image = PolyHok.get_gnx(ref_image)
 
         next = System.monotonic_time()
@@ -127,7 +127,7 @@ defmodule Main do
 
 
 
-    
+
   end
 end
 

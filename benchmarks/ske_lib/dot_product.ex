@@ -5,7 +5,7 @@ require Integer
 
 PolyHok.defmodule DP do
   include CAS
-  
+
   def replicate(n, x), do: (for _ <- 1..n, do: x)
   def rep_change(n,x), do: rep_pos(n,x)
   def rep_pos(0,_x), do: []
@@ -43,7 +43,7 @@ PolyHok.defmodule DP do
         <<b2::binary, b::float-little-32>>
     )
   end
-  
+
   defp gen_nx_f(size,ref), do:  %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,size}, names: [nil,nil]}
 end
 

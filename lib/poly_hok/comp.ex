@@ -1,11 +1,11 @@
 require PolyHok
 
 PolyHok.defmodule Comp do
-    
+
     defmacro gpu_for({:<-,_, [var1, {:..,_, [_b1, e1]}]}, do: body) do
       quote do: Comp.map_coord(  unquote(e1),
                                 PolyHok.clo (fn (unquote(var1)) -> (unquote body) end))
-      
+
     end
     defmacro gpu_for({:<-, _ ,[var,tensor]},do: b)  do
       quote do: Comp.map(unquote(tensor), PolyHok.clo (fn (unquote(var)) -> (unquote b) end))
@@ -22,6 +22,7 @@ PolyHok.defmodule Comp do
 end
     def find_return_type_closure({:closure,_name,ast,_free,args}) do
       types_free = JIT.infer_types_actual_parameters(args)
+      {ast,_funs} =ast
       {:fn, _, [{:->, _ , [para,_body]}] } = ast
       extra_size = length(para) - length(args)
       extra_types = replicate(extra_size,:none)
@@ -35,8 +36,8 @@ end
         :double -> {:f,64}
         x -> raise "Expression in comprehension has type #{x} which is not suported."
       end
-      
-     
+
+
     end
     defp replicate(0,_x), do: []
     defp replicate(n,v), do: [ v | replicate(n-1,v) ]
@@ -47,7 +48,7 @@ end
         size = Tuple.product(shape)
         threadsPerBlock = 128;
         numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
-    
+
         PolyHok.spawn(&Comp.map_ker/4,
                   {numberOfBlocks,1,1},
                   {threadsPerBlock,1,1},
@@ -57,7 +58,7 @@ end
       defk map_ker(a1,a2,size,f) do
         index = blockIdx.x * blockDim.x + threadIdx.x
         stride = blockDim.x * gridDim.x
-  
+
         for i in range(index,size,stride) do
               a2[i] = f(a1[i])
         end
@@ -68,10 +69,10 @@ end
         type = find_return_type_closure(f)
         IO.inspect type
         result_gpu = PolyHok.new_gnx(shape,type)
-        
+
         threadsPerBlock = 128;
         numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
-    
+
         PolyHok.spawn(&Comp.map_coord_ker/3,
                   {numberOfBlocks,1,1},
                   {threadsPerBlock,1,1},
@@ -81,7 +82,7 @@ end
       defk map_coord_ker(a1,size,f) do
         index = blockIdx.x * blockDim.x + threadIdx.x
         stride = blockDim.x * gridDim.x
-  
+
         for i in range(index,size,stride) do
               a1[i] = f(i)
         end
@@ -89,7 +90,7 @@ end
       defk map2xy2D_kernel(resp,size,f) do
         row  = blockIdx.y * blockDim.y + threadIdx.y
         col = blockIdx.x * blockDim.x + threadIdx.x
-      
+
         if(col < size && row < size) do
           resp[row * size + col] = f(row,col)
         end
@@ -98,15 +99,15 @@ end
           size = size1
           type = find_return_type_closure(f)
           result_gpu = PolyHok.new_gnx(size1,size2,type)
-          
+
           block_size = 16
          grid_rows = trunc ((size + block_size - 1) / block_size)
         grid_cols = trunc ((size + block_size - 1) / block_size)
-      
+
           PolyHok.spawn(&Comp.map2xy2D_kernel/3,{grid_cols,grid_rows,1},{block_size,block_size,1},[result_gpu,size,f])
-      
+
           r_gpu = PolyHok.get_gnx(result_gpu)
           r_gpu
       end
-      
+
 end

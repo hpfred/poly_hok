@@ -97,7 +97,7 @@ defmodule Main do
 
   def main do
     start = System.monotonic_time()
-    
+
     :rand.seed(:exsss, {123, 123, 123})
 
     use Ske
@@ -115,7 +115,7 @@ defmodule Main do
     ref_image = PolyHok.new_gnx({width, height, 4},{:s,32})
 
     Ske.map(ref_image, &RayTracer.raytracing/5, [width,ref_sphere], [dim: :two, return: false, coord: true])
-  
+
     image = PolyHok.get_gnx(ref_image)
     #IO.inspect(image, limit: :infinity)
 
