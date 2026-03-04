@@ -47,7 +47,7 @@ size_body = 6
 :rand.seed(:exsss, {123, 123, 123})
 
 h_buf = PolyHok.new_nx_from_function(nBodies,size_body,{:f,64},fn -> :rand.uniform() end )
-IO.inspect(h_buf)
+#IO.inspect(h_buf)
 
 prev = System.monotonic_time()
 
