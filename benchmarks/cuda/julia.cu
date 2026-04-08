@@ -42,7 +42,7 @@ void genBpm(int height, int width, float *pixelbuffer_f)
 {
     uint32_t pixelbytesize = height * width * _bitsperpixel / 8;
     uint32_t _filesize = pixelbytesize + sizeof(bitmap);
-    FILE *fp = fopen("julia.bmp", "wb");
+    FILE *fp = fopen("julia_cuda.bmp", "wb");
     bitmap *pbitmap = (bitmap *)calloc(1, sizeof(bitmap));
 
     int buffer_size = height * width * 4;
@@ -174,7 +174,9 @@ int main(int argc, char const *argv[])
 
     printf("CUDA\t%d\t%3.1f\n", usr_value, time);
 
-    // genBpm(height,width,h_pixelbuffer);
+    //float h_pixelbuffer2 = (float)h_pixelbuffer;
+    //float *h_pixelbuffer3 = &h_pixelbuffer2;
+    //genBpm(height,width,h_pixelbuffer3);
 
     free(h_pixelbuffer);
     cudaFree(d_pixelbuffer);

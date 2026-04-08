@@ -71,16 +71,16 @@ prev = System.monotonic_time()
 ref1 = PolyHok.new_gnx(vet1)
 #ref1 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end )
 ref2 = PolyHok.new_gnx(vet2)
-IO.inspect(PolyHok.get_gnx(ref1))
-IO.inspect(PolyHok.get_gnx(ref2))
+#IO.inspect(PolyHok.get_gnx(ref1))
+#IO.inspect(PolyHok.get_gnx(ref2))
 
-result = ref1
+_result = ref1
     |> Ske.map(ref2, PolyHok.phok fn (a,b) -> a * b end)
-IO.inspect(PolyHok.get_gnx(result))
-_result = result
+#IO.inspect(PolyHok.get_gnx(result))
+#_result = result
     |> Ske.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
     |> PolyHok.get_gnx
-    |> IO.inspect
+    #|> IO.inspect
 
 next = System.monotonic_time()
 

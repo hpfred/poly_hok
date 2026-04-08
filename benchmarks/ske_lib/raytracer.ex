@@ -104,7 +104,7 @@ defmodule Main do
 
     sphereList = Nx.tensor([sphereMaker2(Main.spheres,Main.dim)], type: {:f,32})
 
-    IO.inspect(sphereList)
+    #IO.inspect(sphereList)
 
     width = Main.dim
     height = width
