@@ -1,5 +1,5 @@
 {application,poly_hok,
-             [{config_mtime,1753986152},
+             [{config_mtime,1775691014},
               {optional_applications,[]},
               {applications,[kernel,stdlib,elixir,logger,matrex,nx]},
               {description,"poly_hok"},

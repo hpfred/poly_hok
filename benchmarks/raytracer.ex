@@ -79,9 +79,9 @@ defk mapxy_2D_step_2_para_no_resp_kernel(d_array,  step, par1, par2,size,f) do
   y = threadIdx.y + blockIdx.y * blockDim.y
   offset = x + y * blockDim.x * gridDim.x
 
-   id  = step * offset
   #f(id,id)
   if (offset < (size*size)) do
+    id  = step * offset
     f(d_array+id,par1,par2,x,y)
   end
 end
@@ -157,6 +157,7 @@ defmodule Main do
     end
 
     def main do
+        :rand.seed(:exsss, {123, 123, 123})
 
         sphereList = Nx.tensor([sphereMaker2(Main.spheres,Main.dim)], type: {:f,32})
 

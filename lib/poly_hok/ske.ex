@@ -731,6 +731,7 @@ PolyHok.defmodule Ske do
       id = stride*step
 
       ret[id] = f(d_array[id], par1, par2, x, y)
+      #ret[id] = f(d_array[id], par1, par2, idX, idY)
     end
   end
   def map_2para_coord_2D_resp(d_array, par1, par2, f) do
