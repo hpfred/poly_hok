@@ -58,10 +58,10 @@ n = String.to_integer(arg)
 
 :rand.seed(:exsss, {123, 123, 123})
 
-#vet1 = DP.new_dataset_nx_a(n)
-vet1 = Nx.tensor(Enum.to_list(1..(n)), type: :f32)
-#vet2 = DP.new_dataset_nx_b(n)
-vet2 = Nx.tensor(Enum.to_list(n+1..(n+n)), type: :f32)
+vet1 = DP.new_dataset_nx_a(n)
+#vet1 = Nx.tensor(Enum.to_list(1..(n)), type: :f32)
+vet2 = DP.new_dataset_nx_b(n)
+#vet2 = Nx.tensor(Enum.to_list(n+1..(n+n)), type: :f32)
 
 #IO.inspect(vet1)
 #IO.inspect(vet2)
@@ -83,5 +83,6 @@ _result = ref1
     #|> IO.inspect
 
 next = System.monotonic_time()
+
 
 IO.puts "PolyHok\t#{n}\tTotal: #{System.convert_time_unit(next-start,:native,:millisecond)}\tGPU: #{System.convert_time_unit(next-prev,:native,:millisecond)}"

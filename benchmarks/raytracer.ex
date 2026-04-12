@@ -25,9 +25,6 @@ PolyHok.defmodule RayTracer do
 
 
 defd raytracing(image, width,  spheres ,x,y) do
-
-
-
   ox = 0.0
   oy = 0.0
   ox = (x - width/2)
@@ -40,7 +37,6 @@ defd raytracing(image, width,  spheres ,x,y) do
   maxz = -99999.0
 
   for i in range(0, 20) do
-
     sphereRadius = spheres[i * 7 + 3]
 
     dx = ox - spheres[i * 7 + 4]
@@ -70,25 +66,31 @@ defd raytracing(image, width,  spheres ,x,y) do
   image[1] = g * 255
   image[2] = b * 255
   image[3] = 255
-
 end
 
-defk mapxy_2D_step_2_para_no_resp_kernel(d_array,  step, par1, par2,size,f) do
-
+defk mapxy_2D_step_2_para_no_resp_kernel(d_array, step, par1, par2, size, f) do
   x = threadIdx.x + blockIdx.x * blockDim.x
   y = threadIdx.y + blockIdx.y * blockDim.y
   offset = x + y * blockDim.x * gridDim.x
 
+  id  = step * offset
   #f(id,id)
   if (offset < (size*size)) do
-    id  = step * offset
     f(d_array+id,par1,par2,x,y)
   end
 end
-def mapxy_2D_para_no_resp(d_array,  step,par1, par2, size, f) do
-  PolyHok.spawn(&RayTracer.mapxy_2D_step_2_para_no_resp_kernel/6,{size,size,1},{1,1,1},[d_array,step,par1,par2,size,f])
-   # PolyHok.spawn(&RayTracer.mapxy_2D_step_2_para_no_resp_kernel/6,{trunc(size/16),trunc(size/16),1},{16,16,1},[d_array,step,par1,par2,size,f])
-    d_array
+def mapxy_2D_para_no_resp(d_array, par1, par2, f) do
+  {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array) do
+    {l,c} -> {l,c,1}
+    {l,c,step} -> {l,c,step}
+    x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+  end
+  block_size = 16
+  grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+  grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+
+  PolyHok.spawn(&RayTracer.mapxy_2D_step_2_para_no_resp_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,step,par1,par2,sizeX,f])
+  d_array
 end
 
 end
@@ -113,8 +115,8 @@ defmodule Main do
 
     def spherePrinter([]) do
       File.write!("spheregpu.txt", "done\n", [:append])
-
     end
+
     def spherePrinter([ r, g, b, _radius, _x, _y, _z | list]) do
       File.write!("spheregpu.txt", "\t r: #{r}", [:append])
       File.write!("spheregpu.txt", "\t g: #{g}", [:append])
@@ -134,8 +136,8 @@ defmodule Main do
         |> Matrex.set( 1, max * 7 + 6, Main.rnd(Main.dim) - Main.dim/2) #y
         |> Matrex.set( 1, max * 7 + 7, Main.rnd(256) - 128) #z
     end
-    def sphereMaker(spheres, n, max) do
 
+    def sphereMaker(spheres, n, max) do
       Matrex.set(spheres, 1, n * 7 + 1, Main.rnd(1)) #r
       |> Matrex.set( 1, (n - 1) * 7 + 2, Main.rnd(1)) #g
       |> Matrex.set( 1, (n - 1) * 7 + 3, Main.rnd(1)) #b
@@ -151,9 +153,9 @@ defmodule Main do
       d
     end
     def spheres do
-     # {s, _} = Integer.parse(Enum.at(System.argv, 1))
-     # s
-     20
+      # {s, _} = Integer.parse(Enum.at(System.argv, 1))
+      # s
+      20
     end
 
     def main do
@@ -170,11 +172,12 @@ defmodule Main do
         prev = System.monotonic_time()
 
         ref_sphere = PolyHok.new_gnx(sphereList)
-        ref_image = PolyHok.new_gnx(1,width * height  * 4,{:s,32})
+        #ref_image = PolyHok.new_gnx(1,width * height  * 4,{:s,32})
+        ref_image = PolyHok.new_gnx({width, height, 4},{:s,32})
 
-        RayTracer.mapxy_2D_para_no_resp(ref_image, 4,width, ref_sphere, width, &RayTracer.raytracing/5)
+        RayTracer.mapxy_2D_para_no_resp(ref_image, width, ref_sphere, &RayTracer.raytracing/5)
 
-       # PolyHok.spawn_jit(&RayTracer.raytracing/4,{trunc(width/16),trunc(height/16),1},{16,16,1},[width, height, refSphere, refImag])
+        #PolyHok.spawn_jit(&RayTracer.raytracing/4,{trunc(width/16),trunc(height/16),1},{16,16,1},[width, height, refSphere, refImag])
 
         image = PolyHok.get_gnx(ref_image)
 

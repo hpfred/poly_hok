@@ -10,8 +10,8 @@ include CAS
       a3[id] = f(a1[id],a2[id])
     end
   end
-  def map2(t1,t2,func) do
 
+  def map2(t1,t2,func) do
     {l,c} = PolyHok.get_shape_gnx(t1)
     type = PolyHok.get_type_gnx(t2)
      size = l*c
@@ -25,8 +25,8 @@ include CAS
 
       result_gpu
   end
-  def reduce(ref, initial, f) do
 
+  def reduce(ref, initial, f) do
      {l,c} = PolyHok.get_shape_gnx(ref)
      type = PolyHok.get_type_gnx(ref)
      size = l*c
@@ -38,8 +38,8 @@ include CAS
       PolyHok.spawn(&DP.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial,f, size])
       result_gpu
   end
-  defk reduce_kernel(a, ref4, initial,f,n) do
 
+  defk reduce_kernel(a, ref4, initial,f,n) do
     __shared__ cache[256]
 
     tid = threadIdx.x + blockIdx.x * blockDim.x;
@@ -73,8 +73,8 @@ include CAS
       current_value = ref4[0]
     end
   end
-
   end
+
   def replicate(n, x), do: (for _ <- 1..n, do: x)
   def rep_change(n,x), do: rep_pos(n,x)
   def rep_pos(0,_x), do: []
@@ -83,8 +83,8 @@ include CAS
   def rep_neg(n,x), do:  [-x | rep_pos(n-1,x)]
   def new_dataset_nx_a(n), do: gen_nx_f(n,a_gen_new_dataset_nx_f(div(n,2),<<>>,<<>>))
   defp a_gen_new_dataset_nx_f(0,a1,a2), do: <<a1::binary,a2::binary>>
-  defp a_gen_new_dataset_nx_f(size, a1,a2) do
 
+  defp a_gen_new_dataset_nx_f(size, a1,a2) do
     {ax,ay} = if (rem(size,2) == 0) do
                 v = :rand.uniform(100)/1
                 {v,-v}
@@ -101,8 +101,8 @@ include CAS
   end
   def new_dataset_nx_b(n), do: gen_nx_f(n,b_gen_new_dataset_nx_f(div(n,2),<<>>,<<>>))
   defp b_gen_new_dataset_nx_f(0,b1,b2), do: <<b1::binary,b2::binary>>
-  defp b_gen_new_dataset_nx_f(size, b1,b2) do
 
+  defp b_gen_new_dataset_nx_f(size, b1,b2) do
     b = :rand.uniform(5)/1
 
     b_gen_new_dataset_nx_f(
@@ -113,12 +113,13 @@ include CAS
   end
   defp gen_nx_f(size,ref), do:  %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,size}, names: [nil,nil]}
 end
-#PolyHok.include [DP]
 
+#PolyHok.include [DP]
 [arg] = System.argv()
 
 n = String.to_integer(arg)
 
+:rand.seed(:exsss, {123, 123, 123})
 
 #{vet1,_} = Nx.Random.uniform(Nx.Random.key(1), shape: {1, n}, type: :f32)
 #{vet2,_} = Nx.Random.uniform(Nx.Random.key(1), shape: {1, n}, type: :f32)
@@ -133,7 +134,10 @@ n = String.to_integer(arg)
 #vet2 = PolyHok.new_nx_from_function(1,n,{:f,32},fn  -> 1 end)
 
 vet1 = DP.new_dataset_nx_a(n)
+#vet1 = Nx.tensor(Enum.to_list(1..(n)), type: :f32)
 vet2 = DP.new_dataset_nx_b(n)
+#vet2 = Nx.tensor(Enum.to_list(n+1..(n+n)), type: :f32)
+
 
 #vet2 = Nx.tensor(DP.rep_change(n,1), type: {:f,32})
 #vet1 = Nx.iota({1,n}, type: :f32)
@@ -159,7 +163,7 @@ _result = ref1
     |> DP.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
     |> PolyHok.get_gnx
 
-#IO.inspect result
+I#O.inspect result
 
 next = System.monotonic_time()
 

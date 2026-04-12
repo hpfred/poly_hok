@@ -31,7 +31,7 @@ defmodule DataSet do
         lat = (7 + Enum.random(0..63)) + :rand.uniform()
         lon = (Enum.random(0..358)) + :rand.uniform()
         gen_bin_data_double(
-                size - 1,
+            size - 1,
             <<accumulator::binary, lat::float-little-64, lon::float-little-64>>
         )
     end
@@ -109,7 +109,7 @@ size = String.to_integer(arg)
 data_set_host = DataSet.gen_data_set_nx_double(size)
 #data_set_host = Nx.tensor(DataSet.gen_data_set(size),  type: {:f,32} )
 
-IO.inspect data_set_host
+#IO.inspect data_set_host
 
 prev = System.monotonic_time()
 

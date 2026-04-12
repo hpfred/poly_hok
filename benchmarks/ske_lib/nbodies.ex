@@ -41,7 +41,7 @@ use Ske
 user_value = String.to_integer(arg)
 
 nBodies = user_value #3000;
-IO.puts(nBodies)
+#IO.puts(nBodies)
 size_body = 6
 
 :rand.seed(:exsss, {123, 123, 123})

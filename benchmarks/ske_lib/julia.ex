@@ -42,7 +42,7 @@ PolyHok.defmodule Julia do
     return 1
   end
   defd julia_function(ptr,dim,x,y) do
-
+    ## offset?
     juliaValue = julia(x,y,dim)
 
     ptr[0] = 255 * juliaValue;

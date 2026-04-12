@@ -267,6 +267,9 @@ PolyHok.defmodule Ske do
   end
   end
 
+
+##-----------------------------------------------------------------
+## AQUI MAP NÃO CONFIGURAVEL -- arrumar o que precisa e tirar esse
   def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func, options) do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
 
@@ -486,6 +489,7 @@ PolyHok.defmodule Ske do
       f(d_array+id,par1,x,y)
     end
   end
+  @spec map_1para_coord_2D(any(), any(), any()) :: none()
   def map_1para_coord_2D(d_array, par1, f) do
     {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array) do
                             {l,c} -> {l,c,1}
@@ -700,8 +704,11 @@ PolyHok.defmodule Ske do
     #if (stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
+      ## Confirmar se aqui precisa esse calculo, ou se pode mesmo só usar id
+      ## Quase certeza que um teste que fiz dava errado usando só id em alguns casos, e esse era o bugfix
 
       f(d_array+id,par1,par2,x,y)
+      #f(d_array+id,par1,par2,idX,idY)
     end
   end
   def map_2para_coord_2D(d_array, par1, par2, f) do
