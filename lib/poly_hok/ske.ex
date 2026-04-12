@@ -20,6 +20,9 @@ PolyHok.defmodule Ske do
   include CAS_Poly
   #include CAS_Double
 
+## --------------------------------------------------------------------------------------------------------------------------------------------------------
+## REDUCE--------------------------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------------------------------------------------
   def reduce(ref, initial, f) do
     #IO.inspect(PolyHok.get_gnx(ref))
     shape = PolyHok.get_shape_gnx(ref)
@@ -150,38 +153,82 @@ PolyHok.defmodule Ske do
     end
   end
 
+## MAP--------------------------------------------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+## SELECT : 1 GNX : 0 PARA
   @defaults %{coord: false, return: true, dim: :one}
+  def map(a,b,c,options \\[])
+  def map({:nx, type, shape, name , ref}, func, [], options )do
+    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+  case dim do
+    :one ->   if (not coord && not return )do
+                map_0para_1D({:nx, type, shape, name, ref}, func)
+
+              else if (not coord && return) do
+                map_0para_1D_resp({:nx, type, shape, name, ref}, func)
+
+              else if (coord && not return) do
+                map_0para_coord_1D({:nx, type, shape, name, ref}, func)
+
+              else if (coord && return) do
+                map_0para_coord_1D_resp({:nx, type, shape, name, ref}, func)
+              end
+              end
+              end
+              end
+
+     :two ->  if (not coord && not return) do
+                map_0para_2D({:nx, type, shape, name, ref}, func)
+
+              else if (not coord && return) do
+                map_0para_2D_resp({:nx, type, shape, name, ref}, func)
+
+              else if (coord && not return) do
+                map_0para_coord_2D({:nx, type, shape, name, ref},  func)
+
+              else if (coord && return) do
+                map_0para_coord_2D_resp({:nx, type, shape, name, ref}, func)
+              end
+              end
+              end
+              end
+
+  end
+  end
+
+## SELECT : 1 GNX : 1 PARA
   def map(a,b,c,options \\[])
   def map({:nx, type, shape, name , ref}, func, [par1], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
     :one ->   if (not coord && not return )do
-                map_1para_1D({:nx, type, shape, name , ref}, par1, func)
+                map_1para_1D({:nx, type, shape, name, ref}, par1, func)
 
               else if (not coord && return) do
                 map_1para_1D_resp({:nx, type, shape, name , ref}, par1, func)
 
               else if (coord && not return) do
-                map_1para_coord_1D({:nx, type, shape, name , ref},  par1, func)
+                map_1para_coord_1D({:nx, type, shape, name, ref}, par1, func)
 
               else if (coord && return) do
-                map_1para_coord_1D_resp({:nx, type, shape, name , ref},  par1, func)
+                map_1para_coord_1D_resp({:nx, type, shape, name, ref}, par1, func)
               end
               end
               end
               end
 
      :two ->  if (not coord && not return) do
-                map_1para_2D({:nx, type, shape, name , ref},  par1, func)
+                map_1para_2D({:nx, type, shape, name, ref}, par1, func)
 
               else if (not coord && return) do
-                map_1para_2D_resp({:nx, type, shape, name , ref},  par1, func)
+                map_1para_2D_resp({:nx, type, shape, name, ref}, par1, func)
 
               else if (coord && not return) do
-                map_1para_coord_2D({:nx, type, shape, name , ref}, par1,  func)
+                map_1para_coord_2D({:nx, type, shape, name, ref}, par1, func)
 
               else if (coord && return) do
-                map_1para_coord_2D_resp({:nx, type, shape, name , ref},  par1, func)
+                map_1para_coord_2D_resp({:nx, type, shape, name, ref}, par1, func)
               end
               end
               end
@@ -190,37 +237,37 @@ PolyHok.defmodule Ske do
   end
   end
 
+## SELECT : 1 GNX : 2 PARA
   def map({:nx, type, shape, name , ref}, func, [par1,par2], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
     :one ->   if (not coord && not return )do
-                #IO.puts("teste")
-                map_2para_1D({:nx, type, shape, name , ref},  par1, par2, func)
+                map_2para_1D({:nx, type, shape, name, ref}, par1, par2, func)
 
               else if (not coord && return) do
-                map_2para_1D_resp({:nx, type, shape, name , ref},  par1, par2, func)
+                map_2para_1D_resp({:nx, type, shape, name, ref}, par1, par2, func)
 
               else if (coord && not return) do
-                map_2para_coord_1D({:nx, type, shape, name , ref},  par1, par2, func)
+                map_2para_coord_1D({:nx, type, shape, name, ref}, par1, par2, func)
 
               else if (coord && return) do
-                map_2para_coord_1D_resp({:nx, type, shape, name , ref},  par1, par2, func)
+                map_2para_coord_1D_resp({:nx, type, shape, name, ref}, par1, par2, func)
               end
               end
               end
               end
 
      :two ->  if (not coord && not return) do
-                map_2para_2D({:nx, type, shape, name , ref},  par1, par2, func)
+                map_2para_2D({:nx, type, shape, name, ref}, par1, par2, func)
 
               else if (not coord && return) do
-                map_2para_2D_resp({:nx, type, shape, name , ref},  par1, par2, func)
+                map_2para_2D_resp({:nx, type, shape, name, ref}, par1, par2, func)
 
               else if (coord && not return) do
-                map_2para_coord_2D({:nx, type, shape, name , ref}, par1, par2, func)
+                map_2para_coord_2D({:nx, type, shape, name, ref}, par1, par2, func)
 
               else if (coord && return) do
-                map_2para_coord_2D_resp({:nx, type, shape, name , ref},  par1, par2, func)
+                map_2para_coord_2D_resp({:nx, type, shape, name, ref}, par1, par2, func)
               end
               end
               end
@@ -229,36 +276,37 @@ PolyHok.defmodule Ske do
   end
   end
 
+## SELECT : 1 GNX : 3 PARA
   def map({:nx, type, shape, name , ref}, func, [par1,par2,par3], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
     :one ->   if (not coord && not return )do
-                map_3para_1D({:nx, type, shape, name , ref}, par1, par2, par3, func)
+                map_3para_1D({:nx, type, shape, name, ref}, par1, par2, par3, func)
 
               else if (not coord && return) do
-                map_3para_1D_resp({:nx, type, shape, name , ref}, par1, par2, par3, func)
+                map_3para_1D_resp({:nx, type, shape, name, ref}, par1, par2, par3, func)
 
               else if (coord && not return) do
-                map_3para_coord_1D({:nx, type, shape, name , ref}, par1, par2, par3, func)
+                map_3para_coord_1D({:nx, type, shape, name, ref}, par1, par2, par3, func)
 
               else if (coord && return) do
-                map_3para_coord_1D_resp({:nx, type, shape, name , ref}, par1, par2, par3, func)
+                map_3para_coord_1D_resp({:nx, type, shape, name, ref}, par1, par2, par3, func)
               end
               end
               end
               end
 
      :two ->  if (not coord && not return) do
-                map_3para_2D({:nx, type, shape, name , ref}, par1, par2, par3, func)
+                map_3para_2D({:nx, type, shape, name, ref}, par1, par2, par3, func)
 
               else if (not coord && return) do
-                map_3para_2D_resp({:nx, type, shape, name , ref}, par1, par2, par3, func)
+                map_3para_2D_resp({:nx, type, shape, name, ref}, par1, par2, par3, func)
 
               else if (coord && not return) do
-                map_3para_coord_2D({:nx, type, shape, name , ref}, par1, par2, par3, func)
+                map_3para_coord_2D({:nx, type, shape, name, ref}, par1, par2, par3, func)
 
               else if (coord && return) do
-                map_3para_coord_2D_resp({:nx, type, shape, name , ref}, par1, par2, par3, func)
+                map_3para_coord_2D_resp({:nx, type, shape, name, ref}, par1, par2, par3, func)
               end
               end
               end
@@ -267,6 +315,315 @@ PolyHok.defmodule Ske do
   end
   end
 
+## SELECT : 2GNX : 0 PARA
+  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [], options )do
+    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+  case dim do
+#    :one ->   if (not coord && not return )do
+#                map2_0para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+#
+#              else if (not coord && return) do
+#                map2_0para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+#
+#              else if (coord && not return) do
+#                map2_0para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+#
+#              else if (coord && return) do
+#                map2_0para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+#              end
+#              end
+#              end
+#              end
+#
+     :two ->  #if (not coord && not return) do
+#                map2_0para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+#
+#              else if (not coord && return) do
+#                map2_0para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+#
+              #else if (coord && not return) do
+              if (coord && not return) do
+                map2_0para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+
+              else if (coord && return) do
+                map2_0para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+              end
+              end
+#              end
+#              end
+#
+  end
+  end
+
+  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1], options )do
+    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+  case dim do
+#    :one ->   if (not coord && not return )do
+#                map2_1para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+#
+#              else if (not coord && return) do
+#                map2_1para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+#
+#              else if (coord && not return) do
+#                map2_1para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+#
+#              else if (coord && return) do
+#                map2_1para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+#              end
+#              end
+#              end
+#              end
+#
+     :two ->  #if (not coord && not return) do
+#                map2_1para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+#
+#              else if (not coord && return) do
+#                map2_1para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+#
+              #else if (coord && not return) do
+              if (coord && not return) do
+                map2_1para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+
+              else if (coord && return) do
+                map2_1para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+              end
+              end
+#              end
+#              end
+#
+  end
+  end
+
+  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1, par2], options )do
+    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+  case dim do
+    :one ->   if (not coord && not return )do
+                map2_2para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+#
+#              else if (not coord && return) do
+#                map2_2para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+#
+#              else if (coord && not return) do
+#                map2_2para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+#
+#              else if (coord && return) do
+#                map2_2para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+#              end
+#              end
+#              end
+              end
+
+     :two ->  #if (not coord && not return) do
+#                map2_2para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+#
+#              else if (not coord && return) do
+#                map2_2para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+#
+              #else if (coord && not return) do
+              if (coord && not return) do
+                map2_2para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+
+              else if (coord && return) do
+                map2_2para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+              end
+              end
+#              end
+#              end
+#
+  end
+  end
+
+  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1, par2, par3], options )do
+    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+  case dim do
+#    :one ->   if (not coord && not return )do
+#                map2_3para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+#
+#              else if (not coord && return) do
+#                map2_3para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+#
+#              else if (coord && not return) do
+#                map2_3para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+#
+#              else if (coord && return) do
+#                map2_3para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+#              end
+#              end
+#              end
+#              end
+#
+     :two ->  #if (not coord && not return) do
+#                map2_3para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+#
+#              else if (not coord && return) do
+#                map2_3para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+#
+              #else if (coord && not return) do
+              if (coord && not return) do
+                map2_3para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+
+              else if (coord && return) do
+                map2_3para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+              end
+              end
+#              end
+#              end
+#
+  end
+  end
+
+## 3 GNX
+#  def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [], options )do
+#    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+#  case dim do
+#    :one ->   if (not coord && not return )do
+#                map3_0para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+#
+#              else if (not coord && return) do
+#                map3_0para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+#
+#              else if (coord && not return) do
+#                map3_0para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+#
+#              else if (coord && return) do
+#                map3_0para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+#              end
+#              end
+#              end
+#              end
+#
+#   :two ->  #if (not coord && not return) do
+#                map3_0para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+#
+#              else if (not coord && return) do
+#                map3_0para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+#
+#            #else if (coord && not return) do
+#            if (coord && not return) do
+#              map3_0para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+#
+#              else if (coord && return) do
+#                map3_0para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+#            end
+#              end
+#              end
+#              end
+#  end
+#  end
+
+  def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [par1], options )do
+    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+  case dim do
+#    :one ->   if (not coord && not return )do
+#                map3_1para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+#
+#              else if (not coord && return) do
+#                map3_1para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+#
+#              else if (coord && not return) do
+#                map3_1para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+#
+#              else if (coord && return) do
+#                map3_1para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+#              end
+#              end
+#              end
+#              end
+#
+     :two ->  #if (not coord && not return) do
+#                map3_1para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+#
+#              else if (not coord && return) do
+#                map3_1para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+#
+              #else if (coord && not return) do
+              if (coord && not return) do
+                map3_1para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+
+#              else if (coord && return) do
+#                map3_1para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+              end
+#              end
+#              end
+#              end
+  end
+  end
+
+#  def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [par1, par2], options )do
+#    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+#  case dim do
+#    :one ->   if (not coord && not return )do
+#                map3_2para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3 , ref3}, par1, par2, func)
+#
+#              else if (not coord && return) do
+#                map3_2para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
+#
+#              else if (coord && not return) do
+#                map3_2para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
+#
+#              else if (coord && return) do
+#                map3_2para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
+#              end
+#              end
+#              end
+#              end
+#
+#   :two ->  #if (not coord && not return) do
+#                map3_2para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
+#
+#              else if (not coord && return) do
+#                map3_2para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2 , ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
+#
+#            #else if (coord && not return) do
+#            if (coord && not return) do
+#               map3_2para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
+#
+#              else if (coord && return) do
+#                map3_2para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2 , ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
+#            end
+#              end
+#              end
+#              end
+#  end
+#  end
+
+#  def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [par1], options )do
+#    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+#  case dim do
+#    :one ->   if (not coord && not return )do
+#                map3_3para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+#
+#              else if (not coord && return) do
+#                map3_3para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+#
+#              else if (coord && not return) do
+#                map3_3para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2 , ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+#
+#              else if (coord && return) do
+#                map3_3para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+#              end
+#              end
+#              end
+#              end
+#
+#   :two ->  #if (not coord && not return) do
+#                map3_3para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+#
+#              else if (not coord && return) do
+#                map3_3para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+#
+#            #else if (coord && not return) do
+#            if (coord && not return) do
+#              map3_3para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+#
+#              else if (coord && return) do
+#                map3_3para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+#            end
+#              end
+#              end
+#              end
+#  end
+#  end
 
 ##-----------------------------------------------------------------
 ## AQUI MAP NÃO CONFIGURAVEL -- arrumar o que precisa e tirar esse
@@ -322,6 +679,230 @@ PolyHok.defmodule Ske do
       result_gpu
   end
 
+## 1 GNX
+## ---------------------------------------------------------------------------------------------------------------------------------------
+
+## MAP = 1 GNX; 0 PARAMETERS; 1D;
+  defk map_0para_1D_kernel(d_array, step, size, f) do
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(id,size,stride) do
+      id = i*step
+      f(d_array[id])
+    end
+  end
+  def map_0para_1D(d_array, f) do
+    block_size =  128;
+    {l,step} = case PolyHok.get_shape_gnx(d_array) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    #size = l*step
+    size = l
+    nBlocks = floor ((size + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map_0para_1D_kernel/4,{nBlocks,1,1},{block_size,1,1},[d_array,step,size,f])
+    d_array
+  end
+## MAP = 1 GNX; 0 PARAMETERS; 1D, RETURN: TRUE;
+  defk map_0para_1D_resp_kernel(d_array, ret, step, size, f) do
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(id,size,stride) do
+      id = i*step
+      ret[id] = f(d_array[id])
+    end
+  end
+  def map_0para_1D_resp(d_array, f) do
+    block_size =  128;
+    {l,step} = case PolyHok.get_shape_gnx(d_array) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    #size = l*step
+    size = l
+    nBlocks = floor ((size + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
+
+    PolyHok.spawn(&Ske.map_0para_1D_resp_kernel/5,{nBlocks,1,1},{block_size,1,1},[d_array,ret,step,size,f])
+    ret
+  end
+## MAP = 1 GNX; 0 PARAMETERS; 1D, COORD: TRUE;
+  defk map_0para_coord_1D_kernel(d_array, step, size, f) do
+    idX = threadIdx.x + blockIdx.x * blockDim.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      f(d_array[id],idX)
+    end
+  end
+  def map_0para_coord_1D(d_array, f) do
+    {sizeX,step} =  case PolyHok.get_shape_gnx(d_array) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    #size = sizeX*step
+    size = sizeX
+
+    block_size = 16
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map_0para_coord_1D_kernel/4,{grid_rows,1,1},{block_size,block_size,1},[d_array,step,size,f])
+    d_array
+  end
+## MAP = 1 GNX; 0 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+  defk map_0para_coord_1D_resp_kernel(d_array, ret, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      ret[id] = f(d_array[id],idX)
+    end
+  end
+  def map_0para_coord_1D_resp(d_array, f) do
+    {sizeX,step} =  case PolyHok.get_shape_gnx(d_array) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    #size = sizeX*step
+    size = sizeX
+
+    block_size = 16
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
+
+    PolyHok.spawn(&Ske.map_0para_coord_1D_resp_kernel/5,{grid_rows,1,1},{block_size,block_size,1},[d_array,ret,step,size,f])
+    ret
+  end
+## MAP = 1 GNX; 0 PARAMETERS; 2D;
+  defk map_0para_2D_kernel(d_array, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if (stride < (sizeX*sizeY)) do
+    #if (stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      f(d_array[id])
+    end
+  end
+  def map_0para_2D(d_array, f) do
+    #block_size =  128;
+    {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map_0para_2D_kernel/5,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,step,sizeX,sizeY,f])
+    d_array
+  end
+## MAP = 1 GNX; 0 PARAMETERS; 2D, RETURN: TRUE;
+  defk map_0para_2D_resp_kernel(d_array, ret, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      ret[id] = f(d_array[id])
+    end
+  end
+  def map_0para_2D_resp(d_array, f) do
+    #block_size =  128;
+    {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
+
+    PolyHok.spawn(&Ske.map_0para_2D_resp_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,ret,step,sizeX,sizeY,f])
+    ret
+  end
+## MAP = 1 GNX; 0 PARAMETERS; 2D, COORD: TRUE;
+  defk map_0para_coord_2D_kernel(d_array, step, sizeX, sizeY, f) do
+    idX = threadIdx.x + blockIdx.x * blockDim.x
+    idY = threadIdx.y + blockIdx.y * blockDim.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    id  = step * stride
+    ## Aqui tenho que verificar o 'step'
+    if (stride < (sizeX*sizeY)) do
+    #if (stride < (sizeX*sizeY*step)) do
+      x = (stride - sizeY * (stride / sizeY))
+      y = stride/sizeY
+
+      f(d_array+id,x,y)
+    end
+  end
+  def map_0para_coord_2D(d_array, f) do
+    {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+
+    block_size = 16
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map_0para_coord_2D_kernel/5,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,step,sizeX,sizeY,f])
+    #PolyHok.spawn(&Ske.map_0para_coord_2D_kernel/5,{sizeX,sizeX,1},{1,1,1},[d_array,step,par1,sizeX,sizeY,f])
+    d_array
+  end
+## MAP = 1 GNX; 0 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
+  defk map_0para_coord_2D_resp_kernel(d_array, ret, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      x = (stride - sizeY * (stride / sizeY))
+      y = stride/sizeY
+      id  = step * stride
+
+      ret[id] = f(d_array[id], x, y)
+    end
+  end
+  def map_0para_coord_2D_resp(d_array, f) do
+    {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+
+    block_size = 16
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array),PolyHok.get_type(d_array))
+
+    PolyHok.spawn(&Ske.map_0para_coord_2D_resp_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,ret,step,sizeX,sizeY,f])
+    ret
+  end
+
+## MAP = 1 GNX; 1 PARAMETER; 1D;
   defk map_1para_1D_kernel(d_array, par1, step, size, f) do
     id = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
@@ -345,6 +926,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_1para_1D_kernel/5,{nBlocks,1,1},{block_size,1,1},[d_array,par1,step,size,f])
     d_array
   end
+## MAP = 1 GNX; 1 PARAMETER; 1D, RETURN: TRUE;
   defk map_1para_1D_resp_kernel(d_array, ret, par1, step, size, f) do
     id = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
@@ -369,6 +951,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_1para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,ret,par1,step,size,f])
     ret
   end
+## MAP = 1 GNX; 1 PARAMETER; 1D, COORD: TRUE;
   defk map_1para_coord_1D_kernel(d_array, par1, step, size, f) do
     idX = threadIdx.x + blockIdx.x * blockDim.x
     stride = blockDim.x * gridDim.x
@@ -393,6 +976,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_1para_coord_1D_kernel/5,{grid_rows,1,1},{block_size,block_size,1},[d_array,par1,step,size,f])
     d_array
   end
+## MAP = 1 GNX; 1 PARAMETER; 1D, COORD: TRUE, RETURN: TRUE;
   defk map_1para_coord_1D_resp_kernel(d_array, ret, par1, step, size, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
@@ -418,7 +1002,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_1para_coord_1D_resp_kernel/6,{grid_rows,1,1},{block_size,block_size,1},[d_array,ret,par1,step,size,f])
     ret
   end
-
+## MAP = 1 GNX; 1 PARAMETER; 2D;
   defk map_1para_2D_kernel(d_array, par1, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -446,6 +1030,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_1para_2D_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,par1,step,sizeX,sizeY,f])
     d_array
   end
+## MAP = 1 GNX; 1 PARAMETER; 2D, RETURN: TRUE;
   defk map_1para_2D_resp_kernel(d_array, ret, par1, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -474,6 +1059,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_1para_2D_resp_kernel/7,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,ret,par1,step,sizeX,sizeY,f])
     ret
   end
+## MAP = 1 GNX; 1 PARAMETER; 2D, COORD: TRUE;
   defk map_1para_coord_2D_kernel(d_array, step, par1, sizeX, sizeY, f) do
     idX = threadIdx.x + blockIdx.x * blockDim.x
     idY = threadIdx.y + blockIdx.y * blockDim.y
@@ -489,7 +1075,6 @@ PolyHok.defmodule Ske do
       f(d_array+id,par1,x,y)
     end
   end
-  @spec map_1para_coord_2D(any(), any(), any()) :: none()
   def map_1para_coord_2D(d_array, par1, f) do
     {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array) do
                             {l,c} -> {l,c,1}
@@ -505,6 +1090,7 @@ PolyHok.defmodule Ske do
     #PolyHok.spawn(&Ske.map_1para_coord_2D_kernel/6,{sizeX,sizeX,1},{1,1,1},[d_array,step,par1,sizeX,sizeY,f])
     d_array
   end
+## MAP = 1 GNX; 1 PARAMETER; 2D, COORD: TRUE, RETURN: TRUE;
   defk map_1para_coord_2D_resp_kernel(d_array, ret, par1, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -536,6 +1122,7 @@ PolyHok.defmodule Ske do
     ret
   end
 
+## MAP = 1 GNX; 2 PARAMETERS; 1D;
   defk map_2para_1D_kernel(d_array, step, par1, par2, size, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
@@ -560,6 +1147,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_2para_1D_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,step,par1,par2,size,f])
     d_array
   end
+## MAP = 1 GNX; 2 PARAMETERS; 1D, RETURN: TRUE;
   defk map_2para_1D_resp_kernel(d_array, ret, par1, par2, step, size, f) do
     #printf("AQUI\\n")
     id = blockIdx.x * blockDim.x + threadIdx.x
@@ -585,6 +1173,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_2para_1D_resp_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array,ret,par1,par2,step,size,f])
     ret
   end
+## MAP = 1 GNX; 2 PARAMETERS; 1D, COORD: TRUE;
   defk map_2para_coord_1D_kernel(d_array, par1, par2, step, size, f) do
     x = threadIdx.x + blockIdx.x * blockDim.x
     offset = x * blockDim.x * gridDim.x
@@ -609,6 +1198,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_2para_coord_1D_kernel/6,{grid_rows,1,1},{block_size,block_size,1},[d_array,par1,par2,step,size,f])
     d_array
   end
+## MAP = 1 GNX; 2 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
   defk map_2para_coord_1D_resp_kernel(d_array, ret, par1, par2, step, size, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
@@ -638,6 +1228,7 @@ PolyHok.defmodule Ske do
     ret
   end
 
+## MAP = 1 GNX; 2 PARAMETERS; 2D;
   defk map_2para_2D_kernel(d_array, par1, par2, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -665,6 +1256,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_2para_2D_kernel/7,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,par1,par2,step,sizeX,sizeY,f])
     d_array
   end
+## MAP = 1 GNX; 2 PARAMETERS; 2D, RETURN: TRUE;
   defk map_2para_2D_resp_kernel(d_array, ret, par1, par2, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -693,6 +1285,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_2para_2D_resp_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,ret,par1,par2,step,sizeX,sizeY,f])
     ret
   end
+## MAP = 1 GNX; 2 PARAMETERS; 2D, COORD: TRUE;
   defk map_2para_coord_2D_kernel(d_array, step, par1, par2, sizeX, sizeY, f) do
     idX = threadIdx.x + blockIdx.x * blockDim.x
     idY = threadIdx.y + blockIdx.y * blockDim.y
@@ -725,6 +1318,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_2para_coord_2D_kernel/7,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,step,par1,par2,sizeX,sizeY,f])
     d_array
   end
+## MAP = 1 GNX; 2 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
   defk map_2para_coord_2D_resp_kernel(d_array, ret, par1, par2, step, sizeX, sizeY, f) do
     idX = threadIdx.x + blockIdx.x * blockDim.x
     idY = threadIdx.y + blockIdx.y * blockDim.y
@@ -757,6 +1351,7 @@ PolyHok.defmodule Ske do
     ret
   end
 
+## MAP = 1 GNX; 3 PARAMETERS; 1D;
   defk map_3para_1D_kernel(d_array, par1, par2, par3, step, size, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
@@ -780,6 +1375,7 @@ PolyHok.defmodule Ske do
       PolyHok.spawn(&Ske.map_3para_1D_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array,par1,par2,par3,step,size,f])
       d_array
   end
+## MAP = 1 GNX; 3 PARAMETERS; 1D, RETURN: TRUE;
   defk map_3para_1D_resp_kernel(d_array, ret, par1, par2, par3, step, size, f) do
         idX = blockIdx.x * blockDim.x + threadIdx.x
         stride = blockDim.x * gridDim.x
@@ -804,6 +1400,7 @@ PolyHok.defmodule Ske do
       PolyHok.spawn(&Ske.map_3para_1D_resp_kernel/8,{nBlocks,1,1},{block_size,1,1},[d_array,ret,par1,par2,par3,step,size,f])
       ret
   end
+## MAP = 1 GNX; 3 PARAMETERS; 1D, COORD: TRUE;
   defk map_3para_coord_1D_kernel(d_array, par1, par2, par3, step, size, f) do
     idX = threadIdx.x + blockIdx.x * blockDim.x
     stride = blockDim.x * gridDim.x
@@ -831,6 +1428,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_3para_coord_1D_kernel/7,{grid_rows,1,1},{block_size,block_size,1},[d_array,par1,par2,par3,step,size,f])
     d_array
   end
+## MAP = 1 GNX; 3 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
   defk map_3para_coord_1D_resp_kernel(d_array, ret, par1, par2, par3, step, size, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
@@ -859,6 +1457,7 @@ PolyHok.defmodule Ske do
     ret
   end
 
+## MAP = 1 GNX; 3 PARAMETERS; 2D;
   defk map_3para_2D_kernel(d_array, par1, par2, par3, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -886,6 +1485,7 @@ PolyHok.defmodule Ske do
       PolyHok.spawn(&Ske.map_3para_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,par1,par2,par3,step,sizeX,sizeY,f])
       d_array
   end
+## MAP = 1 GNX; 3 PARAMETERS; 2D, RETURN: TRUE;
   defk map_3para_2D_resp_kernel(d_array, ret, par1, par2, par3, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -914,6 +1514,7 @@ PolyHok.defmodule Ske do
       PolyHok.spawn(&Ske.map_3para_2D_resp_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,ret,par1,par2,par3,step,sizeX,sizeY,f])
       ret
   end
+## MAP = 1 GNX; 3 PARAMETERS; 2D, COORD: TRUE;
   defk map_3para_coord_2D_kernel(d_array, par1, par2, par3, step, sizeX, sizeY, f) do
     idX = threadIdx.x + blockIdx.x * blockDim.x
     idY = threadIdx.y + blockIdx.y * blockDim.y
@@ -944,6 +1545,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_3para_coord_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,par1,par2,par3,step,sizeX,sizeY,f])
     d_array
   end
+## MAP = 1 GNX; 3 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
   defk map_3para_coord_2D_resp_kernel(d_array, ret, par1, par2, par3, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -976,124 +1578,49 @@ PolyHok.defmodule Ske do
     ret
   end
 
+## 2 GNX
+## ---------------------------------------------------------------------------------------------------------------------------------------
 
-  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1], options )do
-    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
-  case dim do
-#    :one ->   if (not coord && not return )do
-#                map2_1para_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-#
-#              else if (not coord && return) do
-#                map2_1para_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-#
-#              else if (coord && not return) do
-#                map2_1para_coord_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-#
-#              else if (coord && return) do
-#                map2_1para_coord_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-#              end
-#              end
-#              end
-#              end
-#
-     :two ->  #if (not coord && not return) do
-#                map2_1para_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-#
-#              else if (not coord && return) do
-#                map2_1para_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-#
-              #else if (coord && not return) do
-              if (coord && not return) do
-                map2_1para_coord_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, par1, func)
+## "X" indica os que adicionei depois, e portanto preciso testar pra confirmar que fiz corretamente
+## X MAP = 2 GNX; 0 PARAMETERS; 1D;
+  defk map2_0para_1D_kernel(d_array1, d_array2, step, size, f) do
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
 
-              else if (coord && return) do
-                map2_1para_coord_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, func)
-              end
-              end
-#              end
-#              end
-#
+    for i in range(id,size,stride) do
+      id = i*step
+      f(d_array1[id])
+    end
   end
-  end
-
-  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1, par2], options )do
-    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
-  case dim do
-    :one ->   if (not coord && not return )do
-                map2_2para_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, func)
-#
-#              else if (not coord && return) do
-#                map2_2para_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, func)
-#
-#              else if (coord && not return) do
-#                map2_2para_coord_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, func)
-#
-#              else if (coord && return) do
-#                map2_2para_coord_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, func)
-#              end
-#              end
-#              end
+  def map2_0para_1D(d_array, f) do
+    block_size =  128;
+    {l,step} = case PolyHok.get_shape_gnx(d_array) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
               end
+    #size = l*step
+    size = l
+    nBlocks = floor ((size + block_size - 1) / block_size)
 
-     :two ->  #if (not coord && not return) do
-#                map2_2para_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, func)
-#
-#              else if (not coord && return) do
-#                map2_2para_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, func)
-#
-              #else if (coord && not return) do
-              if (coord && not return) do
-                map2_2para_coord_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, par1, par2, func)
-
-              else if (coord && return) do
-                map2_2para_coord_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, func)
-              end
-              end
-#              end
-#              end
-#
+    PolyHok.spawn(&Ske.map2_0para_1D_kernel/4,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,step,size,f])
+    d_array
   end
-  end
+## X MAP = 2 GNX; 0 PARAMETERS; 1D, RETURN: TRUE;
+## X MAP = 2 GNX; 0 PARAMETERS; 1D, COORD: TRUE;
+## X MAP = 2 GNX; 0 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+## X MAP = 2 GNX; 0 PARAMETERS; 2D;
+## X MAP = 2 GNX; 0 PARAMETERS; 2D, RETURN: TRUE;
+## X MAP = 2 GNX; 0 PARAMETERS; 2D, COORD: TRUE;
+## X MAP = 2 GNX; 0 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
 
-  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1, par2, par3], options )do
-    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
-  case dim do
-#    :one ->   if (not coord && not return )do
-#                map2_3para_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, par3, func)
-#
-#              else if (not coord && return) do
-#                map2_3para_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, par3, func)
-#
-#              else if (coord && not return) do
-#                map2_3para_coord_1D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, par3, func)
-#
-#              else if (coord && return) do
-#                map2_3para_coord_1D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, par3, func)
-#              end
-#              end
-#              end
-#              end
-#
-     :two ->  #if (not coord && not return) do
-#                map2_3para_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, par3, func)
-#
-#              else if (not coord && return) do
-#                map2_3para_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, par3, func)
-#
-              #else if (coord && not return) do
-              if (coord && not return) do
-                map2_3para_coord_2D({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, par1, par2, par3, func)
-
-              else if (coord && return) do
-                map2_3para_coord_2D_resp({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2},  par1, par2, par3, func)
-              end
-              end
-#              end
-#              end
-#
-  end
-  end
-
+## X MAP = 2 GNX; 1 PARAMETER; 1D;
+## X MAP = 2 GNX; 1 PARAMETER; 1D, RETURN: TRUE;
+## X MAP = 2 GNX; 1 PARAMETER; 1D, COORD: TRUE;
+## X MAP = 2 GNX; 1 PARAMETER; 1D, COORD: TRUE, RETURN: TRUE;
+## X MAP = 2 GNX; 1 PARAMETER; 2D;
+## X MAP = 2 GNX; 1 PARAMETER; 2D, RETURN:TRUE;
+## MAP = 2 GNX; 1 PARAMETER; 2D, COORD: TRUE;
   defk map2_1para_coord_2D_kernel(d_array1, d_array2, par1, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -1131,6 +1658,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map2_1para_coord_2D_kernel/7,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,par1,step,sizeX,sizeY,f])
     d_array1
   end
+## MAP = 2 GNX; 1 PARAMETER; 2D, RETURN: TRUE;
   defk map2_1para_coord_2D_resp_kernel(d_array1, d_array2, ret, par1, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -1170,6 +1698,7 @@ PolyHok.defmodule Ske do
     ret
   end
 
+## MAP = 2 GNX; 2 PARAMETERS; 1D;
   defk map2_2para_1D_kernel(d_array1, d_array2, par1, par2, step, size, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
@@ -1196,6 +1725,12 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map2_2para_1D_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,par1,par2,step,size,f])
     d_array1
   end
+## X MAP = 2 GNX; 2 PARAMETERS; 1D, RETURN: TRUE;
+## X MAP = 2 GNX; 2 PARAMETERS; 1D, COORD: TRUE;
+## X MAP = 2 GNX; 2 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+## X MAP = 2 GNX; 2 PARAMETERS; 2D;
+## X MAP = 2 GNX; 2 PARAMETERS; 2D, RETURN: TRUE;
+## MAP = 2 GNX; 2 PARAMETERS; 2D, COORD: TRUE;
   defk map2_2para_coord_2D_kernel(d_array1, d_array2, par1, par2, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -1233,6 +1768,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map2_2para_coord_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,par1,par2,step,sizeX,sizeY,f])
     d_array1
   end
+## MAP = 2 GNX; 2 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
   defk map2_2para_coord_2D_resp_kernel(d_array1, d_array2, ret, par1, par2, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -1272,6 +1808,13 @@ PolyHok.defmodule Ske do
     ret
   end
 
+## X MAP = 2 GNX; 3 PARAMETERS; 1D;
+## X MAP = 2 GNX; 3 PARAMETERS; 1D, RETURN: TRUE;
+## X MAP = 2 GNX; 3 PARAMETERS; 1D, COORD: TRUE;
+## X MAP = 2 GNX; 3 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+## X MAP = 2 GNX; 3 PARAMETERS; 2D;
+## X MAP = 2 GNX; 3 PARAMETERS; 2D, RETURN: TRUE;
+## MAP = 2 GNX; 3 PARAMETERS; 2D, COORD: TRUE;
   defk map2_3para_coord_2D_kernel(d_array1, d_array2, par1, par2, par3, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -1309,6 +1852,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map2_3para_coord_2D_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,par1,par2,par3,step,sizeX,sizeY,f])
     d_array1
   end
+## MAP = 2 GNX; 3 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
   defk map2_3para_coord_2D_resp_kernel(d_array1, d_array2, ret, par1, par2, par3, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -1348,16 +1892,25 @@ PolyHok.defmodule Ske do
     ret
   end
 
+## 3 GNX
+## -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-  def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [par1], options )do
-    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
-  case dim do
-     :two ->  if (coord && not return) do
-                map3_1para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
-              end
-  end
-  end
+## X MAP = 3 GNX; 0 PARAMETERS; 1D;
+## X MAP = 3 GNX; 0 PARAMETERS; 1D, RETURN: TRUE;
+## X MAP = 3 GNX; 0 PARAMETERS; 1D, COORD: TRUE;
+## X MAP = 3 GNX; 0 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+## X MAP = 3 GNX; 0 PARAMETERS; 2D;
+## X MAP = 3 GNX; 0 PARAMETERS; 2D, RETURN: TRUE;
+## X MAP = 3 GNX; 0 PARAMETERS; 2D, COORD: TRUE;
+## X MAP = 3 GNX; 0 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
 
+## X MAP = 3 GNX; 1 PARAMETER; 1D;
+## X MAP = 3 GNX; 1 PARAMETER; 1D, RETURN: TRUE;
+## X MAP = 3 GNX; 1 PARAMETER; 1D, COORD: TRUE;
+## X MAP = 3 GNX; 1 PARAMETER; 1D, COORD: TRUE, RETURN: TRUE;
+## X MAP = 3 GNX; 1 PARAMETER; 2D;
+## X MAP = 3 GNX; 1 PARAMETER; 2D, RETURN: TRUE;
+## MAP = 3 GNX; 1 PARAMETER; 2D, COORD: TRUE;
   defk map3_1para_coord_2D_kernel(d_array1, d_array2, d_array3, par1, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
     idY = blockIdx.y * blockDim.y + threadIdx.y
@@ -1396,6 +1949,27 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map3_1para_coord_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,step,sizeX,sizeY,f])
     d_array1
   end
+## X MAP = 3 GNX; 1 PARAMETER; 2D, COORD: TRUE, RETURN: TRUE;
+
+## X MAP = 3 GNX; 2 PARAMETERS; 1D;
+## X MAP = 3 GNX; 2 PARAMETERS; 1D, RETURN: TRUE;
+## X MAP = 3 GNX; 2 PARAMETERS; 1D, COORD: TRUE;
+## X MAP = 3 GNX; 2 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+## X MAP = 3 GNX; 2 PARAMETERS; 2D;
+## X MAP = 3 GNX; 2 PARAMETERS; 2D, RETURN: TRUE;
+## X MAP = 3 GNX; 2 PARAMETERS; 2D, COORD: TRUE;
+## X MAP = 3 GNX; 2 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
+
+## X MAP = 3 GNX; 3 PARAMETERS; 1D;
+## X MAP = 3 GNX; 3 PARAMETERS; 1D, RETURN: TRUE;
+## X MAP = 3 GNX; 3 PARAMETERS; 1D, COORD: TRUE;
+## X MAP = 3 GNX; 3 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+## X MAP = 3 GNX; 3 PARAMETERS; 2D;
+## X MAP = 3 GNX; 3 PARAMETERS; 2D, RETURN: TRUE;
+## X MAP = 3 GNX; 3 PARAMETERS; 2D, COORD: TRUE;
+## X MAP = 3 GNX; 3 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
+
+##
 
 end
 
