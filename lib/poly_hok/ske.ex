@@ -24,7 +24,43 @@ PolyHok.defmodule Ske do
 ## REDUCE-----------------------------------------------------------------------------------------------------------------------------------------------
 ## -----------------------------------------------------------------------------------------------------------------------------------------------------
 
-  def reduce(ref, initial, f) do
+  # def reduce(ref, initial, f) do
+  #   #IO.inspect(PolyHok.get_gnx(ref))
+  #   shape = PolyHok.get_shape_gnx(ref)
+  #   type = PolyHok.get_type_gnx(ref)
+  #   size = Tuple.product(shape)
+  #   result_gpu  = PolyHok.new_gnx(Nx.tensor([[initial]] , type: type))
+
+  #   threadsPerBlock = 256
+  #   blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
+  #   numberOfBlocks = blocksPerGrid
+
+  #   #cudaDeviceProp prop
+  #   #cudaGetDeviceProperties(&prop, 0)
+  #   #blocks = prop.multiProcessorCount*2
+  #   #threads = 256
+
+  #   #PolyHok.spawn(&Ske.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, initial, size, f, size])
+  #   case type do
+  #     {:f,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
+  #             PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+  #             #PolyHok.spawn(&Ske.reduce_kernel_nvidia_k5/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
+
+  #     {:f,64} -> cas = PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
+  #             PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+  #             #PolyHok.spawn(&Ske.reduce_kernel_nvidia_k5/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
+
+  #     {:s,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_int(x,y,z) end)
+  #             PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+  #             #PolyHok.spawn(&Ske.reduce_kernel_nvidia_k5/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
+
+  #     x -> raise "new_gnx: type #{x} not suported"
+  #   end
+
+  #   result_gpu
+  # end
+
+  def reduce(ref, initial, f, sel_ver \\01) do
     #IO.inspect(PolyHok.get_gnx(ref))
     shape = PolyHok.get_shape_gnx(ref)
     type = PolyHok.get_type_gnx(ref)
@@ -41,24 +77,30 @@ PolyHok.defmodule Ske do
     #threads = 256
 
     #PolyHok.spawn(&Ske.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, initial, size, f, size])
-    case type do
-      {:f,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
-              PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
-              #PolyHok.spawn(&Ske.reduce_kernel_nvidia_k5/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
+    cas = case type do
+      {:f,32} -> PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
 
-      {:f,64} -> cas = PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
-              PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
-              #PolyHok.spawn(&Ske.reduce_kernel_nvidia_k5/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
+      {:f,64} -> PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
 
-      {:s,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_int(x,y,z) end)
-              PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
-              #PolyHok.spawn(&Ske.reduce_kernel_nvidia_k5/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
+      {:s,32} -> PolyHok.phok (fn (x,y,z) -> cas_int(x,y,z) end)
 
       x -> raise "new_gnx: type #{x} not suported"
     end
 
+    case sel_ver do
+      01 -> PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+
+      02 -> PolyHok.spawn(&Ske.reduce_kernel_nvidia_k4/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
+
+      03 -> PolyHok.spawn(&Ske.reduce_kernel_nvidia_k5/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
+
+      x  -> raise "reduce implementation #{x} not available"
+    end
+
     result_gpu
   end
+
+## REDUCE CLÁSSICO => SEL_VER : 01
   defk reduce_kernel(a, ref4, initial, n, cas, f) do
   #defk reduce_kernel(a, ref4, initial, n, f) do
     __shared__ cache[256]
@@ -96,8 +138,10 @@ PolyHok.defmodule Ske do
       end
     end
   end
+
+## REDUCE NVIDIA OTIMIZAÇÃO 4 => SEL_VER : 02
   defk reduce_kernel_nvidia_k4(a, ref4, n, cas, f) do
-    printf("TESTE7")
+    printf("TESTE4")
     __shared__ cache[256]
 
     unsigned int tid
@@ -119,8 +163,10 @@ PolyHok.defmodule Ske do
       ref4[blockIdx.x] = cache[0];
     end
   end
+
+## REDUCE NVIDIA OTIMIZAÇÃO 5 => SEL_VER : 03
   defk reduce_kernel_nvidia_k5(a, ref4, n, cas, f) do
-    printf("TESTE2")
+    printf("TESTE5")
     __shared__ cache[256]
 
     tid = blockIdx.x*(blockDim.x) + threadIdx.x;
