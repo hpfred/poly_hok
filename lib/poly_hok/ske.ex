@@ -20,9 +20,10 @@ PolyHok.defmodule Ske do
   include CAS_Poly
   #include CAS_Double
 
-## --------------------------------------------------------------------------------------------------------------------------------------------------------
-## REDUCE--------------------------------------------------------------------------------------------------------------------------------------------------
-## --------------------------------------------------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------------------------------------------
+## REDUCE-----------------------------------------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------------------------------------------
+
   def reduce(ref, initial, f) do
     #IO.inspect(PolyHok.get_gnx(ref))
     shape = PolyHok.get_shape_gnx(ref)
@@ -626,65 +627,11 @@ PolyHok.defmodule Ske do
  end
  end
 
-# ##-----------------------------------------------------------------
-# ## AQUI MAP NÃO CONFIGURAVEL -- arrumar o que precisa e tirar esse
-#   def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func, options) do
-#     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
-
-#     if (coord || not return || dim == :two) do
-#       raise "The only options for a map2 are: coord: false, return: true, dim: :one"
-#     else
-#       map2({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2, ref2}, func)
-#     end
-#   end
-#   defk map_ker(a1,a2,size,f) do
-#       index = blockIdx.x * blockDim.x + threadIdx.x
-#       stride = blockDim.x * gridDim.x
-
-#       for i in range(index,size,stride) do
-#             a2[i] = f(a1[i])
-#       end
-#   end
-#   def map(input, f) do
-#     shape = PolyHok.get_shape(input)
-#     type = PolyHok.get_type(input)
-#     result_gpu = PolyHok.new_gnx(shape,type)
-#     size = Tuple.product(shape)
-#     threadsPerBlock = 128;
-#     numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
-
-#     PolyHok.spawn(&Ske.map_ker/4,
-#               {numberOfBlocks,1,1},
-#               {threadsPerBlock,1,1},
-#               [input,result_gpu,size, f])
-#     #IO.inspect(result_gpu)
-#     result_gpu
-#   end
-#   defk map2_kernel(a1, a2, a3, size, f) do
-#     id = blockIdx.x * blockDim.x + threadIdx.x
-#     if(id < size) do
-#       a3[id] = f(a1[id],a2[id])
-#     end
-#   end
-#   def map2(t1, t2, func) do
-#     shape = PolyHok.get_shape_gnx(t1)
-#     type = PolyHok.get_type_gnx(t2)
-#     size = Tuple.product shape
-#     result_gpu = PolyHok.new_gnx(shape, type)
-
-#       threadsPerBlock = 256;
-#       numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
-
-#       PolyHok.spawn(&Ske.map2_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[t1,t2,result_gpu,size,func])
-
-#       result_gpu
-#   end
-
 ## -----------------------------------------------------------------------------------------------------------------------------------------------------
 ## -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 1 GNX
-## ---------------------------------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## MAP = 1 GNX; 0 PARAMETERS; 1D;
   defk map_0para_1D_kernel(d_array, step, size, f) do
@@ -1581,7 +1528,7 @@ PolyHok.defmodule Ske do
   end
 
 ## 2 GNX
-## ---------------------------------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## "X" indica os que adicionei depois, e portanto preciso testar pra confirmar que fiz corretamente
 
@@ -2751,7 +2698,7 @@ PolyHok.defmodule Ske do
   end
 
 ## 3 GNX
-## -------------------------------------------------------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## X MAP = 3 GNX; 0 PARAMETERS; 1D;
   defk map3_0para_1D_kernel(d_array1, d_array2, d_array3, step, size, f) do
@@ -4080,6 +4027,3 @@ PolyHok.defmodule Ske do
   end
 
 end
-
-
-#### kernels
