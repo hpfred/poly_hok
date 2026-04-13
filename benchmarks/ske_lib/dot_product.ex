@@ -81,7 +81,7 @@ _result = Ske.map(ref1, ref2, mult, [], [])
 # _result = _result
         |> Ske.reduce(0.0, soma)
         |> PolyHok.get_gnx
-IO.inspect(_result)
+# IO.inspect(_result)
 
 # _result = ref1
 #     |> Ske.map(ref2, PolyHok.phok fn (a,b) -> a * b end)
