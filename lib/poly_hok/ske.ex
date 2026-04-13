@@ -206,7 +206,7 @@ PolyHok.defmodule Ske do
 
 ## SELECT : 1 GNX : 0 PARA
   @defaults %{coord: false, return: true, dim: :one}
-  def map(a,b,c,options \\[])
+  def map(a,b,c \\[],options \\[])
   def map({:nx, type, shape, name , ref}, func, [], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
@@ -1615,9 +1615,13 @@ PolyHok.defmodule Ske do
     id = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
 
+    # printf("outside id thread: %d\\n",id);
+    # printf("size: %d\\n",size);
     for i in range(id,size,stride) do
-      id = i*step
-      ret[id] = f(d_array1[id],d_array2[id])
+      # printf("inside id thread: %d\\n",id);
+      id2 = i*step
+      # printf("posicao no array: %d\\n",id);
+      ret[id2] = f(d_array1[id2],d_array2[id2])
     end
   end
   def map2_0para_1D_resp(d_array1, d_array2, f) do
@@ -1636,12 +1640,13 @@ PolyHok.defmodule Ske do
     end
 
     block_size =  128;
-    #size = l*step
+    # size = l1*step1
     size = l1
     nBlocks = floor ((size + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
 
-    PolyHok.spawn(&Ske.map2_0para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,step1,size,f])
+    # PolyHok.spawn(&Ske.map2_0para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,step1,size,f])
+    PolyHok.spawn(&Ske.map2_0para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,size,step1,f])
     ret
   end
 ## X MAP = 2 GNX; 0 PARAMETERS; 1D, COORD: TRUE;
