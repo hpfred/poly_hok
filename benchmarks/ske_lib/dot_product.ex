@@ -74,16 +74,19 @@ ref2 = PolyHok.new_gnx(vet2)
 #IO.inspect(PolyHok.get_gnx(ref1))
 #IO.inspect(PolyHok.get_gnx(ref2))
 
-#soma = PolyHok.phok fn (a,b) -> a + b end
+mult = PolyHok.phok fn (a,b) -> a * b end
+soma = PolyHok.phok fn (a,b) -> a + b end
+_result = Ske.map(ref1, ref2, mult, [], [])
+        |> Ske.reduce(0.0, soma)
+        |> PolyHok.get_gnx
 
-_result = ref1
-    |> Ske.map(ref2, PolyHok.phok fn (a,b) -> a * b end)
-#IO.inspect(PolyHok.get_gnx(result))
-#_result = result
-    |> Ske.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
-    #|> Ske.reduce(0.0,soma,01)
-    |> PolyHok.get_gnx
-    #|> IO.inspect
+# _result = ref1
+#     |> Ske.map(ref2, PolyHok.phok fn (a,b) -> a * b end)
+# #IO.inspect(PolyHok.get_gnx(result))
+# #_result = result
+#     |> Ske.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
+#     |> PolyHok.get_gnx
+#     #|> IO.inspect
 
 next = System.monotonic_time()
 

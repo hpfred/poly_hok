@@ -366,7 +366,7 @@ PolyHok.defmodule Ske do
   ### \/ Problema de não colocar: quando for 0 parametros mas quer passar lista de Options ele vai quebrar dizendo que tá passando parâmetros demais
 
 ## SELECT : 2 GNX : 0 PARA
-  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, options )do
+  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
     :one ->   if (not coord && not return )do
