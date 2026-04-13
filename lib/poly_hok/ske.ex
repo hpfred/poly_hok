@@ -1577,6 +1577,7 @@ PolyHok.defmodule Ske do
 ## -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## "X" indica os que adicionei depois, e portanto preciso testar pra confirmar que fiz corretamente
+## "Y" indica o que eu fiz modificação para corrigir, e precisa ver se é correto substituir em todos outros casos
 
 ## X MAP = 2 GNX; 0 PARAMETERS; 1D;
   defk map2_0para_1D_kernel(d_array1, d_array2, step, size, f) do
@@ -1610,7 +1611,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map2_0para_1D_kernel/5,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,step1,size,f])
     d_array1
   end
-## X MAP = 2 GNX; 0 PARAMETERS; 1D, RETURN: TRUE;
+## Y MAP = 2 GNX; 0 PARAMETERS; 1D, RETURN: TRUE;
   defk map2_0para_1D_resp_kernel(d_array1, d_array2, ret, step, size, f) do
     id = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
@@ -1644,7 +1645,7 @@ PolyHok.defmodule Ske do
     block_size =  128;
     # size = l1*step1
     size = l1
-    nBlocks = floor ((size + block_size - 1) / block_size)
+    nBlocks = floor (((size*step1) + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
 
     PolyHok.spawn(&Ske.map2_0para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,step1,size,f])

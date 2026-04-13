@@ -163,7 +163,7 @@ _result = ref1
     |> DP.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
     |> PolyHok.get_gnx
 
-IO.inspect _result
+# IO.inspect _result
 
 next = System.monotonic_time()
 
