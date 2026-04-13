@@ -3309,7 +3309,7 @@ PolyHok.defmodule Ske do
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
     grid_cols = trunc ((sizeY + block_size - 1) / block_size)
 
-    PolyHok.spawn(&Ske.map3_1para_coord_2D_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,step,sizeX,sizeY,f])
+    PolyHok.spawn(&Ske.map3_1para_coord_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,step,sizeX,sizeY,f])
     d_array1
   end
 ## X MAP = 3 GNX; 1 PARAMETER; 2D, COORD: TRUE, RETURN: TRUE;
@@ -3766,7 +3766,7 @@ PolyHok.defmodule Ske do
     nBlocks = floor ((size + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
 
-    PolyHok.spawn(&Ske.map3_3para_1D_resp_kernel/9,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,par1,par2,par3,step1,size,f])
+    PolyHok.spawn(&Ske.map3_3para_1D_resp_kernel/10,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,d_array3,ret,par1,par2,par3,step1,size,f])
     ret
   end
 ## X MAP = 3 GNX; 3 PARAMETERS; 1D, COORD: TRUE;
