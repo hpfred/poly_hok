@@ -1614,12 +1614,14 @@ PolyHok.defmodule Ske do
   defk map2_0para_1D_resp_kernel(d_array1, d_array2, ret, step, size, f) do
     id = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
+    actualStep = (size/step)
 
     # printf("outside id thread: %d\\n",id);
     # printf("size: %d\\n",size);
-    for i in range(id,size,stride) do
+    for i in range(id,(size*step),stride) do
       # printf("inside id thread: %d\\n",id);
-      id2 = i*step
+      # id2 = i*step
+      id2 = i
       # printf("posicao no array: %d\\n",id);
       ret[id2] = f(d_array1[id2],d_array2[id2])
     end
@@ -1645,8 +1647,8 @@ PolyHok.defmodule Ske do
     nBlocks = floor ((size + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
 
-    # PolyHok.spawn(&Ske.map2_0para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,step1,size,f])
-    PolyHok.spawn(&Ske.map2_0para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,size,step1,f])
+    PolyHok.spawn(&Ske.map2_0para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,step1,size,f])
+    # PolyHok.spawn(&Ske.map2_0para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,size,step1,f])
     ret
   end
 ## X MAP = 2 GNX; 0 PARAMETERS; 1D, COORD: TRUE;
