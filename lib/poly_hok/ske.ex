@@ -153,6 +153,7 @@ PolyHok.defmodule Ske do
     end
   end
 
+## -----------------------------------------------------------------------------------------------------------------------------------------------------
 ## MAP--------------------------------------------------------------------------------------------------------------------------------------------------
 ## -----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -198,7 +199,6 @@ PolyHok.defmodule Ske do
   end
 
 ## SELECT : 1 GNX : 1 PARA
-  def map(a,b,c,options \\[])
   def map({:nx, type, shape, name , ref}, func, [par1], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
@@ -315,369 +315,373 @@ PolyHok.defmodule Ske do
   end
   end
 
-## SELECT : 2GNX : 0 PARA
-  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [], options )do
+  ### \/ Para 0 parametros devo usar uma lista vazia [] ou só não usar?
+  ### \/ Problema de não colocar: quando for 0 parametros mas quer passar lista de Options ele vai quebrar dizendo que tá passando parâmetros demais
+
+## SELECT : 2 GNX : 0 PARA
+  def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
-#    :one ->   if (not coord && not return )do
-#                map2_0para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
-#
-#              else if (not coord && return) do
-#                map2_0para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
-#
-#              else if (coord && not return) do
-#                map2_0para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
-#
-#              else if (coord && return) do
-#                map2_0para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
-#              end
-#              end
-#              end
-#              end
-#
-     :two ->  #if (not coord && not return) do
-#                map2_0para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
-#
-#              else if (not coord && return) do
-#                map2_0para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
-#
-              #else if (coord && not return) do
-              if (coord && not return) do
+    :one ->   if (not coord && not return )do
+                map2_0para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+
+              else if (not coord && return) do
+                map2_0para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+
+              else if (coord && not return) do
+                map2_0para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+
+              else if (coord && return) do
+                map2_0para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+              end
+              end
+              end
+              end
+
+     :two ->  if (not coord && not return) do
+                map2_0para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+
+              else if (not coord && return) do
+                map2_0para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
+
+              else if (coord && not return) do
                 map2_0para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
 
               else if (coord && return) do
                 map2_0para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func)
               end
               end
-#              end
-#              end
-#
+              end
+              end
+
   end
   end
 
+## SELECT : 2 GNX : 1 PARA
   def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
-#    :one ->   if (not coord && not return )do
-#                map2_1para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
-#
-#              else if (not coord && return) do
-#                map2_1para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
-#
-#              else if (coord && not return) do
-#                map2_1para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
-#
-#              else if (coord && return) do
-#                map2_1para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
-#              end
-#              end
-#              end
-#              end
-#
-     :two ->  #if (not coord && not return) do
-#                map2_1para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
-#
-#              else if (not coord && return) do
-#                map2_1para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
-#
-              #else if (coord && not return) do
-              if (coord && not return) do
+   :one ->   if (not coord && not return )do
+               map2_1para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+
+             else if (not coord && return) do
+               map2_1para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+
+             else if (coord && not return) do
+               map2_1para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+
+             else if (coord && return) do
+               map2_1para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+             end
+             end
+             end
+             end
+
+     :two ->  if (not coord && not return) do
+               map2_1para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+
+              else if (not coord && return) do
+               map2_1para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
+
+              else if (coord && not return) do
                 map2_1para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
 
               else if (coord && return) do
                 map2_1para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, func)
               end
               end
-#              end
-#              end
-#
+              end
+              end
+
   end
   end
 
+## SELECT : 2 GNX : 2 PARA
   def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1, par2], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
     :one ->   if (not coord && not return )do
                 map2_2para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
-#
-#              else if (not coord && return) do
-#                map2_2para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
-#
-#              else if (coord && not return) do
-#                map2_2para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
-#
-#              else if (coord && return) do
-#                map2_2para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
-#              end
-#              end
-#              end
+
+              else if (not coord && return) do
+                map2_2para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+
+              else if (coord && not return) do
+                map2_2para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+
+              else if (coord && return) do
+                map2_2para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+              end
+              end
+              end
               end
 
-     :two ->  #if (not coord && not return) do
-#                map2_2para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
-#
-#              else if (not coord && return) do
-#                map2_2para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
-#
-              #else if (coord && not return) do
-              if (coord && not return) do
+     :two ->  if (not coord && not return) do
+               map2_2para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+
+              else if (not coord && return) do
+                map2_2para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
+
+              else if (coord && not return) do
                 map2_2para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
 
               else if (coord && return) do
                 map2_2para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, func)
               end
               end
-#              end
-#              end
-#
+              end
+              end
+
   end
   end
 
+## SELECT : 2 GNX : 3 PARA
   def map({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2 , ref2}, func, [par1, par2, par3], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
-#    :one ->   if (not coord && not return )do
-#                map2_3para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
-#
-#              else if (not coord && return) do
-#                map2_3para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
-#
-#              else if (coord && not return) do
-#                map2_3para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
-#
-#              else if (coord && return) do
-#                map2_3para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
-#              end
-#              end
-#              end
-#              end
-#
-     :two ->  #if (not coord && not return) do
-#                map2_3para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
-#
-#              else if (not coord && return) do
-#                map2_3para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
-#
-              #else if (coord && not return) do
-              if (coord && not return) do
+   :one ->   if (not coord && not return )do
+               map2_3para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+
+             else if (not coord && return) do
+               map2_3para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+
+             else if (coord && not return) do
+               map2_3para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+
+             else if (coord && return) do
+               map2_3para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+             end
+             end
+             end
+             end
+
+     :two ->  if (not coord && not return) do
+                map2_3para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+
+              else if (not coord && return) do
+                map2_3para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
+
+              else if (coord && not return) do
                 map2_3para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
 
               else if (coord && return) do
                 map2_3para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, par1, par2, par3, func)
               end
               end
-#              end
-#              end
-#
+              end
+              end
+
   end
   end
 
-## 3 GNX
-#  def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [], options )do
-#    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
-#  case dim do
-#    :one ->   if (not coord && not return )do
-#                map3_0para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
-#
-#              else if (not coord && return) do
-#                map3_0para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
-#
-#              else if (coord && not return) do
-#                map3_0para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
-#
-#              else if (coord && return) do
-#                map3_0para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
-#              end
-#              end
-#              end
-#              end
-#
-#   :two ->  #if (not coord && not return) do
-#                map3_0para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
-#
-#              else if (not coord && return) do
-#                map3_0para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
-#
-#            #else if (coord && not return) do
-#            if (coord && not return) do
-#              map3_0para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
-#
-#              else if (coord && return) do
-#                map3_0para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
-#            end
-#              end
-#              end
-#              end
-#  end
-#  end
+## SELECT : 3 GNX : 0 PARA
+ def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [], options )do
+   %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+ case dim do
+   :one ->  if (not coord && not return )do
+              map3_0para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
 
+            else if (not coord && return) do
+              map3_0para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+
+            else if (coord && not return) do
+              map3_0para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+
+            else if (coord && return) do
+              map3_0para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+            end
+            end
+            end
+            end
+
+  :two ->   if (not coord && not return) do
+              map3_0para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+
+            else if (not coord && return) do
+              map3_0para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+
+            else if (coord && not return) do
+              map3_0para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+
+            else if (coord && return) do
+              map3_0para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func)
+            end
+            end
+            end
+            end
+ end
+ end
+
+## SELECT : 3 GNX : 1 PARA
   def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [par1], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
-#    :one ->   if (not coord && not return )do
-#                map3_1para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
-#
-#              else if (not coord && return) do
-#                map3_1para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
-#
-#              else if (coord && not return) do
-#                map3_1para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
-#
-#              else if (coord && return) do
-#                map3_1para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
-#              end
-#              end
-#              end
-#              end
-#
-     :two ->  #if (not coord && not return) do
-#                map3_1para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
-#
-#              else if (not coord && return) do
-#                map3_1para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
-#
-              #else if (coord && not return) do
-              if (coord && not return) do
+    :one ->   if (not coord && not return )do
+                map3_1para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+
+              else if (not coord && return) do
+                map3_1para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+
+              else if (coord && not return) do
+                map3_1para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+
+              else if (coord && return) do
+                map3_1para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+              end
+              end
+              end
+              end
+
+    :two ->   if (not coord && not return) do
+                map3_1para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+
+              else if (not coord && return) do
+                map3_1para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+
+              else if (coord && not return) do
                 map3_1para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
 
-#              else if (coord && return) do
-#                map3_1para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
+              else if (coord && return) do
+                map3_1para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, func)
               end
-#              end
-#              end
-#              end
+              end
+              end
+              end
   end
   end
 
-#  def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [par1, par2], options )do
-#    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
-#  case dim do
-#    :one ->   if (not coord && not return )do
-#                map3_2para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3 , ref3}, par1, par2, func)
-#
-#              else if (not coord && return) do
-#                map3_2para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
-#
-#              else if (coord && not return) do
-#                map3_2para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
-#
-#              else if (coord && return) do
-#                map3_2para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
-#              end
-#              end
-#              end
-#              end
-#
-#   :two ->  #if (not coord && not return) do
-#                map3_2para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
-#
-#              else if (not coord && return) do
-#                map3_2para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2 , ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
-#
-#            #else if (coord && not return) do
-#            if (coord && not return) do
-#               map3_2para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
-#
-#              else if (coord && return) do
-#                map3_2para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2 , ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
-#            end
-#              end
-#              end
-#              end
-#  end
-#  end
+## SELECT : 3 GNX : 2 PARA
+ def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [par1, par2], options )do
+   %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+ case dim do
+   :one ->   if (not coord && not return )do
+               map3_2para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3 , ref3}, par1, par2, func)
 
-#  def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [par1], options )do
-#    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
-#  case dim do
-#    :one ->   if (not coord && not return )do
-#                map3_3para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
-#
-#              else if (not coord && return) do
-#                map3_3para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
-#
-#              else if (coord && not return) do
-#                map3_3para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2 , ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
-#
-#              else if (coord && return) do
-#                map3_3para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
-#              end
-#              end
-#              end
-#              end
-#
-#   :two ->  #if (not coord && not return) do
-#                map3_3para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
-#
-#              else if (not coord && return) do
-#                map3_3para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
-#
-#            #else if (coord && not return) do
-#            if (coord && not return) do
-#              map3_3para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
-#
-#              else if (coord && return) do
-#                map3_3para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
-#            end
-#              end
-#              end
-#              end
-#  end
-#  end
+             else if (not coord && return) do
+               map3_2para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
 
-##-----------------------------------------------------------------
-## AQUI MAP NÃO CONFIGURAVEL -- arrumar o que precisa e tirar esse
-  def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func, options) do
-    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+             else if (coord && not return) do
+               map3_2para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
 
-    if (coord || not return || dim == :two) do
-      raise "The only options for a map2 are: coord: false, return: true, dim: :one"
-    else
-      map2({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2, ref2}, func)
-    end
-  end
-  defk map_ker(a1,a2,size,f) do
-      index = blockIdx.x * blockDim.x + threadIdx.x
-      stride = blockDim.x * gridDim.x
+             else if (coord && return) do
+               map3_2para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
+             end
+             end
+             end
+             end
 
-      for i in range(index,size,stride) do
-            a2[i] = f(a1[i])
-      end
-  end
-  def map(input, f) do
-    shape = PolyHok.get_shape(input)
-    type = PolyHok.get_type(input)
-    result_gpu = PolyHok.new_gnx(shape,type)
-    size = Tuple.product(shape)
-    threadsPerBlock = 128;
-    numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
+  :two ->  if (not coord && not return) do
+              map3_2para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
 
-    PolyHok.spawn(&Ske.map_ker/4,
-              {numberOfBlocks,1,1},
-              {threadsPerBlock,1,1},
-              [input,result_gpu,size, f])
-    #IO.inspect(result_gpu)
-    result_gpu
-  end
-  defk map2_kernel(a1, a2, a3, size, f) do
-    id = blockIdx.x * blockDim.x + threadIdx.x
-    if(id < size) do
-      a3[id] = f(a1[id],a2[id])
-    end
-  end
-  def map2(t1, t2, func) do
-    shape = PolyHok.get_shape_gnx(t1)
-    type = PolyHok.get_type_gnx(t2)
-    size = Tuple.product shape
-    result_gpu = PolyHok.new_gnx(shape, type)
+           else if (not coord && return) do
+              map3_2para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2 , ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
 
-      threadsPerBlock = 256;
-      numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
+           else if (coord && not return) do
+              map3_2para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
 
-      PolyHok.spawn(&Ske.map2_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[t1,t2,result_gpu,size,func])
+           else if (coord && return) do
+              map3_2para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2 , ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, func)
+           end
+           end
+           end
+           end
+ end
+ end
 
-      result_gpu
-  end
+## SELECT : 3 GNX : 3 PARA
+ def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, func, [par1, par2, par3], options )do
+   %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+ case dim do
+   :one ->  if (not coord && not return )do
+              map3_3para_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+
+            else if (not coord && return) do
+              map3_3para_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+
+            else if (coord && not return) do
+              map3_3para_coord_1D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2 , ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+
+            else if (coord && return) do
+              map3_3para_coord_1D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+            end
+            end
+            end
+            end
+
+  :two ->   if (not coord && not return) do
+              map3_3para_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+
+            else if (not coord && return) do
+              map3_3para_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+
+            else if (coord && not return) do
+              map3_3para_coord_2D({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+
+            else if (coord && return) do
+              map3_3para_coord_2D_resp({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, {:nx, type3, shape3, name3, ref3}, par1, par2, par3, func)
+            end
+            end
+            end
+            end
+ end
+ end
+
+# ##-----------------------------------------------------------------
+# ## AQUI MAP NÃO CONFIGURAVEL -- arrumar o que precisa e tirar esse
+#   def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func, options) do
+#     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+
+#     if (coord || not return || dim == :two) do
+#       raise "The only options for a map2 are: coord: false, return: true, dim: :one"
+#     else
+#       map2({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2, ref2}, func)
+#     end
+#   end
+#   defk map_ker(a1,a2,size,f) do
+#       index = blockIdx.x * blockDim.x + threadIdx.x
+#       stride = blockDim.x * gridDim.x
+
+#       for i in range(index,size,stride) do
+#             a2[i] = f(a1[i])
+#       end
+#   end
+#   def map(input, f) do
+#     shape = PolyHok.get_shape(input)
+#     type = PolyHok.get_type(input)
+#     result_gpu = PolyHok.new_gnx(shape,type)
+#     size = Tuple.product(shape)
+#     threadsPerBlock = 128;
+#     numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
+
+#     PolyHok.spawn(&Ske.map_ker/4,
+#               {numberOfBlocks,1,1},
+#               {threadsPerBlock,1,1},
+#               [input,result_gpu,size, f])
+#     #IO.inspect(result_gpu)
+#     result_gpu
+#   end
+#   defk map2_kernel(a1, a2, a3, size, f) do
+#     id = blockIdx.x * blockDim.x + threadIdx.x
+#     if(id < size) do
+#       a3[id] = f(a1[id],a2[id])
+#     end
+#   end
+#   def map2(t1, t2, func) do
+#     shape = PolyHok.get_shape_gnx(t1)
+#     type = PolyHok.get_type_gnx(t2)
+#     size = Tuple.product shape
+#     result_gpu = PolyHok.new_gnx(shape, type)
+
+#       threadsPerBlock = 256;
+#       numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
+
+#       PolyHok.spawn(&Ske.map2_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[t1,t2,result_gpu,size,func])
+
+#       result_gpu
+#   end
+
+## -----------------------------------------------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 1 GNX
 ## ---------------------------------------------------------------------------------------------------------------------------------------
@@ -1227,7 +1231,6 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_2para_coord_1D_resp_kernel/7,{grid_rows,1,1},{block_size,block_size,1},[d_array,ret,par1,par2,step,size,f])
     ret
   end
-
 ## MAP = 1 GNX; 2 PARAMETERS; 2D;
   defk map_2para_2D_kernel(d_array, par1, par2, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
@@ -1456,7 +1459,6 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map_3para_coord_1D_resp_kernel/8,{grid_rows,1,1},{block_size,1,1},[d_array,ret,par1,par2,par3,step,size,f])
     ret
   end
-
 ## MAP = 1 GNX; 3 PARAMETERS; 2D;
   defk map_3para_2D_kernel(d_array, par1, par2, par3, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
@@ -1582,6 +1584,7 @@ PolyHok.defmodule Ske do
 ## ---------------------------------------------------------------------------------------------------------------------------------------
 
 ## "X" indica os que adicionei depois, e portanto preciso testar pra confirmar que fiz corretamente
+
 ## X MAP = 2 GNX; 0 PARAMETERS; 1D;
   defk map2_0para_1D_kernel(d_array1, d_array2, step, size, f) do
     id = blockIdx.x * blockDim.x + threadIdx.x
@@ -1589,37 +1592,497 @@ PolyHok.defmodule Ske do
 
     for i in range(id,size,stride) do
       id = i*step
-      f(d_array1[id])
+      f(d_array1[id],d_array2[id])
     end
   end
-  def map2_0para_1D(d_array, f) do
+  def map2_0para_1D(d_array1, d_array2, f) do
     block_size =  128;
-    {l,step} = case PolyHok.get_shape_gnx(d_array) do
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
                 {l} -> {l,1}
                 {l,step} -> {l,step}
                 x -> raise "Invalid shape for 1D map: #{inspect x}!"
               end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    if(l1 != l2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
     #size = l*step
-    size = l
+    size = l1
     nBlocks = floor ((size + block_size - 1) / block_size)
 
-    PolyHok.spawn(&Ske.map2_0para_1D_kernel/4,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,step,size,f])
-    d_array
+    PolyHok.spawn(&Ske.map2_0para_1D_kernel/5,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,step1,size,f])
+    d_array1
   end
 ## X MAP = 2 GNX; 0 PARAMETERS; 1D, RETURN: TRUE;
+  defk map2_0para_1D_resp_kernel(d_array1, d_array2, ret, step, size, f) do
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(id,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id])
+    end
+  end
+  def map2_0para_1D_resp(d_array1, d_array2, f) do
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+      {l} -> {l,1}
+      {l,step} -> {l,step}
+      x -> raise "Invalid shape for 1D map: #{inspect x}!"
+    end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+      {l} -> {l,1}
+      {l,step} -> {l,step}
+      x -> raise "Invalid shape for 1D map: #{inspect x}!"
+    end
+    if(l1 != l2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    block_size =  128;
+    #size = l*step
+    size = l1
+    nBlocks = floor ((size + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map2_0para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,step1,size,f])
+    ret
+  end
 ## X MAP = 2 GNX; 0 PARAMETERS; 1D, COORD: TRUE;
+  defk map2_0para_coord_1D_kernel(d_array1, d_array2, step, size, f) do
+    idX = threadIdx.x + blockIdx.x * blockDim.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      f(d_array1[id],d_array2[id],idX)
+    end
+  end
+  def map2_0para_coord_1D(d_array1, d_array2, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map2_0para_coord_1D_kernel/5,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,step1,size,f])
+    d_array1
+  end
 ## X MAP = 2 GNX; 0 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+  defk map2_0para_coord_1D_resp_kernel(d_array1, d_array2, ret, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],idX)
+    end
+  end
+  def map2_0para_coord_1D_resp(d_array1, d_array2, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map2_0para_coord_1D_resp_kernel/6,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,ret,step1,size,f])
+    ret
+  end
 ## X MAP = 2 GNX; 0 PARAMETERS; 2D;
+  defk map2_0para_2D_kernel(d_array1, d_array2, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if (stride < (sizeX*sizeY)) do
+    #if (stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      f(d_array1[id],d_array2[id])
+    end
+  end
+  def map2_0para_2D(d_array1, d_array2, f) do
+    #block_size =  128;
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeY1 != sizeY2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map2_0para_2D_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,step1,sizeX1,sizeY1,f])
+    d_array1
+  end
 ## X MAP = 2 GNX; 0 PARAMETERS; 2D, RETURN: TRUE;
+  defk map2_0para_2D_resp_kernel(d_array1, d_array2, ret, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      ret[id] = f(d_array1[id],d_array2[id])
+    end
+  end
+  def map2_0para_2D_resp(d_array1, d_array2, f) do
+    #block_size =  128;
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeY1 != sizeY2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map2_0para_2D_resp_kernel/7,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,ret,step1,sizeX1,sizeY1,f])
+    ret
+  end
 ## X MAP = 2 GNX; 0 PARAMETERS; 2D, COORD: TRUE;
+  defk map2_0para_coord_2D_kernel(d_array1, d_array2, step, sizeX, sizeY, f) do
+    idX = threadIdx.x + blockIdx.x * blockDim.x
+    idY = threadIdx.y + blockIdx.y * blockDim.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    id  = step * stride
+    ## Aqui tenho que verificar o 'step'
+    if (stride < (sizeX*sizeY)) do
+    #if (stride < (sizeX*sizeY*step)) do
+      x = (stride - sizeY * (stride / sizeY))
+      y = stride/sizeY
+
+      f(d_array1+id,d_array2+id,x,y)
+    end
+  end
+  def map2_0para_coord_2D(d_array1, d_array2, f) do
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeY1 != sizeY2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map2_0para_coord_2D_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,step1,sizeX1,sizeY1,f])
+    #PolyHok.spawn(&Ske.map2_0para_coord_2D_kernel/6,{sizeX,sizeX,1},{1,1,1},[d_array1,d_array2,step,par1,sizeX,sizeY,f])
+    d_array1
+  end
 ## X MAP = 2 GNX; 0 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
+  defk map2_0para_coord_2D_resp_kernel(d_array1, d_array2, ret, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      x = (stride - sizeY * (stride / sizeY))
+      y = stride/sizeY
+      id  = step * stride
+
+      ret[id] = f(d_array1[id], d_array2[id], x, y)
+    end
+  end
+  def map2_0para_coord_2D_resp(d_array1, d_array2, f) do
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeY1 != sizeY2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map2_0para_coord_2D_resp_kernel/7,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,ret,step1,sizeX1,sizeY1,f])
+    ret
+  end
 
 ## X MAP = 2 GNX; 1 PARAMETER; 1D;
+  defk map2_1para_1D_kernel(d_array1, d_array2, par1, step, size, f) do
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(id,size,stride) do
+      id = i*step
+      f(d_array1[id], d_array2[id], par1)
+    end
+  end
+  def map2_1para_1D(d_array1, d_array2, par1, f) do
+    block_size =  128;
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    if(l1 != l2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+    #size = l*step
+    size = l1
+    nBlocks = floor ((size + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map2_1para_1D_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,par1,step1,size,f])
+    d_array1
+  end
 ## X MAP = 2 GNX; 1 PARAMETER; 1D, RETURN: TRUE;
+  defk map2_1para_1D_resp_kernel(d_array1, d_array2, ret, par1, step, size, f) do
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(id,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id], d_array2[id], par1)
+    end
+  end
+  def map2_1para_1D_resp(d_array1, d_array2, par1, f) do
+    block_size =  128;
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    if(l1 != l2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #size = l*step
+    size = l1
+    nBlocks = floor ((size + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map2_1para_1D_resp_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,par1,step1,size,f])
+    ret
+  end
 ## X MAP = 2 GNX; 1 PARAMETER; 1D, COORD: TRUE;
+  defk map2_1para_coord_1D_kernel(d_array1, d_array2, par1, step, size, f) do
+    idX = threadIdx.x + blockIdx.x * blockDim.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      f(d_array1[id],d_array2[id],par1,idX)
+    end
+  end
+  def map2_1para_coord_1D(d_array1, d_array2, par1, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map2_1para_coord_1D_kernel/6,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,par1,step1,size,f])
+    d_array1
+  end
 ## X MAP = 2 GNX; 1 PARAMETER; 1D, COORD: TRUE, RETURN: TRUE;
+  defk map2_1para_coord_1D_resp_kernel(d_array1, d_array2, ret, par1, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],par1,idX)
+    end
+  end
+  def map2_1para_coord_1D_resp(d_array1, d_array2, par1, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map2_1para_coord_1D_resp_kernel/7,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,ret,par1,step1,size,f])
+    ret
+  end
 ## X MAP = 2 GNX; 1 PARAMETER; 2D;
+  defk map2_1para_2D_kernel(d_array1, d_array2, par1, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if (stride < (sizeX*sizeY)) do
+    #if (stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      f(d_array1[id], d_array2[id], par1)
+    end
+  end
+  def map2_1para_2D(d_array1, d_array2, par1, f) do
+    #block_size =  128;
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeY1 != sizeY2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map2_1para_2D_kernel/7,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,par1,step1,sizeX1,sizeY1,f])
+    d_array1
+  end
 ## X MAP = 2 GNX; 1 PARAMETER; 2D, RETURN:TRUE;
+  defk map2_1para_2D_resp_kernel(d_array1, d_array2, ret, par1, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      ret[id] = f(d_array1[id], d_array2[id], par1)
+    end
+  end
+  def map2_1para_2D_resp(d_array1, d_array2, par1, f) do
+    #block_size =  128;
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeY1 != sizeY2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map2_1para_2D_resp_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,ret,par1,step1,sizeX1,sizeY1,f])
+    ret
+  end
 ## MAP = 2 GNX; 1 PARAMETER; 2D, COORD: TRUE;
   defk map2_1para_coord_2D_kernel(d_array1, d_array2, par1, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
@@ -1714,22 +2177,207 @@ PolyHok.defmodule Ske do
   end
   def map2_2para_1D(d_array1, d_array2, par1, par2, f) do
     block_size =  128;
-    {l,step} = case PolyHok.get_shape_gnx(d_array1) do
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
                 {l} -> {l,1}
                 {l,step} -> {l,step}
                 x -> raise "Invalid shape for 1D map: #{inspect x}!"
               end
-    size = l
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    if(l1 != l2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    size = l1
     nBlocks = floor ((size + block_size - 1) / block_size)
 
-    PolyHok.spawn(&Ske.map2_2para_1D_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,par1,par2,step,size,f])
+    PolyHok.spawn(&Ske.map2_2para_1D_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,par1,par2,step1,size,f])
     d_array1
   end
 ## X MAP = 2 GNX; 2 PARAMETERS; 1D, RETURN: TRUE;
+  defk map2_2para_1D_resp_kernel(d_array1, d_array2, ret, par1, par2, step, size, f) do
+    #printf("AQUI\\n")
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(id,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],par1,par2)
+    end
+  end
+  def map2_2para_1D_resp(d_array1, d_array2, par1, par2, f) do
+    block_size =  128;
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    if(l1 != l2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #size = l*step
+    size = l1
+    nBlocks = floor ((size + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map2_2para_1D_resp_kernel/8,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,par1,par2,step1,size,f])
+    ret
+  end
 ## X MAP = 2 GNX; 2 PARAMETERS; 1D, COORD: TRUE;
+  defk map2_2para_coord_1D_kernel(d_array1, d_array2, par1, par2, step, size, f) do
+    x = threadIdx.x + blockIdx.x * blockDim.x
+    offset = x * blockDim.x * gridDim.x
+
+    if (offset < size) do
+      id = step * offset
+      f(d_array1[id],d_array2[id],par1,par2,x)
+    end
+  end
+  def map2_2para_coord_1D(d_array1, d_array2, par1, par2, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    if(sizeX1 != sizeX2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map2_2para_coord_1D_kernel/7,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,par1,par2,step1,size,f])
+    d_array1
+  end
 ## X MAP = 2 GNX; 2 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+  defk map2_2para_coord_1D_resp_kernel(d_array1, d_array2, ret, par1, par2, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    #offset = idX * blockDim.x * gridDim.x
+    #if(offset < size)do
+    #  ret[offset] = f(d_array[offset],par1,par2,idX)
+    for i in range(idX,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],par1,par2,idX)
+    end
+  end
+  def map2_2para_coord_1D_resp(d_array1,d_array2, par1, par2, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    if(sizeX1 != sizeX2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map2_2para_coord_1D_resp_kernel/8,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,ret,par1,par2,step1,size,f])
+    ret
+  end
 ## X MAP = 2 GNX; 2 PARAMETERS; 2D;
+  defk map2_2para_2D_kernel(d_array1, d_array2, par1, par2, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      f(d_array1[id], d_array2[id], par1, par2)
+    end
+  end
+  def map2_2para_2D(d_array1, d_array2, par1, par2, f) do
+    #block_size =  128;
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeY1 != sizeY2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map2_2para_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,par1,par2,step1,sizeX1,sizeY1,f])
+    d_array1
+  end
 ## X MAP = 2 GNX; 2 PARAMETERS; 2D, RETURN: TRUE;
+  defk map2_2para_2D_resp_kernel(d_array1, d_array2, ret, par1, par2, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      ret[id] = f(d_array1[id], d_array2[id], par1, par2)
+    end
+  end
+  def map2_2para_2D_resp(d_array1, d_array2, par1, par2, f) do
+    #block_size =  128;
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeY1 != sizeY2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map2_2para_2D_resp_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,ret,par1,par2,step1,sizeX1,sizeY1,f])
+    ret
+  end
 ## MAP = 2 GNX; 2 PARAMETERS; 2D, COORD: TRUE;
   defk map2_2para_coord_2D_kernel(d_array1, d_array2, par1, par2, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
@@ -1809,11 +2457,221 @@ PolyHok.defmodule Ske do
   end
 
 ## X MAP = 2 GNX; 3 PARAMETERS; 1D;
+  defk map2_3para_1D_kernel(d_array1, d_array2, par1, par2, par3, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      f(d_array1[id],d_array2[id],par1,par2,par3)
+    end
+  end
+  def map2_3para_1D(d_array1, d_array2, par1, par2, par3, f) do
+      block_size =  128;
+      {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+      {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+      if(l1 != l2 or step1 != step2) do
+        raise "Both matrices shall have same shape."
+      end
+
+      #size = l*step
+      size = l1
+      nBlocks = floor ((size + block_size - 1) / block_size)
+
+      PolyHok.spawn(&Ske.map2_3para_1D_kernel/8,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,par1,par2,par3,step1,size,f])
+      d_array1
+  end
 ## X MAP = 2 GNX; 3 PARAMETERS; 1D, RETURN: TRUE;
+  defk map2_3para_1D_resp_kernel(d_array1, d_array2, ret, par1, par2, par3, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],par1,par2,par3)
+    end
+  end
+  def map2_3para_1D_resp(d_array1, d_array2, par1, par2, par3, f) do
+    block_size =  128;
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+              {l} -> {l,1}
+              {l,step} -> {l,step}
+              x -> raise "Invalid shape for 1D map: #{inspect x}!"
+            end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+              {l} -> {l,1}
+              {l,step} -> {l,step}
+              x -> raise "Invalid shape for 1D map: #{inspect x}!"
+            end
+    if(l1 != l2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #size = l*step
+    size = l1
+    nBlocks = floor ((size + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map2_3para_1D_resp_kernel/9,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,par1,par2,par3,step1,size,f])
+    ret
+  end
 ## X MAP = 2 GNX; 3 PARAMETERS; 1D, COORD: TRUE;
+  defk map2_3para_coord_1D_kernel(d_array1, d_array2, par1, par2, par3, step, size, f) do
+    idX = threadIdx.x + blockIdx.x * blockDim.x
+    stride = blockDim.x * gridDim.x
+
+    #offset = x * blockDim.x * gridDim.x
+    #if (offset < size) do
+    #  f(d_array+id,par1,par2,par3,x)
+    for i in range(idX,size,stride) do
+      id = i*step
+      f(d_array1[id],d_array2[id],par1,par2,par3,idX)
+    end
+  end
+  def map2_3para_coord_1D(d_array1, d_array2, par1, par2, par3, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    if(sizeX1 != sizeX2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map2_3para_coord_1D_kernel/8,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,par1,par2,par3,step1,size,f])
+    d_array1
+  end
 ## X MAP = 2 GNX; 3 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+  defk map2_3para_coord_1D_resp_kernel(d_array1, d_array2, ret, par1, par2, par3, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],par1,par2,par3,id)
+    end
+  end
+  def map2_3para_coord_1D_resp(d_array1, d_array2, par1, par2, par3, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    if(sizeX1 != sizeX2 or step1 != step2) do
+      raise "Both matrices shall have same shape."
+    end
+
+    #size = sizeX*step
+    size = sizeX1
+
+    #block_size = 16
+    block_size = 128
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    #PolyHok.spawn(&Ske.map_3para_coord_1D_resp_kernel/8,{grid_rows,1,1},{block_size,block_size,1},[d_array,ret,par1,par2,par3,step,size,f])
+    PolyHok.spawn(&Ske.map2_3para_coord_1D_resp_kernel/9,{grid_rows,1,1},{block_size,1,1},[d_array1,d_array2,ret,par1,par2,par3,step1,size,f])
+    ret
+  end
 ## X MAP = 2 GNX; 3 PARAMETERS; 2D;
+  defk map2_3para_2D_kernel(d_array1, d_array2, par1, par2, par3, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    id = stride*step
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      f(d_array2[id], d_array2[id], par1, par2, par3)
+    end
+  end
+  def map2_3para_2D(d_array1, d_array2, par1, par2, par3, f) do
+      #block_size =  128;
+      {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+      {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+      if(sizeX1 != sizeX2 or sizeY1 != sizeY2 or step1 != step2) do
+        raise "Both matrices shall have same shape."
+      end
+
+      #nBlocks = floor ((size + block_size - 1) / block_size)
+      block_size = 16
+      grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+      grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+
+      PolyHok.spawn(&Ske.map2_3para_2D_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,par1,par2,par3,step1,sizeX1,sizeY1,f])
+      d_array1
+  end
 ## X MAP = 2 GNX; 3 PARAMETERS; 2D, RETURN: TRUE;
+  defk map2_3para_2D_resp_kernel(d_array1, d_array2, ret, par1, par2, par3, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    id = stride*step
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      ret[id] = f(d_array1[id], d_array2[id], par1, par2, par3)
+    end
+  end
+  def map2_3para_2D_resp(d_array1, d_array2, par1, par2, par3, f) do
+      #block_size =  128;
+      {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+      {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+      if(sizeX1 != sizeX2 or sizeY1 != sizeY2 or step1 != step2) do
+        raise "Both matrices shall have same shape."
+      end
+
+      #nBlocks = floor ((size + block_size - 1) / block_size)
+      block_size = 16
+      grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+      grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+      ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+      PolyHok.spawn(&Ske.map2_3para_2D_resp_kernel/10,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,ret,par1,par2,par3,step1,sizeX1,sizeY1,f])
+      ret
+  end
 ## MAP = 2 GNX; 3 PARAMETERS; 2D, COORD: TRUE;
   defk map2_3para_coord_2D_kernel(d_array1, d_array2, par1, par2, par3, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
@@ -1896,20 +2754,573 @@ PolyHok.defmodule Ske do
 ## -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## X MAP = 3 GNX; 0 PARAMETERS; 1D;
+  defk map3_0para_1D_kernel(d_array1, d_array2, d_array3, step, size, f) do
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(id,size,stride) do
+      id = i*step
+      f(d_array1[id],d_array2[id],d_array3[id])
+    end
+  end
+  def map3_0para_1D(d_array1, d_array2, d_array3, f) do
+    block_size =  128;
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l3,step3} = case PolyHok.get_shape_gnx(d_array3) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    if(l1 != l2 or l2 != l3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+    #size = l*step
+    size = l1
+    nBlocks = floor ((size + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_0para_1D_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,d_array3,step1,size,f])
+    d_array1
+  end
 ## X MAP = 3 GNX; 0 PARAMETERS; 1D, RETURN: TRUE;
+  defk map3_0para_1D_resp_kernel(d_array1, d_array2, d_array3, ret, step, size, f) do
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(id,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],d_array3[id])
+    end
+  end
+  def map3_0para_1D_resp(d_array1, d_array2, d_array3, f) do
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+    end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+    end
+    {l3,step3} = case PolyHok.get_shape_gnx(d_array3) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+    end
+    if(l1 != l2 or l2 != l3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    block_size =  128;
+    #size = l*step
+    size = l1
+    nBlocks = floor ((size + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_0para_1D_resp_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,d_array3,ret,step1,size,f])
+    ret
+  end
 ## X MAP = 3 GNX; 0 PARAMETERS; 1D, COORD: TRUE;
+  defk map3_0para_coord_1D_kernel(d_array1, d_array2, d_array3, step, size, f) do
+    idX = threadIdx.x + blockIdx.x * blockDim.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      f(d_array1[id],d_array2[id],d_array3[id],idX)
+    end
+  end
+  def map3_0para_coord_1D(d_array1, d_array2, d_array3, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    {sizeX3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_0para_coord_1D_kernel/6,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,step1,size,f])
+    d_array1
+  end
 ## X MAP = 3 GNX; 0 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+  defk map3_0para_coord_1D_resp_kernel(d_array1, d_array2, d_array3, ret, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],d_array3[id],idX)
+    end
+  end
+  def map3_0para_coord_1D_resp(d_array1, d_array2, d_array3, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    {sizeX3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_0para_coord_1D_resp_kernel/7,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,ret,step1,size,f])
+    ret
+  end
 ## X MAP = 3 GNX; 0 PARAMETERS; 2D;
+  defk map3_0para_2D_kernel(d_array1, d_array2, d_array3, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if (stride < (sizeX*sizeY)) do
+    #if (stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      f(d_array1[id],d_array2[id],d_array3[id])
+    end
+  end
+  def map3_0para_2D(d_array1, d_array2, d_array3, f) do
+    #block_size =  128;
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or sizeY1 != sizeY2 or sizeY2 != sizeY3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_0para_2D_kernel/7,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,step1,sizeX1,sizeY1,f])
+    d_array1
+  end
 ## X MAP = 3 GNX; 0 PARAMETERS; 2D, RETURN: TRUE;
+  defk map3_0para_2D_resp_kernel(d_array1, d_array2, d_array3, ret, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      ret[id] = f(d_array1[id],d_array2[id],d_array3[id])
+    end
+  end
+  def map3_0para_2D_resp(d_array1, d_array2, d_array3, f) do
+    #block_size =  128;
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or sizeY1 != sizeY2 or sizeY2 != sizeY3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_0para_2D_resp_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,ret,step1,sizeX1,sizeY1,f])
+    ret
+  end
 ## X MAP = 3 GNX; 0 PARAMETERS; 2D, COORD: TRUE;
+  defk map3_0para_coord_2D_kernel(d_array1, d_array2, d_array3, step, sizeX, sizeY, f) do
+    idX = threadIdx.x + blockIdx.x * blockDim.x
+    idY = threadIdx.y + blockIdx.y * blockDim.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    id  = step * stride
+    ## Aqui tenho que verificar o 'step'
+    if (stride < (sizeX*sizeY)) do
+    #if (stride < (sizeX*sizeY*step)) do
+      x = (stride - sizeY * (stride / sizeY))
+      y = stride/sizeY
+
+      f(d_array1+id,d_array2+id,d_array3+id,x,y)
+    end
+  end
+  def map3_0para_coord_2D(d_array1, d_array2, d_array3, f) do
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or sizeY1 != sizeY2 or sizeY2 != sizeY3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_0para_coord_2D_kernel/7,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,step1,sizeX1,sizeY1,f])
+    #PolyHok.spawn(&Ske.map3_0para_coord_2D_kernel/7,{sizeX,sizeX,1},{1,1,1},[d_array1,d_array2,d_array3,step,par1,sizeX,sizeY,f])
+    d_array1
+  end
 ## X MAP = 3 GNX; 0 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
+  defk map3_0para_coord_2D_resp_kernel(d_array1, d_array2, d_array3, ret, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      x = (stride - sizeY * (stride / sizeY))
+      y = stride/sizeY
+      id  = step * stride
+
+      ret[id] = f(d_array1[id], d_array2[id], d_array3[id], x, y)
+    end
+  end
+  def map3_0para_coord_2D_resp(d_array1, d_array2, d_array3, f) do
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or sizeY1 != sizeY2 or sizeY2 != sizeY3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_0para_coord_2D_resp_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,ret,step1,sizeX1,sizeY1,f])
+    ret
+  end
 
 ## X MAP = 3 GNX; 1 PARAMETER; 1D;
+  defk map3_1para_1D_kernel(d_array1, d_array2, d_array3, par1, step, size, f) do
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(id,size,stride) do
+      id = i*step
+      f(d_array1[id], d_array2[id], d_array3[id], par1)
+    end
+  end
+  def map3_1para_1D(d_array1, d_array2, d_array3, par1, f) do
+    block_size =  128;
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l3,step3} = case PolyHok.get_shape_gnx(d_array3) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    if(l1 != l2  or l2 != l3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+    #size = l*step
+    size = l1
+    nBlocks = floor ((size + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_1para_1D_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,d_array3,par1,step1,size,f])
+    d_array1
+  end
 ## X MAP = 3 GNX; 1 PARAMETER; 1D, RETURN: TRUE;
+  defk map3_1para_1D_resp_kernel(d_array1, d_array2, d_array3, ret, par1, step, size, f) do
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(id,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id], d_array2[id], d_array3[id], par1)
+    end
+  end
+  def map3_1para_1D_resp(d_array1, d_array2, d_array3, par1, f) do
+    block_size =  128;
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l3,step3} = case PolyHok.get_shape_gnx(d_array3) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    if(l1 != l2 or l2 != l3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #size = l*step
+    size = l1
+    nBlocks = floor ((size + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_1para_1D_resp_kernel/8,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,d_array3,ret,par1,step1,size,f])
+    ret
+  end
 ## X MAP = 3 GNX; 1 PARAMETER; 1D, COORD: TRUE;
+  defk map3_1para_coord_1D_kernel(d_array1, d_array2, d_array3, par1, step, size, f) do
+    idX = threadIdx.x + blockIdx.x * blockDim.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      f(d_array1[id],d_array2[id],d_array3[id],par1,idX)
+    end
+  end
+  def map3_1para_coord_1D(d_array1, d_array2, d_array3, par1, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    {sizeX3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_1para_coord_1D_kernel/7,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,step1,size,f])
+    d_array1
+  end
 ## X MAP = 3 GNX; 1 PARAMETER; 1D, COORD: TRUE, RETURN: TRUE;
+  defk map3_1para_coord_1D_resp_kernel(d_array1, d_array2, d_array3, ret, par1, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],d_array3[id],par1,idX)
+    end
+  end
+  def map3_1para_coord_1D_resp(d_array1, d_array2, d_array3, par1, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    {sizeX3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l} -> {l,1}
+                            {l,step} -> {l,step}
+                            x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_1para_coord_1D_resp_kernel/8,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,ret,par1,step1,size,f])
+    ret
+  end
 ## X MAP = 3 GNX; 1 PARAMETER; 2D;
+  defk map3_1para_2D_kernel(d_array1, d_array2, d_array3, par1, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if (stride < (sizeX*sizeY)) do
+    #if (stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      f(d_array1[id], d_array2[id], d_array3[id], par1)
+    end
+  end
+  def map3_1para_2D(d_array1, d_array2, d_array3, par1, f) do
+    #block_size =  128;
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or sizeY1 != sizeY2 or sizeY2 != sizeY3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_1para_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,step1,sizeX1,sizeY1,f])
+    d_array1
+  end
 ## X MAP = 3 GNX; 1 PARAMETER; 2D, RETURN: TRUE;
+  defk map3_1para_2D_resp_kernel(d_array1, d_array2, d_array3, ret, par1, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      ret[id] = f(d_array1[id], d_array2[id], d_array3[id], par1)
+    end
+  end
+  def map3_1para_2D_resp(d_array1, d_array2, d_array3, par1, f) do
+    #block_size =  128;
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or sizeY1 != sizeY2 or sizeY2 != sizeY3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_1para_2D_resp_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,ret,par1,step1,sizeX1,sizeY1,f])
+    ret
+  end
 ## MAP = 3 GNX; 1 PARAMETER; 2D, COORD: TRUE;
   defk map3_1para_coord_2D_kernel(d_array1, d_array2, d_array3, par1, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x
@@ -1937,8 +3348,13 @@ PolyHok.defmodule Ske do
                             {l,c,step} -> {l,c,step}
                             x -> raise "Invalid shape for a 2D map: #{inspect x}!"
                           end
-    if(sizeX != sizeX2 or sizeY != sizeY2 or step != step2) do
-      raise "Both matrices shall have same shape."
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX != sizeX2 or sizeX2 != sizeX3 or sizeY != sizeY2 or sizeY2 != sizeY3 or step != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
     end
 
     block_size = 16
@@ -1946,30 +3362,722 @@ PolyHok.defmodule Ske do
     grid_rows = trunc ((sizeX + block_size - 1) / block_size)
     grid_cols = trunc ((sizeY + block_size - 1) / block_size)
 
-    PolyHok.spawn(&Ske.map3_1para_coord_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,step,sizeX,sizeY,f])
+    PolyHok.spawn(&Ske.map3_1para_coord_2D_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,step,sizeX,sizeY,f])
     d_array1
   end
 ## X MAP = 3 GNX; 1 PARAMETER; 2D, COORD: TRUE, RETURN: TRUE;
+  defk map3_1para_coord_2D_resp_kernel(d_array1, d_array2, d_array3, ret, par1, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+      x = (stride - sizeY * (stride / sizeY))
+      y = stride/sizeY
+      id = stride*step
+
+      ret[id] = f(d_array1[id], d_array2[id], d_array3[id], par1, x, y)
+    end
+  end
+  def map3_1para_coord_2D_resp(d_array1, d_array2, d_array3, par1, f) do
+    {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX != sizeX2 or sizeX2 != sizeX3 or sizeY != sizeY2 or sizeY2 != sizeY3 or step != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    block_size = 16
+    #block_size = 128
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_1para_coord_2D_resp_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,ret,par1,step,sizeX,sizeY,f])
+    ret
+  end
 
 ## X MAP = 3 GNX; 2 PARAMETERS; 1D;
+  defk map3_2para_1D_kernel(d_array1, d_array2, d_array3, par1, par2, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(idX < size*step) do
+      #id = stride*step
+      id = idX*step
+
+      #printf("%d %d ",idX,id)
+      f(d_array1+idX, d_array2+id, d_array3+id, par1, par2)
+    end
+  end
+  def map3_2para_1D(d_array1, d_array2, d_array3, par1, par2, f) do
+    block_size =  128;
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l3,step3} = case PolyHok.get_shape_gnx(d_array3) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    if(l1 != l2 or l2 != l3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    size = l1
+    nBlocks = floor ((size + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_2para_1D_kernel/8,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,d_array3,par1,par2,step1,size,f])
+    d_array1
+  end
 ## X MAP = 3 GNX; 2 PARAMETERS; 1D, RETURN: TRUE;
+  defk map3_2para_1D_resp_kernel(d_array1, d_array2, d_array3, ret, par1, par2, step, size, f) do
+    #printf("AQUI\\n")
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(id,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],d_array3[id],par1,par2)
+    end
+  end
+  def map3_2para_1D_resp(d_array1, d_array2, d_array3, par1, par2, f) do
+    block_size =  128;
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    {l3,step3} = case PolyHok.get_shape_gnx(d_array3) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+    if(l1 != l2 or l2 != l3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #size = l*step
+    size = l1
+    nBlocks = floor ((size + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_2para_1D_resp_kernel/9,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,d_array3,ret,par1,par2,step1,size,f])
+    ret
+  end
 ## X MAP = 3 GNX; 2 PARAMETERS; 1D, COORD: TRUE;
+  defk map3_2para_coord_1D_kernel(d_array1, d_array2, d_array3, par1, par2, step, size, f) do
+    x = threadIdx.x + blockIdx.x * blockDim.x
+    offset = x * blockDim.x * gridDim.x
+
+    if (offset < size) do
+      id = step * offset
+      f(d_array1[id],d_array2[id],d_array3[id],par1,par2,x)
+    end
+  end
+  def map3_2para_coord_1D(d_array1, d_array2, d_array3, par1, par2, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    {sizeX3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_2para_coord_1D_kernel/8,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,par2,step1,size,f])
+    d_array1
+  end
 ## X MAP = 3 GNX; 2 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+  defk map3_2para_coord_1D_resp_kernel(d_array1, d_array2, d_array3, ret, par1, par2, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    #offset = idX * blockDim.x * gridDim.x
+    #if(offset < size)do
+    #  ret[offset] = f(d_array[offset],par1,par2,idX)
+    for i in range(idX,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],d_array3[id],par1,par2,idX)
+    end
+  end
+  def map3_2para_coord_1D_resp(d_array1,d_array2, d_array3, par1, par2, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    {sizeX3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_2para_coord_1D_resp_kernel/9,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,ret,par1,par2,step1,size,f])
+    ret
+  end
 ## X MAP = 3 GNX; 2 PARAMETERS; 2D;
+  defk map3_2para_2D_kernel(d_array1, d_array2, d_array3, par1, par2, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      f(d_array1[id], d_array2[id], d_array3[id], par1, par2)
+    end
+  end
+  def map3_2para_2D(d_array1, d_array2, d_array3, par1, par2, f) do
+    #block_size =  128;
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or sizeY1 != sizeY2 or sizeY2 != sizeY3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_2para_2D_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,par2,step1,sizeX1,sizeY1,f])
+    d_array1
+  end
 ## X MAP = 3 GNX; 2 PARAMETERS; 2D, RETURN: TRUE;
+  defk map3_2para_2D_resp_kernel(d_array1, d_array2, d_array3, ret, par1, par2, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      id = stride*step
+      ret[id] = f(d_array1[id], d_array2[id], d_array3[id], par1, par2)
+    end
+  end
+  def map3_2para_2D_resp(d_array1, d_array2, d_array3, par1, par2, f) do
+    #block_size =  128;
+    {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or sizeY1 != sizeY2 or sizeY2 != sizeY3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #nBlocks = floor ((size + block_size - 1) / block_size)
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_2para_2D_resp_kernel/10,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,ret,par1,par2,step1,sizeX1,sizeY1,f])
+    ret
+  end
 ## X MAP = 3 GNX; 2 PARAMETERS; 2D, COORD: TRUE;
+  defk map3_2para_coord_2D_kernel(d_array1, d_array2, d_array3, par1, par2, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+      x = (stride - sizeY * (stride / sizeY))
+      y = stride/sizeY
+      id = stride*step
+
+      f(d_array1+id, d_array2+id, d_arraye3+id, par1, par2, x, y)
+    end
+  end
+  def map3_2para_coord_2D(d_array1, d_array2, d_array3, par1, par2, f) do
+    {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX != sizeX2 or sizeX2 != sizeX3 or sizeY != sizeY2 or sizeY2 != sizeY3 or step != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    block_size = 16
+    #block_size = 128
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_2para_coord_2D_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,par2,step,sizeX,sizeY,f])
+    d_array1
+  end
 ## X MAP = 3 GNX; 2 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
+  defk map3_2para_coord_2D_resp_kernel(d_array1, d_array2, d_array3, ret, par1, par2, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+      x = (stride - sizeY * (stride / sizeY))
+      y = stride/sizeY
+      id = stride*step
+
+      ret[id] = f(d_array1[id], d_array2[id], d_array3[id], par1, par2, x, y)
+    end
+  end
+  def map3_2para_coord_2D_resp(d_array1, d_array2, d_array3, par1, par2, f) do
+    {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX != sizeX2 or sizeX3 != sizeX3 or sizeY != sizeY2 or sizeY2 != sizeY3 or step != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    block_size = 16
+    #block_size = 128
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_2para_coord_2D_resp_kernel/10,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,ret,par1,par2,step,sizeX,sizeY,f])
+    ret
+  end
 
 ## X MAP = 3 GNX; 3 PARAMETERS; 1D;
-## X MAP = 3 GNX; 3 PARAMETERS; 1D, RETURN: TRUE;
-## X MAP = 3 GNX; 3 PARAMETERS; 1D, COORD: TRUE;
-## X MAP = 3 GNX; 3 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
-## X MAP = 3 GNX; 3 PARAMETERS; 2D;
-## X MAP = 3 GNX; 3 PARAMETERS; 2D, RETURN: TRUE;
-## X MAP = 3 GNX; 3 PARAMETERS; 2D, COORD: TRUE;
-## X MAP = 3 GNX; 3 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
+  defk map3_3para_1D_kernel(d_array1, d_array2, d_array3, par1, par2, par3, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
 
-##
+    for i in range(idX,size,stride) do
+      id = i*step
+      f(d_array1[id],d_array2[id],d_array3[id],par1,par2,par3)
+    end
+  end
+  def map3_3para_1D(d_array1, d_array2, d_array3, par1, par2, par3, f) do
+      block_size =  128;
+      {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+      {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+      {l3,step3} = case PolyHok.get_shape_gnx(d_array3) do
+                {l} -> {l,1}
+                {l,step} -> {l,step}
+                x -> raise "Invalid shape for 1D map: #{inspect x}!"
+              end
+      if(l1 != l2 or l2 != l3 or step1 != step2 or step2 != step3) do
+        raise "All matrices shall have same shape."
+      end
+
+      #size = l*step
+      size = l1
+      nBlocks = floor ((size + block_size - 1) / block_size)
+
+      PolyHok.spawn(&Ske.map3_3para_1D_kernel/9,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,d_array3,par1,par2,par3,step1,size,f])
+      d_array1
+  end
+## X MAP = 3 GNX; 3 PARAMETERS; 1D, RETURN: TRUE;
+  defk map3_3para_1D_resp_kernel(d_array1, d_array2, d_array3, ret, par1, par2, par3, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],d_array3[id],par1,par2,par3)
+    end
+  end
+  def map3_3para_1D_resp(d_array1, d_array2, d_array3, par1, par2, par3, f) do
+    block_size =  128;
+    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+              {l} -> {l,1}
+              {l,step} -> {l,step}
+              x -> raise "Invalid shape for 1D map: #{inspect x}!"
+            end
+    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+              {l} -> {l,1}
+              {l,step} -> {l,step}
+              x -> raise "Invalid shape for 1D map: #{inspect x}!"
+            end
+    {l3,step3} = case PolyHok.get_shape_gnx(d_array3) do
+              {l} -> {l,1}
+              {l,step} -> {l,step}
+              x -> raise "Invalid shape for 1D map: #{inspect x}!"
+            end
+    if(l1 != l2 or l2 != l3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #size = l*step
+    size = l1
+    nBlocks = floor ((size + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_3para_1D_resp_kernel/9,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,par1,par2,par3,step1,size,f])
+    ret
+  end
+## X MAP = 3 GNX; 3 PARAMETERS; 1D, COORD: TRUE;
+  defk map3_3para_coord_1D_kernel(d_array1, d_array2, d_array3, par1, par2, par3, step, size, f) do
+    idX = threadIdx.x + blockIdx.x * blockDim.x
+    stride = blockDim.x * gridDim.x
+
+    #offset = x * blockDim.x * gridDim.x
+    #if (offset < size) do
+    #  f(d_array+id,par1,par2,par3,x)
+    for i in range(idX,size,stride) do
+      id = i*step
+      f(d_array1[id],d_array2[id],d_array3[id],par1,par2,par3,idX)
+    end
+  end
+  def map3_3para_coord_1D(d_array1, d_array2, d_array3, par1, par2, par3, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    {sizeX3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #size = sizeX*step
+    size = sizeX1
+
+    block_size = 16
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_3para_coord_1D_kernel/9,{grid_rows,1,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,par2,par3,step1,size,f])
+    d_array1
+  end
+## X MAP = 3 GNX; 3 PARAMETERS; 1D, COORD: TRUE, RETURN: TRUE;
+  defk map3_3para_coord_1D_resp_kernel(d_array1, d_array2, d_array3, ret, par1, par2, par3, step, size, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(idX,size,stride) do
+      id = i*step
+      ret[id] = f(d_array1[id],d_array2[id],par1,par2,par3,id)
+    end
+  end
+  def map3_3para_coord_1D_resp(d_array1, d_array2, d_array3, par1, par2, par3, f) do
+    {sizeX1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    {sizeX2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    {sizeX3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                          {l} -> {l,1}
+                          {l,step} -> {l,step}
+                          x -> raise "Invalid shape for a 1D map: #{inspect x}!"
+                        end
+    if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or step1 != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    #size = sizeX*step
+    size = sizeX1
+
+    #block_size = 16
+    block_size = 128
+    grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    #PolyHok.spawn(&Ske.map3_3para_coord_1D_resp_kernel/10,{grid_rows,1,1},{block_size,block_size,1},[d_array,d_array2,d_array3,ret,par1,par2,par3,step,size,f])
+    PolyHok.spawn(&Ske.map3_3para_coord_1D_resp_kernel/10,{grid_rows,1,1},{block_size,1,1},[d_array1,d_array2,d_array3,ret,par1,par2,par3,step1,size,f])
+    ret
+  end
+## X MAP = 3 GNX; 3 PARAMETERS; 2D;
+  defk map3_3para_2D_kernel(d_array1, d_array2, d_array3, par1, par2, par3, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    id = stride*step
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      f(d_array2[id], d_array2[id], d_array3[id], par1, par2, par3)
+    end
+  end
+  def map3_3para_2D(d_array1, d_array2, d_array3, par1, par2, par3, f) do
+      #block_size =  128;
+      {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+      {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+      {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+      if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or sizeY1 != sizeY2 or sizeY2 != sizeY3 or step1 != step2 or step2 != step3) do
+        raise "All matrices shall have same shape."
+      end
+
+      #nBlocks = floor ((size + block_size - 1) / block_size)
+      block_size = 16
+      grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+      grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+
+      PolyHok.spawn(&Ske.map3_3para_2D_kernel/10,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,par2,par3,step1,sizeX1,sizeY1,f])
+      d_array1
+  end
+## X MAP = 3 GNX; 3 PARAMETERS; 2D, RETURN: TRUE;
+  defk map3_3para_2D_resp_kernel(d_array1, d_array2, d_array3, ret, par1, par2, par3, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    id = stride*step
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+    #if(stride < (sizeX*sizeY*step)) do
+      ret[id] = f(d_array1[id], d_array2[id], d_array3[id], par1, par2, par3)
+    end
+  end
+  def map3_3para_2D_resp(d_array1, d_array2, d_array3, par1, par2, par3, f) do
+      #block_size =  128;
+      {sizeX1,sizeY1,step1} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+      {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+      {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+      if(sizeX1 != sizeX2 or sizeX2 != sizeX3 or sizeY1 != sizeY2 or sizeY2 != sizeY3 or step1 != step2 or step2 != step3) do
+        raise "All matrices shall have same shape."
+      end
+
+      #nBlocks = floor ((size + block_size - 1) / block_size)
+      block_size = 16
+      grid_rows = trunc ((sizeX1 + block_size - 1) / block_size)
+      grid_cols = trunc ((sizeY1 + block_size - 1) / block_size)
+      ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+      PolyHok.spawn(&Ske.map3_3para_2D_resp_kernel/11,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,ret,par1,par2,par3,step1,sizeX1,sizeY1,f])
+      ret
+  end
+## X MAP = 3 GNX; 3 PARAMETERS; 2D, COORD: TRUE;
+  defk map3_3para_coord_2D_kernel(d_array1, d_array2, d_array3, par1, par2, par3, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+      x = (stride - sizeY * (stride / sizeY))
+      y = stride/sizeY
+      id = stride*step
+
+      f(d_array1+id, d_array2+id, d_array3+id, par1, par2, par3, x, y)
+    end
+  end
+  def map3_3para_coord_2D(d_array1, d_array2, d_array3, par1, par2, par3, f) do
+    {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX != sizeX2 or sizeX2 != sizeX3 or sizeY != sizeY2 or sizeY2 != sizeY3 or step != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    block_size = 16
+    #block_size = 128
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+
+    PolyHok.spawn(&Ske.map3_3para_coord_2D_kernel/10,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,par2,par3,step,sizeX,sizeY,f])
+    d_array1
+  end
+## X MAP = 3 GNX; 3 PARAMETERS; 2D, COORD: TRUE, RETURN: TRUE;
+  defk map3_3para_coord_2D_resp_kernel(d_array1, d_array2, d_array3, ret, par1, par2, par3, step, sizeX, sizeY, f) do
+    idX = blockIdx.x * blockDim.x + threadIdx.x
+    idY = blockIdx.y * blockDim.y + threadIdx.y
+    stride = idX + idY * blockDim.x * gridDim.x
+
+    ## Aqui tenho que verificar o 'step'
+    if(stride < (sizeX*sizeY)) do
+      x = (stride - sizeY * (stride / sizeY))
+      y = stride/sizeY
+      id = stride*step
+
+      ret[id] = f(d_array1[id], d_array2[id], d_array3[id], par1, par2, par3, x, y)
+    end
+  end
+  def map3_3para_coord_2D_resp(d_array1, d_array2, d_array3, par1, par2, par3, f) do
+    {sizeX,sizeY,step} =  case PolyHok.get_shape_gnx(d_array1) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX2,sizeY2,step2} =  case PolyHok.get_shape_gnx(d_array2) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    {sizeX3,sizeY3,step3} =  case PolyHok.get_shape_gnx(d_array3) do
+                            {l,c} -> {l,c,1}
+                            {l,c,step} -> {l,c,step}
+                            x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                          end
+    if(sizeX != sizeX2 or sizeX2 != sizeX3 or sizeY != sizeY2 or sizeY2 != sizeY3 or step != step2 or step2 != step3) do
+      raise "All matrices shall have same shape."
+    end
+
+    block_size = 16
+    #block_size = 128
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+    ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
+
+    PolyHok.spawn(&Ske.map3_3para_coord_2D_resp_kernel/11,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,ret,par1,par2,par3,step,sizeX,sizeY,f])
+    ret
+  end
 
 end
 
