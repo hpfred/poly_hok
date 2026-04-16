@@ -62,6 +62,8 @@ result_gpu = PolyHok.new_gnx(m,m,PolyHok.get_array_type(mat1))
 #result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [result_gpu, m], [return: false, dim: :two, coord: true])
 result_gpu = Ske.map(result_gpu, arr1_gpu, arr2_gpu, &MM.mat_mult/5, [m], [return: false, dim: :two, coord: true])
 
+IO.inspect(PolyHok.get_gnx(arr1_gpu))
+
 _r_gpu = PolyHok.get_gnx(result_gpu)
 #r_gpu
 #IO.inspect(r_gpu)
