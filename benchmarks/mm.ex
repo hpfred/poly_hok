@@ -55,6 +55,8 @@ m = String.to_integer(arg)
 mat1 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end)
 mat2 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end)
 
+IO.inspect(PolyHok.get_gnx(mat1))
+
 prev = System.monotonic_time()
 
 _result = PolyHok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
