@@ -1645,7 +1645,7 @@ PolyHok.defmodule Ske do
     block_size =  128;
     # size = l1*step1
     size = l1
-    nBlocks = floor (((size*step1) + block_size - 1) / block_size)
+    nBlocks = floor ((size + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
 
     PolyHok.spawn(&Ske.map2_0para_1D_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,ret,step1,size,f])
@@ -3329,8 +3329,8 @@ PolyHok.defmodule Ske do
     stride = idX + idY * blockDim.x * gridDim.x
 
     ## Aqui tenho que verificar o 'step'
-    # if(stride < (sizeX*sizeY)) do
-    if(stride < (sizeX*sizeY*step)) do
+    if(stride < (sizeX*sizeY)) do
+    # if(stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
       id = stride*step
@@ -3362,10 +3362,10 @@ PolyHok.defmodule Ske do
 
     block_size = 16
     #block_size = 128
-    # grid_rows = trunc ((sizeX + block_size - 1) / block_size)
-    # grid_cols = trunc ((sizeY + block_size - 1) / block_size)
-    grid_rows = trunc (((sizeX*step) + block_size - 1) / block_size)
-    grid_cols = trunc (((sizeY*step) + block_size - 1) / block_size)
+    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+    # grid_rows = trunc (((sizeX*step) + block_size - 1) / block_size)
+    # grid_cols = trunc (((sizeY*step) + block_size - 1) / block_size)
 
     PolyHok.spawn(&Ske.map3_1para_coord_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,step,sizeX,sizeY,f])
     d_array1
