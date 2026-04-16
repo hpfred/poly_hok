@@ -3329,10 +3329,12 @@ PolyHok.defmodule Ske do
     stride = idX + idY * blockDim.x * gridDim.x
 
     ## Aqui tenho que verificar o 'step'
-    if(stride < (sizeX*sizeY)) do
+    # if(stride < (sizeX*sizeY)) do
+    if(stride < (sizeX*sizeY*step)) do
       x = (stride - sizeY * (stride / sizeY))
       y = stride/sizeY
       id = stride*step
+      # id = stride
       #printf("%d\\n",d_array1+id)
 
       f(d_array1+id, d_array2+id, d_array3+id, par1, x, y)
@@ -3360,8 +3362,10 @@ PolyHok.defmodule Ske do
 
     block_size = 16
     #block_size = 128
-    grid_rows = trunc ((sizeX + block_size - 1) / block_size)
-    grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+    # grid_rows = trunc ((sizeX + block_size - 1) / block_size)
+    # grid_cols = trunc ((sizeY + block_size - 1) / block_size)
+    grid_rows = trunc (((sizeX*step) + block_size - 1) / block_size)
+    grid_cols = trunc (((sizeY*step) + block_size - 1) / block_size)
 
     PolyHok.spawn(&Ske.map3_1para_coord_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,step,sizeX,sizeY,f])
     d_array1
