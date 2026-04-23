@@ -474,7 +474,7 @@ defp set_type_exp(map,type,exp) do
                     case t2 do
                         :none -> set_type_exp(map,ntype,arg2)
                         ntype2 -> if ntype != ntype2 do
-                                      raise "Operator #{inspect op} (#{inspect info}) is applyed to type #{t1} and type #{t2}."
+                                      raise "Operator #{inspect op} (#{inspect info}) is applied to type #{t1} and type #{t2}."
                                   else
                                       set_type_exp(map,ntype2,arg2)
                                   end
@@ -646,14 +646,14 @@ end
                            :float -> :float
                            :double -> :double
                            :none -> :none
-                           _  -> raise "Incompatible operands (#{inspect info}: op (#{inspect op}) applyed to  type #{inspect t2}"
+                           _  -> raise "Incompatible operands (#{inspect info}: op (#{inspect op}) applied to  type #{inspect t2}"
                           end
                 :float -> :float
                 :double -> :double
                 :tfloat -> :tfloat
                 :tdouble-> :tdouble
                 :tint -> :tint
-                _ -> raise "Incompatible operands (#{inspect info}: op (#{inspect op}) applyed to  type #{inspect t1}"
+                _ -> raise "Incompatible operands (#{inspect info}: op (#{inspect op}) applied to  type #{inspect t1}"
 
               end
           end
