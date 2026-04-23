@@ -66,8 +66,8 @@ result_gpu = PolyHok.new_gnx(m,m,PolyHok.get_array_type(mat1))
 #MM.map2xy2D1p(arr1_gpu, arr2_gpu, par, result_gpu, size1, f)
 #result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [par1], [return: true, dim: :two, coord: true])
 #result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [result_gpu, m], [return: false, dim: :two, coord: true])
-# result_gpu = Ske.map(result_gpu, arr1_gpu, arr2_gpu, &MM.mat_mult/5, [m], [return: false, dim: :two, coord: true])
-result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [m], [return: true, dim: :two, coord: true])
+result_gpu = Ske.map(result_gpu, arr1_gpu, arr2_gpu, &MM.mat_mult/5, [m], [return: false, dim: :two, coord: true])
+# result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [m], [return: true, dim: :two, coord: true])
 
 # IO.inspect(PolyHok.get_gnx(arr1_gpu))
 #ele não tem step aqui é só [100][100]
