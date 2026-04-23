@@ -2188,14 +2188,16 @@ PolyHok.defmodule Ske do
                 {l,step} -> {l,step}
                 x -> raise "Invalid shape for 1D map: #{inspect x}!"
               end
-    if(l1 != l2 or step1 != step2) do
-      raise "Both matrices shall have same shape."
-    end
+    # if(l1 != l2 or step1 != step2) do
+    #   IO.inspect({l1,step1})
+    #   IO.inspect({l2,step2})
+    #   raise "Both matrices shall have same shape."
+    # end
 
     size = l1
     nBlocks = floor ((size + block_size - 1) / block_size)
 
-    PolyHok.spawn(&Ske.map2_2para_1D_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,par1,par2,step1,size,f])
+    PolyHok.spawn(&Ske.map2_2para_1D_kernel/7,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,par1,par2,step2,size,f])
     d_array1
   end
 ## X MAP = 2 GNX; 2 PARAMETERS; 1D, RETURN: TRUE;
@@ -3335,7 +3337,6 @@ PolyHok.defmodule Ske do
       y = stride/sizeY
       id = stride*step
       # id = stride
-      #printf("%d\\n",d_array1+id)
 
       f(d_array1+id, d_array2+id, d_array3+id, par1, x, y)
     end
@@ -3367,7 +3368,10 @@ PolyHok.defmodule Ske do
     # grid_rows = trunc (((sizeX*step) + block_size - 1) / block_size)
     # grid_cols = trunc (((sizeY*step) + block_size - 1) / block_size)
 
+    # IO.inspect(d_array2)
     PolyHok.spawn(&Ske.map3_1para_coord_2D_kernel/8,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,par1,step,sizeX,sizeY,f])
+    # IO.inspect(PolyHok.get_gnx(d_array2))
+    # IO.inspect(d_array1)
     d_array1
   end
 ## X MAP = 3 GNX; 1 PARAMETER; 2D, COORD: TRUE, RETURN: TRUE;

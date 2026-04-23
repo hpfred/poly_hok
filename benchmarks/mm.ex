@@ -34,6 +34,8 @@ end
 
 m = String.to_integer(arg)
 
+:rand.seed(:exsss, {123, 123, 123})
+
 #vet1 = Nx.iota({m,m}, type: :f32)
 #vet2 = Nx.iota({m,m}, type: :f32)
 

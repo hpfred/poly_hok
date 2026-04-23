@@ -107,6 +107,7 @@ size = String.to_integer(arg)
 :rand.seed(:exsss, {123, 123, 123})
 
 data_set_host = DataSet.gen_data_set_nx_double(size)
+IO.inspect(data_set_host)
 #data_set_host = Nx.tensor(DataSet.gen_data_set(size),  type: {:f,32} )
 
 #IO.inspect data_set_host
@@ -116,7 +117,8 @@ prev = System.monotonic_time()
 d_array = PolyHok.new_gnx(data_set_host)
 #IO.inspect(PolyHok.get_gnx(d_array))
 type = PolyHok.get_type_gnx(d_array)
-r = PolyHok.new_gnx(1,size, type)
+# r = PolyHok.new_gnx(1,size,type)
+r = PolyHok.new_gnx(size,1,type)
     |> Ske.map(d_array, &NN.euclid/3, [0.0, 0.0], [return: false, dim: :one, coord: false])
 IO.inspect(PolyHok.get_gnx(r))
 _r = r

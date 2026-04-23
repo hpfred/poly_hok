@@ -4,12 +4,13 @@ use Ske
 PolyHok.defmodule MM do
   defd mat_mult(res_arr,arr1,arr2,size,row,col) do
     sum = 0.0
-    for i in range(0,size)do
+    for i in range(0,size-1)do
       sum = sum + arr1[row*size+i] * arr2[i*size+col]
     end
-    #printf("%f\\n",sum)
-    #printf("%d\\n",(row*size+col))
+    # printf("%f\\n",sum)
+    # printf("%d\\n",(row*size+col))
     res_arr[row*size+col] = sum
+    # printf("%f\\n",res_arr[row*size+col])
 
   end
 end
@@ -17,6 +18,8 @@ end
 [arg] = System.argv()
 
 m = String.to_integer(arg)
+
+:rand.seed(:exsss, {123, 123, 123})
 
 #vet1 = Nx.iota({m,m}, type: :f32)
 #vet2 = Nx.iota({m,m}, type: :f32)
@@ -27,16 +30,19 @@ m = String.to_integer(arg)
 #mat1 = Matrex.new(1, m*m, fn -> :rand.uniform(1000) end)
 #mat2 = Matrex.new(1, m*m, fn -> :rand.uniform(1000) end)
 
-#mat1 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end )
-#mat2 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end)
+# mat1 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end )
+# mat2 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end)
 
-mat1 = Nx.tensor(Enum.to_list(1..(m*m)), type: :f32)
-mat2 = Nx.tensor(Enum.to_list(1..(m*m)),  type: :f32)
+mat1 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> 1 end )
+mat2 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> 1 end)
+
+# mat1 = Nx.tensor(Enum.to_list(1..(m*m)), type: :f32)
+# mat2 = Nx.tensor(Enum.to_list(1..(m*m)),  type: :f32)
 
 mat1 = Nx.reshape(mat1,{m,m})
 mat2 = Nx.reshape(mat2,{m,m})
 
-#IO.inspect(mat1)
+# IO.inspect(mat1)
 #IO.inspect(mat2)
 
 prev = System.monotonic_time()
@@ -62,7 +68,7 @@ result_gpu = PolyHok.new_gnx(m,m,PolyHok.get_array_type(mat1))
 #result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [result_gpu, m], [return: false, dim: :two, coord: true])
 result_gpu = Ske.map(result_gpu, arr1_gpu, arr2_gpu, &MM.mat_mult/5, [m], [return: false, dim: :two, coord: true])
 
-IO.inspect(PolyHok.get_gnx(arr1_gpu))
+# IO.inspect(PolyHok.get_gnx(arr1_gpu))
 #ele não tem step aqui é só [100][100]
 
 _r_gpu = PolyHok.get_gnx(result_gpu)
