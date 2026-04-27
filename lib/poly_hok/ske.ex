@@ -2178,12 +2178,14 @@ PolyHok.defmodule Ske do
   end
   def map2_2para_1D(d_array1, d_array2, par1, par2, f) do
     block_size =  128;
-    {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+    # {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
+    {l1,_step1} = case PolyHok.get_shape_gnx(d_array1) do
                 {l} -> {l,1}
                 {l,step} -> {l,step}
                 x -> raise "Invalid shape for 1D map: #{inspect x}!"
               end
-    {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+    # {l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
+    {_l2,step2} = case PolyHok.get_shape_gnx(d_array2) do
                 {l} -> {l,1}
                 {l,step} -> {l,step}
                 x -> raise "Invalid shape for 1D map: #{inspect x}!"
