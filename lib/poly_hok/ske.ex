@@ -1578,6 +1578,7 @@ PolyHok.defmodule Ske do
 
 ## "X" indica os que adicionei depois, e portanto preciso testar pra confirmar que fiz corretamente
 ## "Y" indica o que eu fiz modificação para corrigir, e precisa ver se é correto substituir em todos outros casos
+## ""Z é a mesma coisa que o "Y", porém modifiquei mais radicalmente (era um Y, que já precisava revisar, e agora modifiquei totalmente, então precisa atenção dubplicada). Essa modificação em especifico diminuiu muito o tempo de execução, ficando mais parecida com a implementação no dot product com poly_hok puro
 
 ## X MAP = 2 GNX; 0 PARAMETERS; 1D;
   defk map2_0para_1D_kernel(d_array1, d_array2, step, size, f) do
@@ -1590,7 +1591,7 @@ PolyHok.defmodule Ske do
     end
   end
   def map2_0para_1D(d_array1, d_array2, f) do
-    block_size =  128;
+    block_size =  256;
     {l1,step1} = case PolyHok.get_shape_gnx(d_array1) do
                 {l} -> {l,1}
                 {l,step} -> {l,step}
@@ -1611,20 +1612,25 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map2_0para_1D_kernel/5,{nBlocks,1,1},{block_size,1,1},[d_array1,d_array2,step1,size,f])
     d_array1
   end
-## Y MAP = 2 GNX; 0 PARAMETERS; 1D, RETURN: TRUE;
+## Z MAP = 2 GNX; 0 PARAMETERS; 1D, RETURN: TRUE;
   defk map2_0para_1D_resp_kernel(d_array1, d_array2, ret, step, size, f) do
-    id = blockIdx.x * blockDim.x + threadIdx.x
-    stride = blockDim.x * gridDim.x
-    actualStep = (size/step)
+    # id = blockIdx.x * blockDim.x + threadIdx.x
+    # stride = blockDim.x * gridDim.x
+    # size2 = size*step
 
-    # printf("outside id thread: %d\\n",id);
-    # printf("size: %d\\n",size);
-    for i in range(id,(size*step),stride) do
-      # printf("inside id thread: %d\\n",id);
-      # id2 = i*step
-      id2 = i
-      # printf("posicao no array: %d\\n",id);
-      ret[id2] = f(d_array1[id2],d_array2[id2])
+    # # printf("outside id thread: %d\\n",id);
+    # # printf("size: %d\\n",size);
+    # for i in range(id, size2, stride) do
+    #   # printf("inside id thread: %d\\n",id);
+    #   # id2 = i*step
+    #   id2 = i
+    # # printf("posicao no array: %d\\n",id);
+    #   ret[id2] = f(d_array1[id2],d_array2[id2])
+    # end
+
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    if(id < size) do
+      ret[id] = f(d_array1[id],d_array2[id])
     end
   end
   def map2_0para_1D_resp(d_array1, d_array2, f) do
@@ -1642,9 +1648,9 @@ PolyHok.defmodule Ske do
       raise "Both matrices shall have same shape."
     end
 
-    block_size =  128;
-    # size = l1*step1
-    size = l1
+    block_size =  256;
+    size = l1*step1
+    # size = l1
     nBlocks = floor ((size + block_size - 1) / block_size)
     ret = PolyHok.new_gnx(PolyHok.get_shape(d_array1),PolyHok.get_type(d_array1))
 

@@ -70,12 +70,8 @@ while((! (current_value == atomic_cas(ref4, current_value, anon_akgfg4f0hl(cache
 }
 
 
-
-
-
 int main(int argc, char *argv[])
 {
-
     float *a, *b, *resp;
 	float *dev_a, *dev_b, *dev_resp;
     cudaError_t j_error;

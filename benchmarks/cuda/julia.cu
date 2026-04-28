@@ -38,7 +38,7 @@ typedef struct
 } bitmap;
 #pragma pack(pop)
 
-void genBpm(int height, int width, float *pixelbuffer_f)
+void genBpm(int height, int width, int *pixelbuffer_f)
 {
     uint32_t pixelbytesize = height * width * _bitsperpixel / 8;
     uint32_t _filesize = pixelbytesize + sizeof(bitmap);
@@ -152,11 +152,16 @@ int main(int argc, char const *argv[])
     ////////
 
     ////////////////////
-    dim3 grid(DIM, DIM);
+    // dim3 grid(DIM, DIM);
+    // // int (*f)(float*,int,int,int) = (int (*)(float*,int,int,int)) get_julia_function_ptr();
+    // mapgen2D_xy_1para_noret_ker<<<grid, 1>>>(d_pixelbuffer, DIM, DIM);
 
-    // int (*f)(float*,int,int,int) = (int (*)(float*,int,int,int)) get_julia_function_ptr();
-
-    mapgen2D_xy_1para_noret_ker<<<grid, 1>>>(d_pixelbuffer, DIM, DIM);
+    int block_size = 16;
+    int grid_rows = trunc ((DIM + block_size - 1) / block_size);
+    int grid_cols = trunc ((DIM + block_size - 1) / block_size);
+    dim3 grid(grid_cols, grid_rows, 1);
+    dim3 block(block_size, block_size, 1);
+    mapgen2D_xy_1para_noret_ker<<<grid, block>>>(d_pixelbuffer, DIM, DIM);
 
     j_error = cudaGetLastError();
     if (j_error != cudaSuccess)
@@ -174,9 +179,9 @@ int main(int argc, char const *argv[])
 
     printf("CUDA\t%d\t%3.1f\n", usr_value, time);
 
-    //float h_pixelbuffer2 = (float)h_pixelbuffer;
-    //float *h_pixelbuffer3 = &h_pixelbuffer2;
-    //genBpm(height,width,h_pixelbuffer3);
+    // float h_pixelbuffer2 = (float)* h_pixelbuffer;
+    // float *h_pixelbuffer3 = &h_pixelbuffer2;
+    genBpm(height,width,h_pixelbuffer);
 
     free(h_pixelbuffer);
     cudaFree(d_pixelbuffer);

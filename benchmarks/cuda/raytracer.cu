@@ -190,13 +190,18 @@ int main(int argc, char *argv[])
 
     //  dim3    grids(dim/16,dim/16);
     //  dim3    threads(16,16);
-
     //  mapxy_2D_step_2_para_no_resp_kernel<<<grids,threads>>>(dev_image, 4,dim,((float*) s), dim);
-
-    dim3 grids(dim, dim);
-    //   dim3    threads(16,16);
-
-    mapxy_2D_step_2_para_no_resp_kernel<<<grids, 1>>>(dev_image, 4, dim, ((float *)s), dim);
+    
+    // dim3 grids(dim, dim);
+    // //   dim3    threads(16,16);
+    // mapxy_2D_step_2_para_no_resp_kernel<<<grids, 1>>>(dev_image, 4, dim, ((float *)s), dim);
+    
+    int block_size = 16;
+    int grid_rows = trunc ((dim + block_size - 1) / block_size);
+    int grid_cols = trunc ((dim + block_size - 1) / block_size);
+    dim3 grid(grid_cols, grid_rows, 1);
+    dim3 block(block_size, block_size, 1);
+    mapxy_2D_step_2_para_no_resp_kernel<<<grid, block>>>(dev_image, 4, dim, ((float *)s), dim);
 
     // kernel<<<grids,threads>>>(dim, s, dev_image);
 
@@ -210,7 +215,7 @@ int main(int argc, char *argv[])
     cudaEventElapsedTime(&time, start, stop);
 
     printf("CUDA\t%d\t%3.1f\n", dim, time);
-    //genBpm(dim,dim,final_image);
+    genBpm(dim,dim,final_image);
 
     free(temp_s);
     free(final_image);

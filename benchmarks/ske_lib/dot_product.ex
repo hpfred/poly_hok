@@ -77,11 +77,12 @@ ref2 = PolyHok.new_gnx(vet2)
 mult = PolyHok.phok fn (a,b) -> a * b end
 soma = PolyHok.phok fn (a,b) -> a + b end
 _result = Ske.map(ref1, ref2, mult, [], [])
-# IO.inspect(PolyHok.get_gnx(_result))
-# _result = _result
+#  IO.inspect(PolyHok.get_gnx(_result))
+#  File.write!("resultado_map_DP.txt", inspect(PolyHok.get_gnx(_result), limit: :infinity))
+#  _result = _result
         |> Ske.reduce(0.0, soma)
         |> PolyHok.get_gnx
-# IO.inspect(_result)
+#  IO.inspect(_result)
 
 # _result = ref1
 #     |> Ske.map(ref2, PolyHok.phok fn (a,b) -> a * b end)

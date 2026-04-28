@@ -158,10 +158,20 @@ ref1 = PolyHok.new_gnx(vet1)
 ref2 = PolyHok.new_gnx(vet2)
 
 
+# _result = ref1
+#     |> DP.map2(ref2, PolyHok.phok fn (a,b) -> a * b end)
+#     |> DP.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
+#     |> PolyHok.get_gnx
+
 _result = ref1
     |> DP.map2(ref2, PolyHok.phok fn (a,b) -> a * b end)
+#  IO.inspect(PolyHok.get_gnx(_result))
+#   _result = _result
+#           |> DP.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
+#           |> PolyHok.get_gnx
     |> DP.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
     |> PolyHok.get_gnx
+    # |> IO.inspect
 
 # IO.inspect _result
 
