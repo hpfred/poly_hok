@@ -3,24 +3,25 @@ use Ske
 
 PolyHok.defmodule MM do
   # antigo: escreve no tensor de resultado diretamente
-  # defd mat_mult(res_arr,arr1,arr2,size,row,col) do
-  #   sum = 0.0
-  #   for i in range(0,size-1)do
-  #     sum = sum + arr1[row*size+i] * arr2[i*size+col]
-  #   end
-  #   # printf("%f\\n",sum)
-  #   # printf("%d\\n",(row*size+col))
-  #   res_arr[row*size+col] = sum
-  #   # printf("%f\\n",res_arr[row*size+col])
-  # end
-
-  defd mat_mult(arr1,arr2,size,row,col) do
+  defd mat_mult(res_arr,arr1,arr2,size,row,col) do
     sum = 0.0
-    for i in range(0,size-1) do
+    for i in range(0,size-1)do
       sum = sum + arr1[row*size+i] * arr2[i*size+col]
     end
-    sum
+    # printf("%f\\n",sum)
+    # printf("%d\\n",(row*size+col))
+    res_arr[row*size+col] = sum
+    # printf("%f\\n",res_arr[row*size+col])
+
   end
+
+  # defd mat_mult(arr1,arr2,size,row,col) do
+  #   sum = 0.0
+  #   for i in range(0,size-1) do
+  #     sum = sum + arr1[row*size+i] * arr2[i*size+col]
+  #   end
+  #   sum
+  # end
 end
 
 [arg] = System.argv()
@@ -70,15 +71,12 @@ arr1_gpu = PolyHok.new_gnx(mat1)
 arr2_gpu = PolyHok.new_gnx(mat2)
 #par1 = m
 
-# antigo: usar resultado pré-alocado e side-effect
-# result_gpu = PolyHok.new_gnx(m,m,PolyHok.get_array_type(mat1))
-# #MM.map2xy2D1p(arr1_gpu, arr2_gpu, par, result_gpu, size1, f)
-# #result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [par1], [return: true, dim: :two, coord: true])
-# #result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [result_gpu, m], [return: false, dim: :two, coord: true])
-# result_gpu = Ske.map(result_gpu, arr1_gpu, arr2_gpu, &MM.mat_mult/5, [m], [return: false, dim: :two, coord: true])
-# # result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [m], [return: true, dim: :two, coord: true])
-
-result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/4, [m], [return: true, dim: :two, coord: true])
+result_gpu = PolyHok.new_gnx(m,m,PolyHok.get_array_type(mat1))
+#MM.map2xy2D1p(arr1_gpu, arr2_gpu, par, result_gpu, size1, f)
+#result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [par1], [return: true, dim: :two, coord: true])
+#result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [result_gpu, m], [return: false, dim: :two, coord: true])
+result_gpu = Ske.map(result_gpu, arr1_gpu, arr2_gpu, &MM.mat_mult/5, [m], [return: false, dim: :two, coord: true])
+# result_gpu = Ske.map(arr1_gpu, arr2_gpu, &MM.mat_mult/5, [m], [return: true, dim: :two, coord: true])
 
 # IO.inspect(PolyHok.get_gnx(arr1_gpu))
 #ele não tem step aqui é só [100][100]
