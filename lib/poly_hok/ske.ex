@@ -3346,7 +3346,8 @@ PolyHok.defmodule Ske do
       id = stride*step
       # id = stride
 
-      f(d_array1+id, d_array2+id, d_array3+id, par1, x, y)
+      #f(d_array1+id, d_array2+id, d_array3+id, par1, x, y)
+      f(d_array1, d_array2, d_array3, par1, x, y)
     end
   end
   def map3_1para_coord_2D(d_array1, d_array2, d_array3, par1, f) do
