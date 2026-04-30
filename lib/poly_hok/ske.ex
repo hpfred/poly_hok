@@ -77,10 +77,15 @@ PolyHok.defmodule Ske do
     #threads = 256
 
     #PolyHok.spawn(&Ske.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, initial, size, f, size])
-    cas = case type do
-      {:f,32} -> PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
+    #cas = case type do
+    case type do
+      #{:f,32} -> PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
+      {:f,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
+        PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
 
-      {:f,64} -> PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
+      #{:f,64} -> PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
+      {:f,64} -> cas = PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
+        PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
 
       {:s,32} -> PolyHok.phok (fn (x,y,z) -> cas_int(x,y,z) end)
 
@@ -88,7 +93,7 @@ PolyHok.defmodule Ske do
     end
 
     case sel_ver do
-      01 -> PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end), f])
+      01 -> PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
 
       02 -> PolyHok.spawn(&Ske.reduce_kernel_nvidia_k4/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
 
