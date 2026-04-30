@@ -77,30 +77,25 @@ PolyHok.defmodule Ske do
     #threads = 256
 
     #PolyHok.spawn(&Ske.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, initial, size, f, size])
-    #cas = case type do
-    case type do
-      #{:f,32} -> PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
-      {:f,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
-        PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+    cas = case type do
+      {:f,32} -> PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
 
-      #{:f,64} -> PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
-      {:f,64} -> cas = PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
-        PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+      {:f,64} -> PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
 
       {:s,32} -> PolyHok.phok (fn (x,y,z) -> cas_int(x,y,z) end)
 
       x -> raise "new_gnx: type #{x} not suported"
     end
 
-    # case sel_ver do
-    #   01 -> PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+    case sel_ver do
+      01 -> PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
 
-    #   02 -> PolyHok.spawn(&Ske.reduce_kernel_nvidia_k4/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
+      02 -> PolyHok.spawn(&Ske.reduce_kernel_nvidia_k4/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
 
-    #   03 -> PolyHok.spawn(&Ske.reduce_kernel_nvidia_k5/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
+      03 -> PolyHok.spawn(&Ske.reduce_kernel_nvidia_k5/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
 
-    #   x  -> raise "reduce implementation #{x} not available"
-    # end
+      x  -> raise "reduce implementation #{x} not available"
+    end
 
     result_gpu
   end
