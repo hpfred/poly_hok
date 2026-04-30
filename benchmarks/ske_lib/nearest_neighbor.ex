@@ -121,7 +121,7 @@ type = PolyHok.get_type_gnx(d_array)
 r = PolyHok.new_gnx(size,1,type)
     |> Ske.map(d_array, &NN.euclid/3, [0.0, 0.0], [return: false, dim: :one, coord: false])
 #IO.inspect(PolyHok.get_gnx(r))
-File.write!("resultado_map-NN.txt", inspect(r, limit: :infinity))
+File.write!("resultado_map-NN.txt", inspect(PolyHok.get_gnx(r), limit: :infinity))
 _r = r
     |> Ske.reduce(50000.0,&NN.menor/2)
     |> PolyHok.get_gnx
