@@ -145,7 +145,11 @@ PolyHok.defmodule NN do
     type = PolyHok.get_type_gnx(d_array)
 
     distances_device = PolyHok.new_gnx(1,size, type)
-    PolyHok.spawn(&NN.map_step_2para_1resp_kernel/7,{size,1,1},{1,1,1},[d_array,distances_device,step,par1,par2,size,f])
+
+    threadsPerBlock = 256
+    blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
+    numberOfBlocks = blocksPerGrid
+    PolyHok.spawn(&NN.map_step_2para_1resp_kernel/7,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[d_array,distances_device,step,par1,par2,size,f])
     distances_device
   end
 
@@ -171,7 +175,7 @@ size = String.to_integer(arg)
 :rand.seed(:exsss, {123, 123, 123})
 
 data_set_host = DataSet.gen_data_set_nx(size)
-IO.inspect(data_set_host)
+#IO.inspect(data_set_host)
 
 #data_set_host = Nx.tensor(DataSet.gen_data_set(size),  type: {:f,32} )
 
@@ -183,11 +187,11 @@ prev = System.monotonic_time()
 
 r= PolyHok.new_gnx(data_set_host)
   |> NN.map_step_2para_1resp(2,0.0,0.0,size, &NN.euclid/3)
-  IO.inspect(PolyHok.get_gnx(r))
-_r = r
+  #IO.inspect(PolyHok.get_gnx(r))
+#_r = r
   |> NN.reduce(50000.0,&NN.menor/2)
   |> PolyHok.get_gnx
-  |> IO.inspect
+  #|> IO.inspect
 
 
 
