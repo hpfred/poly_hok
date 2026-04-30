@@ -29,16 +29,18 @@ return (sqrt((((lat - d_locations[0]) * (lat - d_locations[0])) + ((lng - d_loca
 
 extern "C" __global__ void map_step_2para_1resp_kernel(float *d_array, float *d_result, int step, float par1, float par2, int size)
 {
-	int globalId = (threadIdx.x + (blockIdx.x * blockDim.x));
-	int id = (step * globalId);
-if((globalId < size))
-{
-	d_result[globalId] = euclid((d_array + id), par1, par2);
+	// int globalId = (threadIdx.x + (blockIdx.x * blockDim.x));
+	// int id = (step * globalId);
+    // if((globalId < size)){
+	//     d_result[globalId] = euclid((d_array + id), par1, par2);
+    // }
+    int id = threadIdx.x + blockIdx.x * blockDim.x;
+    int stride = blockDim.x * gridDim.x;
+    for (int i = id; i < size; i += stride) {
+        int elem_id = step * i;
+        d_result[i] = euclid(d_array + elem_id, par1, par2);
+    }
 }
-
-}
-
-
 
 
 __device__
@@ -145,8 +147,12 @@ int main(int argc, char* argv[])
 
    
 
-    map_step_2para_1resp_kernel<<< numRecords, 1 >>>(d_locations,d_distances,2,0.0,0.0, numRecords);
-    
+    // map_step_2para_1resp_kernel<<< numRecords, 1 >>>(d_locations,d_distances,2,0.0,0.0, numRecords);
+    int block_size = 128;
+    int nBlocks = (numRecords + block_size - 1) / block_size;
+
+    map_step_2para_1resp_kernel<<< nBlocks, block_size >>>(d_locations,d_distances,2,0.0,0.0, numRecords);
+
 
     cudaDeviceSynchronize();
 
