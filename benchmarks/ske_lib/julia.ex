@@ -45,6 +45,8 @@ PolyHok.defmodule Julia do
     ## offset?
     juliaValue = julia(x,y,dim)
 
+    ## AQUI TENHO QUE CALCULAR O OFFSET
+    ## PORQUE NO SKE PRECISO PASSAR O d_array, AO INVÉS DE d_array+id
     ptr[0] = 255 * juliaValue;
     ptr[1] = 0;
     ptr[2] = 0;

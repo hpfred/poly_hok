@@ -88,7 +88,7 @@ PolyHok.defmodule Ske do
     end
 
     case sel_ver do
-      01 -> PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+      01 -> PolyHok.spawn(&Ske.reduce_kernel/6,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end), f])
 
       02 -> PolyHok.spawn(&Ske.reduce_kernel_nvidia_k4/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, size, cas, f])
 
