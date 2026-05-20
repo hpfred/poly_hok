@@ -64,6 +64,12 @@ PolyHok.defmodule RayTracer do
     image[1] = g * 255
     image[2] = b * 255
     image[3] = 255
+    ## CASO COORD: TRUE SENDO INDEX 0 DO ARRAY, ENTÂO AQUI FICARIA ALGO TIPO:
+    # id = x * width + y
+    # image[id] = r * 255
+    # image[id + 1] = g * 255
+    # image[id + 2] = b * 255
+    # image[id + 3] = 255
   end
 end
 

@@ -204,6 +204,8 @@ PolyHok.defmodule Ske do
 ## MAP--------------------------------------------------------------------------------------------------------------------------------------------------
 ## -----------------------------------------------------------------------------------------------------------------------------------------------------
 
+# ADICIONAR: Parâmetro ID, para identificar se valor passado pra função será ponteiro da primeira posição ou ponteiro da posição atual
+
 ## SELECT : 1 GNX : 0 PARA
   @defaults %{coord: false, return: true, dim: :one}
   def map(a,b,c \\[],options \\[])
@@ -2179,7 +2181,7 @@ PolyHok.defmodule Ske do
       id = idX*step
 
       #printf("%d %d ",idX,id)
-      f(d_array1+idX, d_array2+id, par1, par2)
+      f(d_array1+idX, d_array2+id, par1, par2)  # Porque um é idX e outro é id?
     end
   end
   def map2_2para_1D(d_array1, d_array2, par1, par2, f) do
@@ -3332,6 +3334,7 @@ PolyHok.defmodule Ske do
     PolyHok.spawn(&Ske.map3_1para_2D_resp_kernel/9,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array1,d_array2,d_array3,ret,par1,step1,sizeX1,sizeY1,f])
     ret
   end
+# \/ ESSE É O QUE MUDEI o INDEX pra funcinar com MM, onde ele tava acessando posição ilegal da memória pela forma de calcular a posição (usa calculo da posição 0 do array, mas eu tava passando posição id)
 ## MAP = 3 GNX; 1 PARAMETER; 2D, COORD: TRUE;
   defk map3_1para_coord_2D_kernel(d_array1, d_array2, d_array3, par1, step, sizeX, sizeY, f) do
     idX = blockIdx.x * blockDim.x + threadIdx.x

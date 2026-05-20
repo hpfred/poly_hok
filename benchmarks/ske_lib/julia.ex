@@ -51,6 +51,12 @@ PolyHok.defmodule Julia do
     ptr[1] = 0;
     ptr[2] = 0;
     ptr[3] = 255;
+    ## CALCULANDO O OFFSET FICARIA TIPO
+    #           ptr[x*dim+y] = 255 * juliaValue
+    #           ptr[x*dim+y+1] = 0
+    #           ptr[x*dim+y+2] = 0
+    #           ptr[x*dim+y+3] = 255
+    ## TESTAR caso mudde que todo coord assuma ponteiro da posição inicial - do contrario preciso implementar parâmetro ID, que indica que devo passar ponteiro de array+id
   end
 end
 
