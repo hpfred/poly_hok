@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-__global__ void comprehension(double *a, double *b, double *result, int size)
+__global__ void comprehension(float *a, float *b, float *result, int size)
 {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
     int stride = blockDim.x * gridDim.x;
@@ -17,12 +17,16 @@ __global__ void comprehension(double *a, double *b, double *result, int size)
 int main(int argc, char const *argv[])
 {
     int size = atoi(argv[1]);
-    int bytes = size * sizeof(double);
+    int bytes = size * sizeof(float);
 
-    double *host_a, *host_b, *host_result;
-    host_a = (double *)malloc(bytes);
-    host_b = (double *)malloc(bytes);
-    host_result = (double *)malloc(bytes);
+    float *host_a, *host_b, *host_result;
+    host_a = (float *)malloc(bytes);
+    host_b = (float *)malloc(bytes);
+    host_result = (float *)malloc(bytes);
+    if (host_a == NULL || host_b == NULL || host_result == NULL) {
+        fprintf(stderr, "malloc failed for size %d\n", size);
+        return EXIT_FAILURE;
+    }
 
     // Filling a and b arrays
     for (int i = 0; i < size; i++)
@@ -31,10 +35,10 @@ int main(int argc, char const *argv[])
         host_b[i] = i + 1;
     }
 
-    double *dev_a, *dev_b, *dev_result;
+    float *dev_a, *dev_b, *dev_result;
     cudaError_t err;
 
-    int threadsPerBlock = 128;
+    int threadsPerBlock = 256;
     int numberOfBlocks = (size + threadsPerBlock - 1) / threadsPerBlock;
 
     float time;

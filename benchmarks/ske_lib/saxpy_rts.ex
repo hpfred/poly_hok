@@ -1,4 +1,5 @@
 require PolyHok
+use Ske
 
 PolyHok.defmodule PMap2 do
   #deft saxpy a ~> a ~> a
@@ -26,6 +27,7 @@ PolyHok.defmodule PMap2 do
 end
 
 
+
 [arg] = System.argv()
 
 n = String.to_integer(arg)
@@ -47,9 +49,9 @@ vet2 = PolyHok.new_nx_from_function(1,n,{:f,32},fn -> 1 end)
 
 prev = System.monotonic_time()
 
-ref1= PolyHok.new_gnx(1,n,{:f,32})
-ref2= PolyHok.new_gnx(vet1)
-ref3 = PolyHok.new_gnx(vet2)
+# ref1= PolyHok.new_gnx(1,n,{:f,32})
+ref1= PolyHok.new_gnx(vet1)
+ref2 = PolyHok.new_gnx(vet2)
 
 #ref_1= PolyHok.new_gnx(vet_1)
 #ref_2= PolyHok.new_gnx(vet_2)
@@ -59,7 +61,7 @@ ref3 = PolyHok.new_gnx(vet2)
 #PolyHok.set_default_type(:float)
 #PMap2.map2(ref1,ref2,ref3,n, &PMap2.saxpy/2)
 # result = Ske.map(ref1, ref2, ref3, &PMap2.saxpy/2)
-result = Ske.map(ref1, ref2, ref3, &PMap2.saxpy/2, [], [coord: false, return: true, dim: :one])
+_result = Ske.map(ref1, ref2, &PMap2.saxpy/2, [], [coord: false, return: true, dim: :one])
           |> PolyHok.get_gnx
           # |> IO.inspect
 
