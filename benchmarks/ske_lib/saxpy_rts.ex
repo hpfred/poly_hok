@@ -59,9 +59,12 @@ ref2 = PolyHok.new_gnx(vet2)
 #PolyHok.set_default_type(:float)
 #PMap2.map2(ref1,ref2,ref3,n, &PMap2.saxpy/2)
 # result = Ske.map(ref1, ref2, ref3, &PMap2.saxpy/2)
-_result = Ske.map(ref1, ref2, &PMap2.saxpy/2, [], [coord: false, return: true, dim: :one])
+result = Ske.map(ref1, ref2, &PMap2.saxpy/2, [], [coord: false, return: true, dim: :one])
           |> PolyHok.get_gnx
           # |> IO.inspect
+
+dummy = vet1[0] + vet2[0] # para evitar otimização
+_r = dummy + result[0] # para evitar otimização
 
 #PolyHok.set_default_type(:int)
 #PMap2.map2(ref_1,ref_2,ref_3,n,&PMap2.saxpy/2)
