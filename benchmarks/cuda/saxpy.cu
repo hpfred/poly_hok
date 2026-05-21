@@ -17,12 +17,15 @@ __global__ void comprehension(float *a, float *b, float *result, int size)
 int main(int argc, char const *argv[])
 {
     int size = atoi(argv[1]);
-    int bytes = size * sizeof(float);
+    //int bytes = size * sizeof(float);
 
     float *host_a, *host_b, *host_result;
-    host_a = (float *)malloc(bytes);
-    host_b = (float *)malloc(bytes);
-    host_result = (float *)malloc(bytes);
+    host_a = (float *)malloc(size*sizeof(float));
+    host_b = (float *)malloc(size*sizeof(float));
+    host_result = (float *)malloc(size*sizeof(float));
+    // cudaMallocHost((void **)&host_a, size * sizeof(float));
+    // cudaMallocHost((void **)&host_b, size * sizeof(float));
+    // cudaMallocHost((void **)&host_result, size * sizeof(float));
     if (host_a == NULL || host_b == NULL || host_result == NULL) {
         fprintf(stderr, "malloc failed for size %d\n", size);
         return EXIT_FAILURE;
@@ -41,20 +44,32 @@ int main(int argc, char const *argv[])
     int threadsPerBlock = 256;
     int numberOfBlocks = (size + threadsPerBlock - 1) / threadsPerBlock;
 
+    float time_h2d, time_kernel, time_d2h;
+    cudaEvent_t start2, stop2;
+    cudaEventCreate(&start2);
+    cudaEventCreate(&stop2);
     float time;
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
     cudaEventRecord(start, 0);
 
-    cudaMalloc((void **)&dev_a, bytes);
-    cudaMalloc((void **)&dev_b, bytes);
-    cudaMalloc((void **)&dev_result, bytes);
+    cudaMalloc((void **)&dev_a, size * sizeof(float));
+    cudaMalloc((void **)&dev_b, size * sizeof(float));
+    cudaMalloc((void **)&dev_result, size * sizeof(float));
 
-    cudaMemcpy(dev_a, host_a, bytes, cudaMemcpyHostToDevice);
-    cudaMemcpy(dev_b, host_b, bytes, cudaMemcpyHostToDevice);
+    cudaEventRecord(start2, 0);
+    cudaMemcpy(dev_a, host_a, size * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(dev_b, host_b, size * sizeof(float), cudaMemcpyHostToDevice);
+    cudaEventRecord(stop2, 0);
+    cudaEventSynchronize(stop2);
+    cudaEventElapsedTime(&time_h2d, start2, stop2);
 
+    cudaEventRecord(start2, 0);
     comprehension<<<numberOfBlocks, threadsPerBlock>>>(dev_a, dev_b, dev_result, size);
+    cudaEventRecord(stop2, 0);
+    cudaEventSynchronize(stop2);
+    cudaEventElapsedTime(&time_kernel, start2, stop2);
     err = cudaGetLastError();
     if (err != cudaSuccess)
     {
@@ -62,23 +77,32 @@ int main(int argc, char const *argv[])
         exit(EXIT_FAILURE);
     }
 
-    cudaMemcpy(host_result, dev_result, bytes, cudaMemcpyDeviceToHost);
-
-    cudaFree(dev_a);
-    cudaFree(dev_b);
-    cudaFree(dev_result);
+    cudaEventRecord(start2, 0);
+    cudaMemcpy(host_result, dev_result, size * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaEventRecord(stop2, 0);
+    cudaEventSynchronize(stop2);
+    cudaEventElapsedTime(&time_d2h, start2, stop2);
 
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&time, start, stop);
     cudaEventDestroy(start);
     cudaEventDestroy(stop);
+    
+    printf("H2D: %.1fms, Kernel: %.1fms, D2H: %.1fms\n", time_h2d, time_kernel, time_d2h);
+
+    cudaFree(dev_a);
+    cudaFree(dev_b);
+    cudaFree(dev_result);
 
     printf("CUDA\t%d\t%3.1f\n", size, time);
 
     free(host_a);
     free(host_b);
     free(host_result);
+    // cudaFreeHost(host_a);
+    // cudaFreeHost(host_b);
+    // cudaFreeHost(host_result);
 
     return 0;
 }

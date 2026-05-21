@@ -27,11 +27,9 @@ PolyHok.defmodule PMap2 do
 end
 
 
-
 [arg] = System.argv()
 
 n = String.to_integer(arg)
-
 
 #vet1 = Matrex.new(1, n, fn -> :rand.uniform() end)
 #vet2 = Matrex.new(1, n, fn -> :rand.uniform() end)
