@@ -12,7 +12,6 @@ PolyHok.defmodule MM do
     # printf("%d\\n",(row*size+col))
     res_arr[row*size+col] = sum
     # printf("%f\\n",res_arr[row*size+col])
-
   end
 
   # defd mat_mult(arr1,arr2,size,row,col) do

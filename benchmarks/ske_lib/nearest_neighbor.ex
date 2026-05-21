@@ -42,6 +42,18 @@ defmodule DataSet do
         ref = gen_bin_data(n-1, acc)
         %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {n,2}, names:  [nil,nil]}
     end
+    def gen_data_set_nx1(n) do
+        lat = (7 + Enum.random(0..63)) + :rand.uniform()
+        acc = <<lat::float-little-32>>
+        ref = gen_bin_data1(n-1, acc)
+        %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {n,1}, names:  [nil,nil]}
+    end
+    def gen_data_set_nx2(n) do
+        lon = (Enum.random(0..358)) + :rand.uniform()
+        acc = <<lon::float-little-32>>
+        ref = gen_bin_data2(n-1, acc)
+        %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {n,1}, names:  [nil,nil]}
+    end
     defp gen_bin_data(0, accumulator), do: accumulator
     defp gen_bin_data(size, accumulator) do
         lat = (7 + Enum.random(0..63)) + :rand.uniform()
@@ -49,6 +61,22 @@ defmodule DataSet do
         gen_bin_data(
             size - 1,
             <<accumulator::binary, lat::float-little-32, lon::float-little-32>>
+        )
+    end
+    defp gen_bin_data1(0, accumulator), do: accumulator
+    defp gen_bin_data1(size, accumulator) do
+        lat = (7 + Enum.random(0..63)) + :rand.uniform()
+        gen_bin_data(
+            size - 1,
+            <<accumulator::binary, lat::float-little-32>>
+        )
+    end
+    defp gen_bin_data2(0, accumulator), do: accumulator
+    defp gen_bin_data2(size, accumulator) do
+        lon = (Enum.random(0..358)) + :rand.uniform()
+        gen_bin_data(
+            size - 1,
+            <<accumulator::binary, lon::float-little-32>>
         )
     end
     def gen_data_set(n), do: gen_data_set_(n,[])
@@ -106,7 +134,8 @@ size = String.to_integer(arg)
 
 :rand.seed(:exsss, {123, 123, 123})
 
-data_set_host = DataSet.gen_data_set_nx(size)
+dataset_lat_host = DataSet.gen_data_set_nx1(size)
+dataset_lng_host = DataSet.gen_data_set_nx2(size)
 #IO.inspect(data_set_host)
 #data_set_host = Nx.tensor(DataSet.gen_data_set(size),  type: {:f,32} )
 
@@ -114,12 +143,13 @@ data_set_host = DataSet.gen_data_set_nx(size)
 
 prev = System.monotonic_time()
 
-d_array = PolyHok.new_gnx(data_set_host)
+d_array1 = PolyHok.new_gnx(dataset_lat_host)
+d_array2 = PolyHok.new_gnx(dataset_lng_host)
 #IO.inspect(PolyHok.get_gnx(d_array))
-type = PolyHok.get_type_gnx(d_array)
+type = PolyHok.get_type_gnx(d_array1)
 # r = PolyHok.new_gnx(1,size,type)
 r = PolyHok.new_gnx(size,1,type)
-    |> Ske.map(d_array, &NN.euclid/3, [0.0, 0.0], [return: false, dim: :one, coord: false])
+    |> Ske.map(d_array1, d_array2, &NN.euclid/3, [0.0, 0.0], [return: false, dim: :one, coord: false])
 #IO.inspect(PolyHok.get_gnx(r))
 #File.write!("resultado_map-NN.txt", inspect(PolyHok.get_gnx(r), limit: :infinity))
 _r = r
