@@ -134,8 +134,10 @@ size = String.to_integer(arg)
 
 :rand.seed(:exsss, {123, 123, 123})
 
-dataset_lat_host = DataSet.gen_data_set_nx1(size)
-dataset_lng_host = DataSet.gen_data_set_nx2(size)
+# dataset_lat_host = DataSet.gen_data_set_nx1(size)
+# dataset_lng_host = DataSet.gen_data_set_nx2(size)
+dataset_lat_host = Nx.tensor(Enum.to_list(1..(size)), type: :f32)
+dataset_lng_host = Nx.tensor(Enum.to_list(size..(size*2)), type: :f32)
 #IO.inspect(data_set_host)
 #data_set_host = Nx.tensor(DataSet.gen_data_set(size),  type: {:f,32} )
 

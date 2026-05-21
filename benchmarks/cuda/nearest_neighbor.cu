@@ -167,10 +167,17 @@ int main(int argc, char* argv[])
     printf("CUDA\t%d\t%3.1f\n", numRecords,time);
 }
 
+// void loadData(float* locations, int size){
+// 	for (int i=0;i<size;i++){    
+//         locations[0] = ((float)(7 + rand() % 63)) + ((float) rand() / (float) 0x7fffffff);
+//         locations[1] = ((float)(rand() % 358)) + ((float) rand() / (float) 0x7fffffff); 
+//         locations = locations +2;    
+//     }
+// }
 void loadData(float* locations, int size){
 	for (int i=0;i<size;i++){    
-        locations[0] = ((float)(7 + rand() % 63)) + ((float) rand() / (float) 0x7fffffff);
-        locations[1] = ((float)(rand() % 358)) + ((float) rand() / (float) 0x7fffffff); 
+        locations[0] = size;
+        locations[1] = size*2; 
         locations = locations +2;    
     }
 }
