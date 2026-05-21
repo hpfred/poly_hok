@@ -78,6 +78,8 @@ int main(int argc, char const *argv[])
     }
 
     cudaEventRecord(start2, 0);
+    volatile float tmp = host_result[0];
+    tmp = host_result[size-1]; 
     cudaMemcpy(host_result, dev_result, size * sizeof(float), cudaMemcpyDeviceToHost);
     cudaEventRecord(stop2, 0);
     cudaEventSynchronize(stop2);

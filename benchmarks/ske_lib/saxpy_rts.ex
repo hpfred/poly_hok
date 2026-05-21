@@ -60,7 +60,10 @@ ref2 = PolyHok.new_gnx(vet2)
 #PMap2.map2(ref1,ref2,ref3,n, &PMap2.saxpy/2)
 # result = Ske.map(ref1, ref2, ref3, &PMap2.saxpy/2)
 _result = Ske.map(ref1, ref2, &PMap2.saxpy/2, [], [coord: false, return: true, dim: :one])
-          |> PolyHok.get_gnx
+prev2 = System.monotonic_time()
+PolyHok.get_gnx(_result)
+next2 = System.monotonic_time()
+IO.puts "D2H time: #{System.convert_time_unit(next2-prev2, :native, :millisecond)}ms"
           # |> IO.inspect
 
 #PolyHok.set_default_type(:int)
