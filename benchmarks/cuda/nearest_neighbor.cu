@@ -163,7 +163,7 @@ int main(int argc, char* argv[])
     cudaEventSynchronize(stop) ;
     cudaEventElapsedTime(&time, start, stop) ;
 
-    printf("Nearest Neighbor: %f\n", resp[0]);
+    //printf("Nearest Neighbor: %f\n", resp[0]);
     printf("CUDA\t%d\t%3.1f\n", numRecords,time);
 }
 
@@ -176,8 +176,8 @@ int main(int argc, char* argv[])
 // }
 void loadData(float* locations, int size){
 	for (int i=0;i<size;i++){    
-        locations[0] = size;
-        locations[1] = size*2; 
+        locations[0] = i;
+        locations[1] = i*2; 
         locations = locations +2;    
     }
 }
