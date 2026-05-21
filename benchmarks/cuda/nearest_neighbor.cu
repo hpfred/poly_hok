@@ -43,7 +43,7 @@ extern "C" __global__ void map_step_2para_1resp_kernel(float *d_array, float *d_
 
 __device__
 float menor(float x, float y){
-    if((x < y))
+    if((x < y)){
         return (x);
     }
     else{
