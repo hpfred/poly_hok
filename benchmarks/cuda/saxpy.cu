@@ -44,10 +44,6 @@ int main(int argc, char const *argv[])
     int threadsPerBlock = 256;
     int numberOfBlocks = (size + threadsPerBlock - 1) / threadsPerBlock;
 
-    float time_h2d, time_kernel, time_d2h;
-    cudaEvent_t start2, stop2;
-    cudaEventCreate(&start2);
-    cudaEventCreate(&stop2);
     float time;
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
@@ -58,18 +54,10 @@ int main(int argc, char const *argv[])
     cudaMalloc((void **)&dev_b, size * sizeof(float));
     cudaMalloc((void **)&dev_result, size * sizeof(float));
 
-    cudaEventRecord(start2, 0);
     cudaMemcpy(dev_a, host_a, size * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(dev_b, host_b, size * sizeof(float), cudaMemcpyHostToDevice);
-    cudaEventRecord(stop2, 0);
-    cudaEventSynchronize(stop2);
-    cudaEventElapsedTime(&time_h2d, start2, stop2);
 
-    cudaEventRecord(start2, 0);
     comprehension<<<numberOfBlocks, threadsPerBlock>>>(dev_a, dev_b, dev_result, size);
-    cudaEventRecord(stop2, 0);
-    cudaEventSynchronize(stop2);
-    cudaEventElapsedTime(&time_kernel, start2, stop2);
     err = cudaGetLastError();
     if (err != cudaSuccess)
     {
@@ -77,22 +65,14 @@ int main(int argc, char const *argv[])
         exit(EXIT_FAILURE);
     }
 
-    cudaEventRecord(start2, 0);
-    volatile float tmp = host_result[0];
-    tmp = host_result[size-1]; 
     cudaMemcpy(host_result, dev_result, size * sizeof(float), cudaMemcpyDeviceToHost);
-    cudaEventRecord(stop2, 0);
-    cudaEventSynchronize(stop2);
-    cudaEventElapsedTime(&time_d2h, start2, stop2);
-
+    
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&time, start, stop);
     cudaEventDestroy(start);
     cudaEventDestroy(stop);
     
-    printf("H2D: %.1fms, Kernel: %.1fms, D2H: %.1fms\n", time_h2d, time_kernel, time_d2h);
-
     cudaFree(dev_a);
     cudaFree(dev_b);
     cudaFree(dev_result);
