@@ -63,8 +63,8 @@ result = Ske.map(ref1, ref2, &PMap2.saxpy/2, [], [coord: false, return: true, di
           |> PolyHok.get_gnx
           # |> IO.inspect
 
-dummy = vet1[0] + vet2[0] # para evitar otimização
-_r = dummy + result[0] # para evitar otimização
+dummy = Nx.to_number(vet1[0]) + Nx.to_number(vet2[0]) # para evitar otimização
+_r = dummy + Nx.to_number(result[0]) # para evitar otimização
 
 #PolyHok.set_default_type(:int)
 #PMap2.map2(ref_1,ref_2,ref_3,n,&PMap2.saxpy/2)
