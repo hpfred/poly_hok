@@ -114,7 +114,7 @@ PolyHok.defmodule NN do
 
     defd euclid(d_result, d_lat, d_lng, lat, lng) do
         #printf("%f  %f  %f  %f  \\n",d_locations[0], d_locations[1], lat, lng)
-        d_result[0] = sqrt((lat-d_lat)*(lat-d_lat)+(lng-d_lng)*(lng-d_lng))
+        d_result[0] = sqrt((lat-d_lat[0])*(lat-d_lat[0])+(lng-d_lng[0])*(lng-d_lng[0]))
     end
 
     defd menor(x,y) do

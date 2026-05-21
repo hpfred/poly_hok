@@ -67,6 +67,7 @@ PMap2.map2(ref1,ref2,ref3,n, &PMap2.saxpy/2)
 #PolyHok.synchronize()
 
 _result = PolyHok.get_gnx(ref3)
+          |> IO.inspect
 
 #result_ = PolyHok.get_gnx(ref_3)
 

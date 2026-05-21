@@ -61,7 +61,7 @@ ref2 = PolyHok.new_gnx(vet2)
 # result = Ske.map(ref1, ref2, ref3, &PMap2.saxpy/2)
 result = Ske.map(ref1, ref2, &PMap2.saxpy/2, [], [coord: false, return: true, dim: :one])
           |> PolyHok.get_gnx
-          # |> IO.inspect
+          |> IO.inspect
 
 dummy = Nx.to_number(vet1[0][0]) + Nx.to_number(vet2[0][0]) # para evitar otimização
 _r = dummy + Nx.to_number(result[0][0]) # para evitar otimização
