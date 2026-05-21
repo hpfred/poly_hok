@@ -112,9 +112,9 @@ PolyHok.defmodule NN do
         data
     end
 
-    defd euclid(d_result, d_locations, lat, lng) do
+    defd euclid(d_result, d_lat, d_lng, lat, lng) do
         #printf("%f  %f  %f  %f  \\n",d_locations[0], d_locations[1], lat, lng)
-        d_result[0] = sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
+        d_result[0] = sqrt((lat-d_lat)*(lat-d_lat)+(lng-d_lng)*(lng-d_lng))
     end
 
     defd menor(x,y) do
@@ -149,7 +149,7 @@ d_array2 = PolyHok.new_gnx(dataset_lng_host)
 type = PolyHok.get_type_gnx(d_array1)
 # r = PolyHok.new_gnx(1,size,type)
 r = PolyHok.new_gnx(size,1,type)
-    |> Ske.map(d_array1, d_array2, &NN.euclid/3, [0.0, 0.0], [return: false, dim: :one, coord: false])
+    |> Ske.map(d_array1, d_array2, &NN.euclid/5, [0.0, 0.0], [return: false, dim: :one, coord: false])
 #IO.inspect(PolyHok.get_gnx(r))
 #File.write!("resultado_map-NN.txt", inspect(PolyHok.get_gnx(r), limit: :infinity))
 _r = r
