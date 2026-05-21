@@ -153,7 +153,6 @@ int main(int argc, char* argv[])
     //Copy data from device memory to host memory
 
     cudaMemcpy( resp, d_resp, sizeof(float), cudaMemcpyDeviceToHost );
-
     // find the resultsCount least distances
     free(distances);
     //Free memory
@@ -164,6 +163,7 @@ int main(int argc, char* argv[])
     cudaEventSynchronize(stop) ;
     cudaEventElapsedTime(&time, start, stop) ;
 
+    printf("Nearest Neighbor: %f\n", resp[0]);
     printf("CUDA\t%d\t%3.1f\n", numRecords,time);
 }
 
