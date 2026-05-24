@@ -34,8 +34,10 @@ int main(int argc, char const *argv[])
     // Filling a and b arrays
     for (int i = 0; i < size; i++)
     {
-        host_a[i] = i + 1;
-        host_b[i] = i + 1;
+        // host_a[i] = i + 1;
+        // host_b[i] = i + 1;
+        host_a[i] = 1;
+        host_b[i] = 1;
     }
 
     float *dev_a, *dev_b, *dev_result;
@@ -66,7 +68,13 @@ int main(int argc, char const *argv[])
     }
 
     cudaMemcpy(host_result, dev_result, size * sizeof(float), cudaMemcpyDeviceToHost);
-    
+    printf("Result: [");
+    for (int i = 0; i < 20; i++)
+    {
+        printf("%f, ",host_result[i]);
+    }
+    printf("]\n");
+
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&time, start, stop);
