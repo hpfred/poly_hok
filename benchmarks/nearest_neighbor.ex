@@ -34,21 +34,39 @@ defmodule DataSet do
         <<accumulator::binary, lat::float-little-64, lon::float-little-64>>
       )
   end
+  # def gen_data_set_nx(n) do
+  #   lat = (7 + Enum.random(0..63)) + :rand.uniform()
+  #   lon = (Enum.random(0..358)) + :rand.uniform()
+  #   acc = <<lat::float-little-32, lon::float-little-32>>
+  #   ref = gen_bin_data(n-1, acc)
+  #   %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {n,2}, names:  [nil,nil]}
+  # end
+  # defp gen_bin_data(0, accumulator), do: accumulator
+  # defp gen_bin_data(size, accumulator)
+  #   do
+  #     lat = (7 + Enum.random(0..63)) + :rand.uniform()
+  #     lon = (Enum.random(0..358)) + :rand.uniform()
+  #     gen_bin_data(
+  #       size - 1,
+  #       <<accumulator::binary, lat::float-little-32, lon::float-little-32>>
+  #     )
+  #   end
   def gen_data_set_nx(n) do
-    lat = (7 + Enum.random(0..63)) + :rand.uniform()
-    lon = (Enum.random(0..358)) + :rand.uniform()
+    lat = n
+    lon = n*2
     acc = <<lat::float-little-32, lon::float-little-32>>
-    ref = gen_bin_data(n-1, acc)
+    ref = gen_bin_data(n-1, acc, n)
     %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {n,2}, names:  [nil,nil]}
   end
-  defp gen_bin_data(0, accumulator), do: accumulator
-  defp gen_bin_data(size, accumulator)
+  defp gen_bin_data(0, accumulator, t_size), do: accumulator
+  defp gen_bin_data(size, accumulator, total_size)
     do
-      lat = (7 + Enum.random(0..63)) + :rand.uniform()
-      lon = (Enum.random(0..358)) + :rand.uniform()
+      lat = total_size - size
+      lon = (total_size*2) - size
       gen_bin_data(
         size - 1,
-        <<accumulator::binary, lat::float-little-32, lon::float-little-32>>
+        <<accumulator::binary, lat::float-little-32, lon::float-little-32>>,
+        total_size
       )
     end
   def gen_data_set(n), do: gen_data_set_(n,[])
@@ -188,10 +206,10 @@ prev = System.monotonic_time()
 r= PolyHok.new_gnx(data_set_host)
   |> NN.map_step_2para_1resp(2,0.0,0.0,size, &NN.euclid/3)
   #IO.inspect(PolyHok.get_gnx(r))
-#_r = r
+_r = r
   |> NN.reduce(50000.0,&NN.menor/2)
   |> PolyHok.get_gnx
-  #|> IO.inspect
+  |> IO.inspect
 
 
 
