@@ -3,3 +3,5 @@
 priv/gpu_nifs.so
 priv/bmp_nifs.so
 
+deps/exla/cache/
+deps/torchx/cache/
