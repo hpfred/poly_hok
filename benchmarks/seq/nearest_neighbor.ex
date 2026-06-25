@@ -15,7 +15,7 @@ arg = hd(System.argv())
 size = String.to_integer(arg)
 
 # Escolha um backend antes de criar os tensores:
-#Nx.default_backend({EXLA.Backend, []})
+Nx.default_backend({EXLA.Backend, []})
 #Nx.default_backend({Torchx.Backend, []})
 
 points = DataSet.gen_data_set(size)
@@ -26,4 +26,4 @@ dist_sq = Nx.sum(Nx.multiply(points, points), axes: [1])
 min_dist = Nx.sqrt(Nx.reduce_min(dist_sq))
 
 next = System.monotonic_time()
-IO.puts("Nx\t#{size}\t#{System.convert_time_unit(next - prev, :native, :millisecond)}\t#{Nx.to_number(min_dist)}")
+IO.puts("Nx\t#{size}\t#{System.convert_time_unit(next - prev, :native, :millisecond)}")
