@@ -8,9 +8,11 @@ Nx.default_backend({EXLA.Backend, client: :host})
 ## PYTORCH Backend
 #Nx.default_backend({Torchx.Backend, []})
 
-# Cria tensores NX com os valores 1..n
-x = Nx.tensor(Enum.to_list(1..n), type: :f32)
-y = Nx.tensor(Enum.to_list(1..n), type: :f32)
+## Cria tensores NX com os valores 1..n
+#x = Nx.tensor(Enum.to_list(1..n), type: :f32)
+#y = Nx.tensor(Enum.to_list(1..n), type: :f32)
+x = Nx.iota({n}, type: :f32) |> Nx.add(1)
+y = Nx.iota({n}, type: :f32) |> Nx.add(1)
 
 prev = System.monotonic_time()
 
