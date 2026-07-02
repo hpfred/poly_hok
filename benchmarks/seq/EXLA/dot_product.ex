@@ -3,7 +3,8 @@ arg = hd(System.argv())
 n = String.to_integer(arg)
 
 ## EXLA Backend
-Nx.default_backend({EXLA.Backend, []})
+Nx.default_backend({EXLA.Backend, client: :host})
+#Nx.Defn.default_options(compiler: EXLA, client: :host)
 ## PYTORCH Backend
 #Nx.default_backend({Torchx.Backend, []})
 

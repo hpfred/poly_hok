@@ -36,7 +36,7 @@ end
 n_bodies = String.to_integer(arg)
 
 ## Escolha um backend antes de criar os tensores:
-Nx.default_backend({EXLA.Backend, []})
+Nx.default_backend({EXLA.Backend, client: :host})
 #Nx.default_backend({Torchx.Backend, []})
 
 {positions, velocities} = NBody.gen_bodies(n_bodies)
