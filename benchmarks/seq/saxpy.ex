@@ -3,8 +3,8 @@ arg = hd(System.argv())
 n = String.to_integer(arg)
 
 # Escolha um backend antes de criar os tensores:
-#Nx.default_backend({EXLA.Backend, []})
-Nx.default_backend({Torchx.Backend, []})
+Nx.default_backend({EXLA.Backend, []})
+#Nx.default_backend({Torchx.Backend, []})
 
 x = Nx.tensor(Enum.to_list(1..n), type: :f32)
 y = Nx.tensor(Enum.to_list(1..n), type: :f32)
