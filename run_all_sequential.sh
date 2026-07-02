@@ -14,6 +14,9 @@ for ((count=1;count<=30;count++)) do
    mix run benchmarks/seq/dot_product_pytorch.ex 200000000
 done
 
+#echo "--------julia------------------------"
+#Not Implemented
+
 echo "--------default nbodies------------------------"
 for ((count=1;count<=30;count++)) do
    echo -n -e "$count.\t" 
@@ -45,6 +48,9 @@ for ((count=1;count<=30;count++)) do
    echo -n -e "$count.\t" 
    mix run benchmarks/seq/raytracer_pytorch.ex 2160
 done
+
+##echo "--------matrix multiplication-------------------"
+##Not implemented
 
 echo "--------default nearest neighbor------------------------"
 for ((count=1;count<=30;count++)) do
