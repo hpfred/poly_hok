@@ -62,7 +62,7 @@ end
 dim = String.to_integer(arg)
 
 # Escolha um backend antes de criar os tensores:
-#Nx.default_backend({EXLA.Backend, []})
+Nx.default_backend({EXLA.Backend, []})
 #Nx.default_backend({Torchx.Backend, []})
 
 spheres = Raytracer.gen_spheres(20, dim, 160, 20)

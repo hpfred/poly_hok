@@ -16,7 +16,7 @@ size = String.to_integer(arg)
 
 # Escolha um backend antes de criar os tensores:
 #Nx.default_backend({EXLA.Backend, []})
-#Nx.default_backend({Torchx.Backend, []})
+Nx.default_backend({Torchx.Backend, []})
 
 points = DataSet.gen_data_set(size)
 
